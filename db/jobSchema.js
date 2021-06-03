@@ -7,10 +7,17 @@ const jobSchema = new mongoose.Schema({
   jobType: String,
   minCgpa: Number,
   gateScore: Number,
-  courses: {
-    type: Array
-  },
-  year: Date
+  courses: Array,
+  year: Date,
+  dateOfExpiry: Date,
+  isOpen: Boolean,
+  noOfStudentsPlaced: Number,
+  users: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ]
 });
 
 module.exports = mongoose.model('Job', jobSchema);

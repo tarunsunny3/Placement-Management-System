@@ -5,7 +5,6 @@ const requireAuth = async(req, res, next) => {
         //const token = await req.headers['x-access-token'];
         const token = await req.cookies.token || '';
 
-
         // check json web token exists & is verified
         if (token) {
             // console.log(process.env.JWT_SECRET);
@@ -15,12 +14,12 @@ const requireAuth = async(req, res, next) => {
                     console.log(err.message);
                     res.clearCookie('token');
                     res.sendStatus(200);
-                    next();
+                    // next();
                     //  res.redirect('/');
 
                 } else {
                     // res.json({ decoded });
-                    console.log(decodedToken);
+                    // console.log(decodedToken);
                     req.decoded = decodedToken;
                     next();
                 }
@@ -28,12 +27,11 @@ const requireAuth = async(req, res, next) => {
         } else {
             console.log('Token not found');
             req.decoded = {
-              role: undefined,
-              userid: undefined
+              id: null,
+              role: null,
+              username: null
             }
             next();
-            //res.redirect('/');
-
         }
     } catch(err) {
         console.error(err.message)

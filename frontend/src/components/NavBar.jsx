@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -19,9 +20,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NavBar() {
+export default function NavBar({user}) {
   const classes = useStyles();
-
+  const Logout = async  ()=>{
+      await axios.get('/api/logout');
+      window.location.replace("/");
+  }
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -32,8 +36,14 @@ export default function NavBar() {
           <Typography variant="h6" className={classes.title}>
             UoH
           </Typography>
-          <Button href="/login" color="inherit">Login</Button>
-  <Button href="/register" color="inherit">Register</Button>
+          {
+            (user && user.id === null) ?
+            (<><Button href="/login" color="inherit">Login</Button>
+          <Button href="/register" color="inherit">Register</Button></>)
+            :
+            (<Button onClick={()=>Logout()} color="inherit">Logout</Button>)
+          }
+
         </Toolbar>
       </AppBar>
     </div>

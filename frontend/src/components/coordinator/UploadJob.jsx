@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react'
 import {  ThemeProvider, CssBaseline,Typography,InputBase, Grid,Button, FormControl, FormControlLabel, FormLabel, Radio,RadioGroup} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-// import {courses } from "../courses";
 import {cities} from "./cities";
 import Autocomplete , { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
@@ -13,10 +12,14 @@ import Alert from '@material-ui/lab/Alert';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 const filter = createFilterOptions();
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,18 +96,20 @@ const UploadJob = (props) => {
   const [jobPos, setJobPos] = useState("");
   const [jobType, setJobType] = useState("full");
   const [selectedCourses, setSelectedCourses] = useState([]);
-  const [gateScore, setGateScore] = useState("");
+  const [gateScore, setGateScore] = useState(null);
   const [errors, setErrors] = useState({});
   const [alert, setAlert] = useState(false);
   const [open, setOpen] = useState(true);
   const [availableCourses, setAvailableCourses] = useState([]);
+  const [dateOfExpiry, setDate] = useState(new Date().setMonth((new Date().getMonth())+3));
+  //Interface to store courses
   interface CourseType {
     inputValue?: string;
     courseName: string;
   }
   React.useEffect(() => {
     async function fetchCourses() {
-      const res = await axios.get('http://localhost:8080/job/getCourses');
+      const res = await axios.get('/job/getCourses');
       const data = res.data;
       setAvailableCourses(data.courses);
     }
@@ -141,9 +146,13 @@ let courses1: CourseType[]= availableCourses;
     }
     setErrors(tempErrors);
     if(Object.keys(tempErrors).length===0){
-      const data = {
-        company, location, jobPos, jobType,jobDesc, courses: selectedCourses, minCgpa: gpa, gateScore
+
+      let data = {
+        company, location, jobPos, jobType,jobDesc, courses: selectedCourses, minCgpa: gpa, year: new Date().now().getYear(), dateOfExpiry
       }
+      if(gateScore !== null){
+        data["gateScore"] = gateScore;
+       }
       const res = await axios.post('http://localhost:8080/job/uploadJob',data, {withCredentials: true});
       const d = res.data;
       console.log(d);
@@ -314,8 +323,11 @@ const handleCourses = async (event, newValue)=>{
       setSelectedCourses(courses);
     }
 }
+const handleDate = (date: Date | null) => {
+    setDate(date);
+  };
   return (
-
+<MuiPickersUtilsProvider utils={DateFnsUtils}>
     <Grid container direction="column" justify="flex-start" alignItems="center">
       <CssBaseline />
 
@@ -547,6 +559,25 @@ const handleCourses = async (event, newValue)=>{
     fullWidth
     autoFocus={(errors["jobDesc"]) ? true : false}
   />
+
+        <Grid container justify="space-around">
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="dd/MM/yyyy"
+            margin="normal"
+            id="date-of-expiry"
+            label="Date of Expiry"
+            value={dateOfExpiry}
+            onChange={handleDate}
+            helperText="Defaults to 3 months from now"
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+      </Grid>
+
+
   <Button
     type="submit"
     fullWidth
@@ -557,9 +588,9 @@ const handleCourses = async (event, newValue)=>{
       Post Job
     </Button>
   </form>
-
 </div>
 </Grid>
+</MuiPickersUtilsProvider>
 )
 }
 

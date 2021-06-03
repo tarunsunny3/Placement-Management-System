@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/AutoComplete';
 import {createFilterOptions} from '@material-ui/lab';
+import CssBaseline from '@material-ui/core/CssBaseline';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -17,12 +18,14 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     // width: '100%', // Fix IE 11 issue.
+    // backgroundColor: theme.palette.secondary.main,
     margin: theme.spacing(3),
     padding: theme.spacing(4)
   },
   heading:{
     textAlign: 'center',
-    color: 'teal',
+    color:
+      theme.palette.type === 'light' ? theme.palette.grey[900] : theme.palette.grey[50],
     marginTop: '5%'
   },
   newTextField:{
@@ -74,6 +77,7 @@ let courses1: CourseType[]= availableCourses;
   return (
 
 <Grid container className={classes.root} direction="column" justify="space-around" alignItems="center">
+  <CssBaseline />
     <div>  <Typography variant="h4" className={classes.heading}>
         Basic Details
       </Typography>
@@ -104,6 +108,7 @@ let courses1: CourseType[]= availableCourses;
   <Autocomplete
     id="course"
     options={courses1}
+    value={props.values.courseName}
     freeSolo
     filterOptions={(options, params) => {
       const filtered = filter(options, params);

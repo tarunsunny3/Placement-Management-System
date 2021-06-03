@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
+var mongoXlsx = require('mongo-xlsx');
 const Job =  require('../db/jobSchema');
 const Course = require('../db/coursesSchema');
-
+const User = require('../db/userSchema');
+const {requireAuth} = require('../middleware/authToken');
 //Get all company companyNames
 router.get('/getCompanyNames', (req, res)=>{
   Job.find({}, (err, jobs)=>{
@@ -40,10 +42,12 @@ router.post('/addCourse',  (req, res)=>{
 })
 
 router.get("/getJobs", (req, res)=>{
+
   Job.find({}, (err, jobs)=>{
     if(err){
       throw err;
     }else{
+      // console.log(jobs);
       res.json({jobs});
     }
   }
@@ -59,7 +63,9 @@ router.post('/uploadJob', (req, res)=>{
   jobType,
   minCgpa,
   gateScore,
-  courses
+  courses,
+  year,
+  dateOfExpiry
 } = req.body;
 const job = new Job({
   companyName: company,
@@ -69,7 +75,9 @@ const job = new Job({
   jobType,
   minCgpa,
   gateScore,
-  courses
+  courses,
+  year,
+  dateOfExpiry
 })
 job.save();
 res.json({
@@ -77,5 +85,31 @@ res.json({
   data: job
 })
 });
+
+router.post('/addUserToJob', requireAuth, async (req, res)=>{
+  const {jobId} = req.body;
+  const userID = req.decoded.id;
+  const job = await Job.findOne({_id: jobId});
+  if(!job.users.includes(userID)){
+    job.users.push(userID);
+  }
+
+  try {
+    const doc = await job.save();
+    const user = await User.findOne({_id: userID});
+    user.appliedJobs.push(jobId);
+    const updatedUser = await user.save();
+    // const populatedJob = await Job.findOne({_id: jobId}).populate("users");
+    // console.log(populatedJob);
+    // console.log(updatedUser);
+    console.log(doc);
+    res.json({
+      success: true
+    })
+
+  } catch (e) {
+    console.log(e);
+  }
+})
 
 module.exports = router;

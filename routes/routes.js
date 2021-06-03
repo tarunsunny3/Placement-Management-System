@@ -1,13 +1,107 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-// const User = require('../db/userschema');
-// const { requireAuth } = require('../middlewares/authToken');
+const User = require('../db/userSchema');
+const { requireAuth } = require('../middleware/authToken.js');
 
 router.get('/', (req, res)=>{
     res.send("Hi, it works");
 })
-router.post('/register', (req, res)=>{
-  const {} = req.body;
+router.get('/decodedUser', requireAuth, (req, res)=>{
+  res.json({user: req.decoded});
+})
+
+//Logout
+router.get('/logout', requireAuth,(req, res)=>{
+  res.clearCookie('token');
+  res.sendStatus(200);
+})
+
+router.post('/sign_up', async (req, res)=>{
+  const {username, password} = req.body;
+  let userDetails = await User.findOne({username}).exec();
+  if(!userDetails){
+    const newUser = new User({
+      username,  password
+    });
+    try{
+      const doc = await newUser.save();
+      console.log(doc);
+      // console.log(doc.details);
+      res.json({
+        success: true
+      })
+    }catch(e){
+      console.log("Error is ",e);
+      res.json({
+        success: false,
+        error: "Couldn't save the doc"
+      })
+    }
+  }else{
+    res.json({
+      success: false,
+      message: "User already exists!"
+    })
+  }
+})
+router.post('/sign_in', async (req, res)=>{
+  const {username, password} = req.body;
+  const user = await User.findOne({username});
+  if(!user){
+    //User is not registered
+    res.json({
+      success: false,
+      message: "Username is not registered"
+    })
+    return;
+  }
+  user.comparePassword(password, (error, match)=>{
+    if(error) throw error;
+    if(!match) {
+      res.json({success: false, message: "Incorrect password"});
+    }else{
+        const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
+        res.cookie('token',token, {maxAge: 8640000, httpOnly: true});
+        res.status(200).json({
+            success: true,
+            result: {
+                username: user.username,
+                role: user.role,
+            }
+        })
+      }
+  })
+})
+
+//Basic Details basic_registration
+
+router.post('/register_details', requireAuth, async (req, res)=>{
+  const {phone, email} = req.body;
+  try{
+    const username = await req.decoded.username;
+    const user = await User.findOne({username});
+    user.details = {
+      phone,email
+    }
+    try{
+      const updated = await user.save();
+      console.log(updated);
+      res.json({
+        success: true
+      })
+    }catch(e){
+      console.log(e);
+      res.json({
+        success: false
+      })
+
+  }
+}catch(e){
+  console.log(e);
+  res.json({
+    success: false
+  })
+}
 })
 module.exports = router;
