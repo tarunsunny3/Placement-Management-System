@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const  bcrypt = require('bcrypt');
-const {UserDetails, userDetailsSchema} = require('./UserDetails');
+const {UserDetails, userDetailsSchema} = require('./UserDetails.js');
 var schemaOptions = {
   timestamps: true,
   toJSON: {
