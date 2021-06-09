@@ -22,6 +22,9 @@ app.use(cors({credentials: true, origin: true}));
 app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }))
 app.use(bodyParser.json({ extended: true, limit: "50mb" }));
+app.get('/', (req, res)=>{
+	res.send("Server up and running");
+})
 app.use('/api', routes);
 app.use('/job', jobRoutes);
 app.use('/profile', profileRoutes);
@@ -32,9 +35,7 @@ app.use('/profile', profileRoutes);
 // 		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
 // 	})
 // }
-app.get('/', (req, res)=>{
-	res.send("Server up and running");
-})
+
 const PORT = process.env.port || 8080;
 app.listen(PORT, () => {
 	console.log("Server started on port", PORT);
