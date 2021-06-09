@@ -3,13 +3,13 @@ import LinearProgress, { LinearProgressProps } from '@material-ui/core/LinearPro
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number, uploadState: string }) {
   const {value, uploadState} = props;
   return (
     (uploadState==='uploading') && (
     <Box display="flex" alignItems="center" style={{marginTop :  "2%"}} >
       <Box width="100%" mr={1}>
-        <LinearProgress variant="determinate" {...props} />
+        <LinearProgress variant="determinate" value={value} />
       </Box>
       <Box style={{width: "20%"}}>
         <Typography variant="body2" color="textSecondary">{value}%</Typography>

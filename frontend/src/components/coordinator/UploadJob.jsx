@@ -17,7 +17,6 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 const filter = createFilterOptions();
@@ -148,12 +147,12 @@ let courses1: CourseType[]= availableCourses;
     if(Object.keys(tempErrors).length===0){
 
       let data = {
-        company, location, jobPos, jobType,jobDesc, courses: selectedCourses, minCgpa: gpa, year: new Date().now().getYear(), dateOfExpiry
+        company, location, jobPos,salaryPackage, jobType,jobDesc, courses: selectedCourses, minCgpa: gpa, year: new Date().getFullYear(), dateOfExpiry
       }
       if(gateScore !== null){
         data["gateScore"] = gateScore;
        }
-      const res = await axios.post('http://localhost:8080/job/uploadJob',data, {withCredentials: true});
+      const res = await axios.post('/job/uploadJob',data, {withCredentials: true});
       const d = res.data;
       console.log(d);
       setAlert(true);

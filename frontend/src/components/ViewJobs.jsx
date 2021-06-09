@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import axios from 'axios';
+import AppContext from './AppContext';
 import useFetch from "react-fetch-hook";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -51,6 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 })
 );
 const ViewJobs =  (props) => {
+  const {user} = React.useContext(AppContext);
   const classes = useStyles();
   const [jobs, setJobs] = useState([]);
   const [currPage, setCurrPage] = useState(1);
@@ -80,23 +82,46 @@ const ViewJobs =  (props) => {
 
 
 
+  // React.useEffect(() => {
+  //   axios.get('/job/getJobs').then((response)=>{
+  //     let jobs = response.data.jobs;
+  //     if(props.user != null){
+  //       if(props.type==="default"){
+  //         setJobs(jobs.filter((job)=>!job.users.includes(props.user.id)));
+  //       }else{
+  //         console.log(props);
+  //         setJobs(jobs.filter(job=>job.users.includes(props.user.id)));
+  //       }
+  //     }
+  //
+  //   });
+  // }, [props, currPage])
+
+
   React.useEffect(() => {
     axios.get('/job/getJobs').then((response)=>{
       let jobs = response.data.jobs;
-      if(props.user != null){
-        if(props.type==="default"){
-          setJobs(jobs.filter((job)=>!job.users.includes(props.user.id)));
+      if(user != null){
+        if(user.role !== "Student"){
+          //It is a Coordinator
+          if(props.type==="open"){
+            setJobs(jobs.filter((job)=>(job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date())))));
+          }else{
+            //Closed jobs are those whose isOpen value is false
+            //and Date of expiry is crossed
+
+            setJobs(jobs.filter((job)=>job.isOpen===false || (job.dateOfExpiry !== undefined && new Date(job.dateOfExpiry) < (new Date()))));
+          }
         }else{
-          console.log(props);
-          setJobs(jobs.filter(job=>job.users.includes(props.user.id)));
+          if(props.type==="default"){
+            setJobs(jobs.filter((job)=>!job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date())))));
+          }else{
+            setJobs(jobs.filter(job=>job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date())))));
+          }
         }
       }
-
     });
-  }, [props, currPage])
-
-
-
+  }, [props, currPage]);
 
     const indexOfLastJob = currPage * jobsPerPage;
     const indexOfFirstJob = indexOfLastJob - jobsPerPage;
@@ -120,7 +145,7 @@ const ViewJobs =  (props) => {
 
           currJobs.map((job, key)=>{
             return (
-              <Job job={job} key={key} setCurrPage={setCurrPage} currPage={currPage}{...props}/>
+              <Job job={job} key={Math.random() * currPage} setCurrPage={setCurrPage} currPage={currPage}{...props}/>
             )
         })
       }
@@ -128,7 +153,7 @@ const ViewJobs =  (props) => {
       {
         Math.ceil(jobs.length/jobsPerPage) > 1 &&
       <div className={classes.pagination}>
-      <Pagination  showFirstButton showLastButton color="primary" count={Math.ceil(jobs.length/jobsPerPage)} page={currPage} onChange={(event: React.ChangeEvent<unknown>, value: number)=>setCurrPage(value)} />
+      <Pagination style={{marginBottom: "5%"}} showFirstButton showLastButton color="primary" count={Math.ceil(jobs.length/jobsPerPage)} page={currPage} onChange={(event: React.ChangeEvent<unknown>, value: number)=>setCurrPage(value)} />
       </div>
     }
       </div>

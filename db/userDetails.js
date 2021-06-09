@@ -37,7 +37,8 @@ email: {
         },
     required: true
 },
-profilePicturePath: String, //store the path to profilepic
+profilePictureLink: String, //store the path to profilepic
+resumeLink: String,
 gender:{
     type: String,
     enum: [
@@ -46,17 +47,15 @@ gender:{
         'Other'
     ]
 },
-course: {
-    type: String,
-},
-semesters:{
-    type: Number,
-},
+courseName: String,
+semesters: Number,
+semesterWisePercentage: Array,
 tenthCgpa: Number,
 twelfthCgpa: Number,
 branchName: String,
 gateScore: Number,
 ugPercentage: Number,
+pgPercentage: Number,
 otherAcademicsName: String,
 otherAcademicPercentage: Number
 }, schemaOptions);

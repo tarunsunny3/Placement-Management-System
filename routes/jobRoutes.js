@@ -5,6 +5,62 @@ const Job =  require('../db/jobSchema');
 const Course = require('../db/coursesSchema');
 const User = require('../db/userSchema');
 const {requireAuth} = require('../middleware/authToken');
+const fileSystem = require('fs');
+const path = require("path");
+const excel = require('exceljs');
+router.get('/file/:jobId', async (req, res)=>{
+  const jobId = req.params.jobId;
+  const populatedJob = await Job.findOne({_id: jobId}).populate({
+    path: "users",
+    select: "details"
+  })
+  // console.log(populatedJob);
+  let userDetails = [];
+  populatedJob.users.map((user, key)=>{
+    const {phone, email} = user.details;
+    let data = {};
+    data["phone"] = phone,
+    data["id"] = user._id;
+    data["email"] = email;
+    userDetails.push(data);
+  })
+  console.log(userDetails);
+  // let newJobs = [];
+  // jobs.map((job, key)=>{
+  //
+  // })
+  let workbook = new excel.Workbook(); //creating workbook
+	let worksheet = workbook.addWorksheet('User Details of '+populatedJob.companyName); //creating worksheet
+
+	//  WorkSheet Header
+	worksheet.columns = [
+		{ header: 'Id', key: 'id', width: 40 },
+		{ header: 'Phone number', key: 'phone', width: 30 },
+		{ header: 'EMAIL', key: 'email', width: 30},
+	];
+
+	// Add Array Rows
+	worksheet.addRows(userDetails);
+  const fileName = "students_applied_" + populatedJob.companyName + ".xlsx" ;
+	// Write to File
+	await workbook.xlsx.writeFile(fileName);
+
+
+  // var filePath = path.join(__dirname, 'jobs.xlsx');
+  res.download(path.resolve(fileName), (err)=>{
+    if(err){
+      console.log("Errrrror is ", err);
+    }else{
+      console.log("Success");
+      const stats = fileSystem.statSync(path.resolve(fileName));
+      const fileSizeInBytes = stats.size;
+      //Delete the file just downloaded from the server after some time
+      setTimeout(()=>{
+        fileSystem.unlinkSync(path.resolve(fileName));
+      }, (fileSizeInBytes/2))
+    }
+  });
+})
 //Get all company companyNames
 router.get('/getCompanyNames', (req, res)=>{
   Job.find({}, (err, jobs)=>{
@@ -59,22 +115,24 @@ router.post('/uploadJob', (req, res)=>{
   const {company,
   location,
   jobDesc,
-  jobPosition,
+  jobPos,
   jobType,
   minCgpa,
   gateScore,
   courses,
   year,
+  salaryPackage,
   dateOfExpiry
 } = req.body;
 const job = new Job({
   companyName: company,
   location,
   jobDesc,
-  jobPosition,
+  jobPosition: jobPos,
   jobType,
   minCgpa,
   gateScore,
+  salaryPackage,
   courses,
   year,
   dateOfExpiry
@@ -86,9 +144,27 @@ res.json({
 })
 });
 
+router.post('/updateJob', requireAuth, async (req, res)=>{
+  const { _id, updateData} = req.body;
+  try{
+    const job = await Job.findOneAndUpdate({_id}, updateData, {
+    new: true
+    });
+    console.log(job);
+    res.json({
+      success: true
+    });
+  }catch(e){
+    console.log(e);
+    res.json({
+      success: false
+    })
+  }
+})
 router.post('/addUserToJob', requireAuth, async (req, res)=>{
   const {jobId} = req.body;
   const userID = req.decoded.id;
+  console.log(userID);
   const job = await Job.findOne({_id: jobId});
   if(!job.users.includes(userID)){
     job.users.push(userID);

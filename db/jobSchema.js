@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const jobSchema = new mongoose.Schema({
   companyName: String,
   location: String,
@@ -8,9 +9,14 @@ const jobSchema = new mongoose.Schema({
   minCgpa: Number,
   gateScore: Number,
   courses: Array,
-  year: Date,
+  year: Number,
+  salaryPackage: Number,
   dateOfExpiry: Date,
-  isOpen: Boolean,
+  closingDate: Date,
+  isOpen: {
+    type: Boolean,
+    default: true
+  },
   noOfStudentsPlaced: Number,
   users: [
     {

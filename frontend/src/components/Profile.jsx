@@ -1,8 +1,7 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {storage } from './firebaseConfig';
 import LinearProgressWithLabel from './LinearProgressWithLabel.js';
 import {v4 as uuidv4} from 'uuid';
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
@@ -11,7 +10,6 @@ class UploadImage extends React.Component {
 
   constructor(props){
     super(props);
-
     this.state ={
       storageRef: storage.ref(), // ADD THIS LINE
       percentUploaded: 0, // ADD THIS LINE TOO
@@ -24,6 +22,7 @@ class UploadImage extends React.Component {
     }
   }
   addFile = (event) => {
+    // event.preventDefault();
     const file = event.target.files[0];
 
     if (file) {
@@ -31,13 +30,13 @@ class UploadImage extends React.Component {
       const fileType = this.props.type;
       let fileErrors = [];
       if(fileType==="image"){
-        if(this.state.authorizedImageFileTypes.includes(file.type)){
+        if(!this.state.authorizedImageFileTypes.includes(file.type)){
           isAuthorized = false;
-          this.state.fileErrors.push("please select a file which is an image(jpg/jpeg/png)");
+          fileErrors.push({type:"error", message: "Please select a file which is an image(jpg/jpeg/png)"});
         }
         if(file.size >= 5*Math.pow(10, 6)){
           isAuthorized = false;
-          this.state.fileErrors.push("please select a file size<5MB");
+          fileErrors.push({type:"error", message:"please select a file size<5MB"});
         }
       }else if(fileType==="pdf"){
         if(file.type !== "application/pdf"){
@@ -65,23 +64,11 @@ class UploadImage extends React.Component {
 
     return this.state.fileErrors.map((message, key) =>
     (<Collapse style={{  marginTop: '20px',
-      width: '50%',
+      width: '100%',
     }} in={this.state.alertOpen}>
       <Alert
         severity={message.type}
         variant="filled"
-        // action={
-        //   <IconButton
-        //     aria-label="close"
-        //     color="inherit"
-        //     size="small"
-        //     onClick={() => {
-        //       this.setState({alertOpen: false})
-        //     }}
-        //     >
-        //       <CloseIcon fontSize="inherit" />
-        //   </IconButton>
-        // }
         >
           {message.message}
         </Alert>
@@ -96,12 +83,11 @@ class UploadImage extends React.Component {
         const fileType = this.props.type;
         let filePath="";
       // location in storage you want to create/send file to
-        if(fileType==="image"){
+        if(fileType === "image"){
            filePath = `/images/${uuidv4()}-${file.name}`;
         }else if (fileType==="pdf"){
           filePath = `/resumes/${uuidv4()}-${file.name}`;
         }
-
         this.setState({
           uploadState: "uploading"
         })
@@ -126,7 +112,13 @@ class UploadImage extends React.Component {
               () => {
                 this.state.uploadTask.snapshot.ref.getDownloadURL().then(downloadUrl => {
                   this.setState({ uploadState: 'done' },()=>{
-                      alert('this is the download url', downloadUrl);
+                      if(fileType==="image"){
+                        this.props.handleProfilePicture(downloadUrl);
+                      }else if(fileType==="pdf"){
+                        //It is a resume
+                        this.props.handleResume(downloadUrl);
+                      }
+                      // alert('this is the download url', downloadUrl);
                   })
 
 
@@ -149,7 +141,7 @@ class UploadImage extends React.Component {
   }
   handleSubmit = event => {
     event.preventDefault();
-   this.uploadFile(this.state.file);
+    this.uploadFile(this.state.file);
   };
 
 componentWillUnmount(){
@@ -162,25 +154,16 @@ render(){
   return (
 <div>
     <form onSubmit={this.handleSubmit}>
-      <p>Choose a file</p>
-    {/* {this.state.fileErrors.length>0 && <IconButton
-      aria-label="close"
-      color="inherit"
-      size="small"
-      onClick={() => {
-        this.setState({ fileErrors: []})
-      }}
-      >
-      Close<CloseIcon fontSize="inherit" />
-    </IconButton>} */}
+        <p> {this.props.type==="image"? "Choose the profile picture" : "Select the resume file" }</p>
+    {this.state.uploadState === 'done' && <p style={{color: "green", fonrtWeight: "600"}}>Uploaded Successfully</p>}
     {this.handleErrors()}
       <input  onChange={this.addFile}
-              disabled={this.state.uploadState === 'uploading'}
+              disabled={this.state.uploadState === 'uploading' }
               name="file"
               type="file"
-              accept="application/pdf"
+              accept={this.props.type==="image"? "image/*" : "application/pdf" }
             />
-      <Button style={{marginTop: "2%", display: "block"}} variant="contained" color="primary" type="submit" >Upload</Button>
+      <Button style={{marginTop: "2%"}}  variant="contained" color="primary" type="submit" >Upload</Button>
     </form>
 
     <LinearProgressWithLabel value={this.state.percentUploaded} uploadState={this.state.uploadState} />

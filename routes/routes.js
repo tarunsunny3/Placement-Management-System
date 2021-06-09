@@ -7,8 +7,15 @@ const { requireAuth } = require('../middleware/authToken.js');
 router.get('/', (req, res)=>{
     res.send("Hi, it works");
 })
-router.get('/decodedUser', requireAuth, (req, res)=>{
-  res.json({user: req.decoded});
+router.get('/decodedUser', requireAuth, async (req, res)=>{
+  const user = req.decoded;
+  if(user.id === null){
+    res.json({user: req.decoded});
+  }else{
+    const userDetails = await User.findOne({_id: user.id});
+    res.json({user: userDetails});
+  }
+
 })
 
 //Logout
@@ -62,7 +69,7 @@ router.post('/sign_in', async (req, res)=>{
       res.json({success: false, message: "Incorrect password"});
     }else{
         const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
-        res.cookie('token',token, {maxAge: 8640000, httpOnly: true});
+        res.cookie('token',token, {maxAge: 8640000, httpOnly: false});
         res.status(200).json({
             success: true,
             result: {
@@ -77,12 +84,14 @@ router.post('/sign_in', async (req, res)=>{
 //Basic Details basic_registration
 
 router.post('/register_details', requireAuth, async (req, res)=>{
-  const {phone, email} = req.body;
+  const {firstName, lastName, branchName, courseName, semesters, phone, email, semGrades, pg, ug, gateScore,twelfthCgpa, tenthCgpa, profilePictureLink, resumeLink} = req.body;
   try{
     const username = await req.decoded.username;
     const user = await User.findOne({username});
     user.details = {
-      phone,email
+      firstName, lastName, courseName, semesters, phone,email,semesterWisePercentage: semGrades, branchName,
+       gateScore, ugPercentage: ug, pgPercentage:pg,
+       tenthCgpa, twelfthCgpa, profilePictureLink, resumeLink
     }
     try{
       const updated = await user.save();

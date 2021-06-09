@@ -1,5 +1,9 @@
 import React, {useState} from 'react';
+import {Redirect} from 'react-router-dom'
+import welcomeImage from './welcome.png';
 import axios from 'axios';
+import {withRouter} from 'react-router-dom';
+import AppContext from './AppContext';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -25,6 +29,8 @@ import clsx from 'clsx';
 import Alert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from '@material-ui/core/Backdrop';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -43,11 +49,12 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
   },
   image: {
-    backgroundImage: 'url(https://source.unsplash.com/random)',
+    // backgroundImage: 'url(https://source.unsplash.com/random)',
+    backgroundImage: `url(${welcomeImage})`,
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'cover',
+    backgroundSize: 'contain',
     backgroundPosition: 'center',
   },
   paper: {
@@ -73,14 +80,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+const  Login = (props) => {
+  const {history} = props;
+  const {user, getUserAgain, setGetUserAgain} = React.useContext(AppContext);
   const classes = useStyles();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("18mcme14");
+  const [password, setPassword] = useState("9603877545");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [alert, setAlert] = useState(false);
   const [open, setOpen] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({message: "", type: ""});
   const handleClickShowPassword = () => {
    setShowPassword(!showPassword);
@@ -107,12 +117,19 @@ export default function Login() {
      const res = await axios.post('/api/sign_in',data, {withCredentials: true});
      const d = res.data;
      console.log(d);
+
      if(d.success){
-       if(d.result.role==="Student"){
-        window.location.replace('/studentReg');
-      }else if(d.result.role==="Coordinator"){
-        window.location.replace('/viewJobs');
-      }
+       setLoading(true);
+       setGetUserAgain(!getUserAgain);
+       //Since it takes some time time to get the new user details again
+       //We are setting a timeout of 400ms after which we will change the routes
+       setTimeout(()=>{
+         if(d.result.role==="Student"){
+          history.push('/studentReg');
+        }else if(d.result.role==="Coordinator"){
+          history.push('/view');
+        }
+      }, 400);
      }else{
        setAlert(true);
        setOpen(true);
@@ -124,7 +141,8 @@ export default function Login() {
  const showAlert = ()=>{
    if(alert){
 
-   return(<Collapse className={classes.alert} in={open}>
+   return(
+     <Collapse className={classes.alert} in={open}>
      <Alert
        severity={message.type}
        variant="filled"
@@ -145,9 +163,19 @@ export default function Login() {
        </Alert>
      </Collapse>)}
 
- }
+}
   return (
-    <Grid container component="main" className={classes.root}>
+
+
+  loading ?
+
+  <Backdrop  open={loading} onClick={()=>setLoading(false)}>
+    <p style={{fontSize: 50}}>Logging in</p> <CircularProgress style={{marginLeft: "2%"}} color="inherit" />
+</Backdrop>
+:
+  // user==null || user.id == null
+  // ?
+  <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -223,7 +251,7 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/register" variant="body2">
+                <Link style={{cursor: "pointer"}} onClick={()=>history.push("/register")} variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -235,5 +263,14 @@ export default function Login() {
         </div>
       </Grid>
     </Grid>
+    // :
+    // (
+    //   user.role==="Student"
+    //   ?
+    //   <Redirect to="/studentReg"/>
+    //   :
+    //   <Redirect to="/view"/>
+    // )
   );
 }
+export default withRouter(Login);
