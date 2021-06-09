@@ -1,4 +1,6 @@
+if(process.env.NODE_ENV !== "production"){
 require('dotenv').config({path:'./config/config.env'});
+}
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require('path');
@@ -24,12 +26,15 @@ app.use('/api', routes);
 app.use('/job', jobRoutes);
 app.use('/profile', profileRoutes);
 //Serve  static files
-if(process.env.NODE_ENV == 'production'){
-	app.use(express.static(path.resolve(__dirname, 'frontend', 'build')));
-	app.get('*', (req, res)=>{
-		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-	})
-}
+// if(process.env.NODE_ENV == 'production'){
+// 	app.use(express.static(path.resolve(__dirname, 'frontend', 'build')));
+// 	app.get('*', (req, res)=>{
+// 		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+// 	})
+// }
+app.get('/', (req, res)=>{
+	res.send("Server up and running");
+})
 const PORT = process.env.port || 8080;
 app.listen(PORT, () => {
 	console.log("Server started on port", PORT);
