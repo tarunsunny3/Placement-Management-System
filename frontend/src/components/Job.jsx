@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import axios from 'axios';
+import url from '../apiUrl.js';
 import {withRouter} from 'react-router-dom';
 import AppContext from './AppContext';
 import { makeStyles } from '@material-ui/core/styles';
@@ -79,7 +80,7 @@ function Alert(props: AlertProps) {
 }
 const Job = (props) => {
   const {job, type, currPage, setCurrPage, location, history} = props;
-  const urlToServer = encodeURI("http://localhost:8080/job/file/" + job._id);
+  const urlToServer = encodeURI(`${url}/job/file/${job._id}`);
   const jobNotExpired = (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry) > (new Date())));
   const {user} = React.useContext(AppContext);
   const classes = useStyles();
@@ -103,7 +104,7 @@ const Job = (props) => {
     setDialogOpen(false);
     setAlert({open: true, type: "success", message: "Successfully applied to the job"});
     setApplied(true);
-    const res =  await axios.post('/job/addUserToJob', {jobId}, {withCredentials: true});
+    const res =  await axios.post(`${url}/job/addUserToJob`, {jobId}, {withCredentials: true});
 
   }
 const handleDialogClose = () => {;
@@ -121,7 +122,7 @@ const closeJob = async (jobId)=>{
       isOpen: false
     }
   }
-  const res = await axios.post("/job/updateJob", data, {withCredentials: true})
+  const res = await axios.post(`${url}/job/updateJob`, data, {withCredentials: true})
   setAlert({open: true, type: "success", message: "Closed the Job successfully"});
   // props.setRefresh(true);
   setDisabled(true);
@@ -135,13 +136,13 @@ const deleteJob = async (jobId)=>{
     }
   }
   setAlert({open: true, type: "success", message: "Deleted the Job successfully"});
-  const res = await axios.post("/job/updateJob", data, {withCredentials: true})
+  const res = await axios.post(`${url}/job/updateJob`, data, {withCredentials: true})
   setClosed(true);
 }
-const downloadExcelFile = async ()=>{
-  const res = await axios.get("/job/file", {withCredentials: true});
-  console.log(res);
-}
+// const downloadExcelFile = async ()=>{
+//   const res = await axios.get("/job/file", {withCredentials: true});
+//   console.log(res);
+// }
   return (
     <div className={classes.gridItem} key={job._id}>
       { !closed &&

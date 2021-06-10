@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import url from '../apiUrl.js';
 import axios from 'axios';
 import AppContext from './AppContext';
 import useFetch from "react-fetch-hook";
@@ -99,7 +100,7 @@ const ViewJobs =  (props) => {
 
 
   React.useEffect(() => {
-    axios.get('/job/getJobs').then((response)=>{
+    axios.get(`${url}/job/getJobs`).then((response)=>{
       let jobs = response.data.jobs;
       if(user != null){
         if(user.role !== "Student"){

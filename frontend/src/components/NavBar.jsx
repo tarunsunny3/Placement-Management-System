@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import url from '../apiUrl.js';
 import {withRouter} from 'react-router-dom';
 import axios from 'axios';
 import AppContext from './AppContext';
@@ -97,7 +98,7 @@ const  NavBar = (props)=> {
   }
   const Logout = async  ()=>{
     setUser({id: null});
-    await axios.get('/api/logout');
+    await axios.get(`${url}/api/logout`);
     history.push('/login');
   }
   const mobileMenuId = 'primary-search-account-menu-mobile';

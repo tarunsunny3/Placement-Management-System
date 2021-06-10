@@ -69,7 +69,7 @@ router.post('/sign_in', async (req, res)=>{
       res.json({success: false, message: "Incorrect password"});
     }else{
         const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
-        res.cookie('token',token, {maxAge: 8640000, httpOnly: false});
+        res.cookie('token',token, {maxAge: 8640000, httpOnly: false, sameSite: "lax"});
         res.status(200).json({
             success: true,
             result: {

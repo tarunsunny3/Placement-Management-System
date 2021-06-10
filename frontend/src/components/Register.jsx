@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import url from '../apiUrl.js';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -93,7 +94,7 @@ export default function Register() {
      const data = {
        username, password
      }
-     const res = await axios.post('/api/sign_up',data, {withCredentials: true});
+     const res = await axios.post(`${url}/api/sign_up`,data, {withCredentials: true});
      const d = res.data;
      console.log(d);
      if(d.success){

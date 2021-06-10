@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import url from '../../apiUrl.js';
 import {  ThemeProvider, CssBaseline,Typography,InputBase, Grid,Button, FormControl, FormControlLabel, FormLabel, Radio,RadioGroup} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -108,7 +109,7 @@ const UploadJob = (props) => {
   }
   React.useEffect(() => {
     async function fetchCourses() {
-      const res = await axios.get('/job/getCourses');
+      const res = await axios.get(`${url}/job/getCourses`);
       const data = res.data;
       setAvailableCourses(data.courses);
     }
@@ -152,7 +153,7 @@ let courses1: CourseType[]= availableCourses;
       if(gateScore !== null){
         data["gateScore"] = gateScore;
        }
-      const res = await axios.post('/job/uploadJob',data, {withCredentials: true});
+      const res = await axios.post(`${url}/job/uploadJob`,data, {withCredentials: true});
       const d = res.data;
       console.log(d);
       setAlert(true);
@@ -167,7 +168,7 @@ let courses1: CourseType[]= availableCourses;
   useEffect(() => {
     async function fetchCompanyNames() {
 
-      let response = await axios.get('http://localhost:8080/job/getCompanyNames');
+      let response = await axios.get(`${url}/job/getCompanyNames`);
       // setCompanies(respons)
       setCompanies(response.data.companyNames);
 
@@ -299,7 +300,7 @@ const handleCourses = async (event, newValue)=>{
       setErrors({...errors, "courses" : ""});
       // newValue[newValue.length-1] = {"courseName":  newValue[newValue.length-1]};
       setSelectedCourses([...selectedCourses,  newValue[newValue.length-1]]);
-      const res = await axios.post("http://localhost:8080/job/addCourse", data, {withCredentials: true});
+      const res = await axios.post(`${url}/job/addCourse`, data, {withCredentials: true});
       console.log(res.data);
     }
     if(newValue.length>0 && newValue[newValue.length-1].inputValue) {
@@ -311,7 +312,7 @@ const handleCourses = async (event, newValue)=>{
       setErrors({...errors, "courses" : ""});
       setSelectedCourses([...selectedCourses,  newValue[newValue.length-1].inputValue]);
 
-      const res = await axios.post("http://localhost:8080/job/addCourse", data, {withCredentials: true});
+      const res = await axios.post(`${url}/job/addCourse`, data, {withCredentials: true});
       console.log(res.data);
     } else {
       setErrors({...errors, "courses" : ""});
