@@ -73,7 +73,7 @@ router.post('/sign_in', async (req, res)=>{
         if(user.details === undefined){
           reg = true;
         }
-        res.cookie('token',token, {maxAge: 8640000, httpOnly: false, sameSite: "strict"});
+        res.cookie('token',token, {maxAge: 8640000, httpOnly: false, sameSite: "none", secure: true});
         res.status(200).json({
             success: true,
             reg,

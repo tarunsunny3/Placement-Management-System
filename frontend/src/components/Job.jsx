@@ -228,8 +228,12 @@ const deleteJob = async (jobId)=>{
               job.dateOfExpiry !== undefined
               &&
               <>
-
-               <Chip label={"Date of Expiry: " + formattedDate} className={`${classes.chip} ${classes.chips}`} color="primary" variant="default"></Chip>
+              <p><b>Apply by</b></p>
+              <div className={classes.wrapper}>
+                <i className="fas fa-hourglass-half fa-3x"></i>
+                <Chip style={{marginLeft: "4%", marginTop: "1%"}} label={formattedDate} color="primary" variant="default"></Chip>
+              </div>
+               {/*<Chip label={"Date of Expiry: " + formattedDate} className={`${classes.chip} ${classes.chips}`} color="primary" variant="default"></Chip>*/}
             </>
             }
 

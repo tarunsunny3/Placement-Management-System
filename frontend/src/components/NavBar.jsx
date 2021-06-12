@@ -169,6 +169,7 @@ const  NavBar = (props)=> {
               <div className={classes.headerItems}>
                 <Button variant="contained" className = {classes.headerItem} onClick = {(event)=>onButtonClick(event, "/login")}>Login</Button>
                 <Button variant="contained" className = {classes.headerItem} onClick = {(e)=>onButtonClick(e, "/register")}> Register</Button>
+                <MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon className={classes.menuIcons}/><span className={classes.iconText}>Logout</span></MenuItem>
               </div>
               </>)
             :
