@@ -74,13 +74,18 @@ const BasicReg = (props) => {
     courseName: string;
   }
   React.useEffect(() => {
+    let mounted = true;
     async function fetchCourses() {
       const res = await axios.get(`${url}/job/getCourses`);
       const data = res.data;
-      setAvailableCourses(data.courses);
+      if(mounted){
+        setAvailableCourses(data.courses);
+      }
     }
     fetchCourses();
-
+    return function cleanup() {
+        mounted = false
+    }
   }, [])
 
 let courses1: CourseType[]= availableCourses;
@@ -97,8 +102,6 @@ const goNext = (e)=>{
     ?
     (<p>Loading..</p>)
     :
-    (user.details === undefined)
-    ?
 <Grid container className={classes.root} direction="column" justify="space-around" alignItems="center">
   <CssBaseline />
     <div>
@@ -273,8 +276,7 @@ const goNext = (e)=>{
 
     </div>
 </Grid>
-:
-<Redirect to="/view"/>
+
 )
 }
 

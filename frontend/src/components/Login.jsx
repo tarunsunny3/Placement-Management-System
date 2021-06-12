@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
 
 const  Login = (props) => {
   const {history} = props;
-  const {user, getUserAgain, setGetUserAgain} = React.useContext(AppContext);
+  const {setLoggedIn} = React.useContext(AppContext);
   const classes = useStyles();
   const [username, setUsername] = useState("18mcme14");
   const [password, setPassword] = useState("9603877545");
@@ -120,17 +120,16 @@ const  Login = (props) => {
      console.log(d);
 
      if(d.success){
-       setLoading(true);
-       setGetUserAgain(!getUserAgain);
-       //Since it takes some time time to get the new user details again
-       //We are setting a timeout of 400ms after which we will change the routes
-       setTimeout(()=>{
-         if(d.result.role==="Student"){
-          history.push('/studentReg');
-        }else if(d.result.role==="Coordinator"){
-          history.push('/view');
+       setLoggedIn(true);
+       if(d.result.role==="Student"){
+         if(d.reg){
+           history.push('/studentReg');
+         }else{
+            history.push('/view');
+         }
+       }else if(d.result.role==="Coordinator"){
+         history.push('/view');
         }
-      }, 400);
      }else{
        setAlert(true);
        setOpen(true);

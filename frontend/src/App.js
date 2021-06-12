@@ -18,10 +18,10 @@ import Brightness3Icon from "@material-ui/icons/Brightness3";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 function App() {
   const [theme, setTheme] = useState(true);
-  const [user, setUser] =useState(null);
+  const [user, setUser] = useState({});
   //After logout to be able to get the user again in Login we need to use
   //this variable to hit the backend again
-  const [getUserAgain, setGetUserAgain] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const icon = !theme ? <Brightness7Icon /> : <Brightness3Icon />;
   const appliedTheme = createMuiTheme(theme ? light : dark);
 
@@ -32,12 +32,12 @@ function App() {
        setUser(data.user);
      }
      fetchUser();
-  }, [getUserAgain]);
+  }, [loggedIn]);
   const userDetails = {
     user,
     setUser,
-    getUserAgain,
-    setGetUserAgain
+    loggedIn,
+    setLoggedIn
   }
   return (
     <>

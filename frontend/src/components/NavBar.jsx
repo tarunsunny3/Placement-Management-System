@@ -42,26 +42,32 @@ const useStyles = makeStyles((theme) => ({
   iconText: {
     marginLeft: "10px"
   },
-  sectionMobile: {
-      display: 'flex',
-      [theme.breakpoints.up('md')]: {
-        display: 'none',
-      },
-    },
+  sectionDesktop: {
+     display: 'none',
+     [theme.breakpoints.up('md')]: {
+       display: 'flex',
+     },
+   },
+   sectionMobile: {
+     display: 'flex',
+     [theme.breakpoints.up('md')]: {
+       display: 'none',
+     },
+   },
 }));
 
 
 const  NavBar = (props)=> {
   const {history} = props;
-  const {user, setUser} = React.useContext(AppContext);
+  const {user, setLoggedIn} = React.useContext(AppContext);
   const theme = useTheme();
   // const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   // const user = userDetails.user;
-  // const isMenuOpen = Boolean(anchorEl);
-  console.log(user);
+  const isMenuOpen = Boolean(anchorEl);
+  // console.log(user);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -89,6 +95,7 @@ const  NavBar = (props)=> {
   const handleMenuClick = (e, pageURL) => {
     e.preventDefault();
     setAnchorEl(null);
+    // setMobileMoreAnchorEl(null);
     history.push(pageURL);
   };
 
@@ -97,8 +104,8 @@ const  NavBar = (props)=> {
     history.push(pageURL);
   }
   const Logout = async  ()=>{
-    setUser({id: null});
     await axios.get(`${url}/api/logout`);
+    setLoggedIn(false);
     history.push('/login');
   }
   const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -112,22 +119,14 @@ const  NavBar = (props)=> {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
+      {
+        user.role==="Coordinator"
+        &&
+        <MenuItem onClick={(e)=>handleMenuClick(e, "/job")}><VisibilityIcon /><span className={classes.iconText}>Upload Job</span></MenuItem>
+      }
+
+      <MenuItem onClick={(e)=>handleMenuClick(e, "/view")}><VisibilityIcon /><span className={classes.iconText}>View Jobs</span></MenuItem>
+
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -141,13 +140,25 @@ const  NavBar = (props)=> {
       </MenuItem>
     </Menu>
   );
+  const menuId = 'primary-search-account-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+    </Menu>
+  );
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton> */}
           <Typography variant="h6" className={classes.title}>
             UoH
           </Typography>
@@ -164,7 +175,7 @@ const  NavBar = (props)=> {
             (
 
               <div>
-              <div className={classes.sectionMobile}>
+            <div className={classes.sectionMobile}>
               <IconButton
                 aria-label="show more"
                 aria-controls={mobileMenuId}
@@ -174,42 +185,60 @@ const  NavBar = (props)=> {
               >
                 <MoreIcon />
               </IconButton>
-            </div>
-            {renderMobileMenu}
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-            <AccountCircle/>
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={open}
-              onClose={()=>setAnchorEl(null)}
-            >
+          </div>
+
+
+
+            <div className={classes.sectionDesktop}>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+              <AccountCircle/>
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={()=>setAnchorEl(null)}
+              >
+
               {user.username}
               <MenuItem onClick={(e)=>handleMenuClick(e, "/profile")}><VisibilityIcon /><span className={classes.iconText}>View Profile</span></MenuItem>
               <MenuItem onClick={(e)=>handleMenuClick(e, "/updateProfile")}><EditTwoToneIcon /><span className={classes.iconText}>Edit Profile</span></MenuItem>
               <MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon className={classes.menuIcons}/><span className={classes.iconText}>Logout</span></MenuItem>
-            </Menu>
+                </Menu>
+                {/* {renderMenu} */}
+            </div>
 
           </div>
 
         )
           }
+          <div className={classes.sectionMobile}>
+          <IconButton
+            aria-label="show more"
+            aria-controls={mobileMenuId}
+            aria-haspopup="true"
+            onClick={handleMobileMenuOpen}
+            color="inherit"
+          >
+            <MoreIcon />
+          </IconButton>
+        </div>
+        {renderMobileMenu}
 
         </Toolbar>
       </AppBar>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import url from '../apiUrl.js';
 import {withRouter} from 'react-router-dom';
 import AppContext from './AppContext';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -25,6 +25,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import Chip from '@material-ui/core/Chip';
 import Tooltip from '@material-ui/core/Tooltip';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -70,14 +72,40 @@ const useStyles = makeStyles((theme) => ({
   chips: {
     margin: "3% auto 3% auto",
     display: "flex",
-    justifyContent: "space-between",
-    flex: 1
+    flexWrap: 'wrap',
+    direction: 'row',
+    justifyContent: "space-around",
+    // alignItems: "center"
+  },
+  chipItem:{
+    // marginTop: "100%",
+    marginLeft: "20%",
+    // marginRight: "50%"
+  },
+  wrapper:{
+    display: "flex",
+    flexDirection: "row",
+    // justifyContent: "center",
+    // alignItems: "center"
   }
 })
 );
 function Alert(props: AlertProps) {
   return <MuiAlert variant="filled" {...props} />;
 }
+const StyledInput = withStyles({
+  root: {
+    '& fieldset': {
+        borderColor: '#03256c',
+      },
+      textTransform: 'capitalize',
+      '& input:valid:focus + fieldset': {
+        borderLeftWidth: 7,
+        padding: '4px !important', // override inline-style
+    },
+  },
+
+})(TextField);
 const Job = (props) => {
   const {job, type, currPage, setCurrPage, location, history} = props;
   const urlToServer = encodeURI(`${url}/job/file/${job._id}`);
@@ -147,7 +175,7 @@ const deleteJob = async (jobId)=>{
     <div className={classes.gridItem} key={job._id}>
       { !closed &&
       <div>
-      <Card style={{backgroundColor: "#fff5eb"}} className={classes.root}>
+      <Card style={{backgroundColor: "#f4eee8"}} className={classes.root}>
         <CardActionArea>
           {
             (user && user.role!=="Student") &&
@@ -160,9 +188,28 @@ const deleteJob = async (jobId)=>{
             {job.companyName}
             </Typography>
             <div className={classes.chips}>
-            <Chip label={job.jobPosition} color="secondary" variant="default"></Chip>
-            <Chip label={job.salaryPackage} color="primary" variant="default"></Chip>
-            <Chip label={job.location} color="secondary" variant="default"></Chip>
+              <div>
+                <p>Location</p>
+                <div className={classes.wrapper}>
+                  <i className="fas fa-map-marker-alt fa-3x"></i>
+                <Chip style={{marginLeft: "4%", marginTop: "5%"}} label={job.location} color="secondary" variant="default"></Chip>
+                </div>
+              </div>
+
+              <div>
+                <p>Salary Package</p>
+                <div className={classes.wrapper}>
+                  <i className="fas fa-rupee-sign fa-3x"></i>
+                  <Chip style={{marginLeft: "4%", marginTop: "5%"}} label={job.salaryPackage} color="primary" variant="default"></Chip>
+                </div>
+              </div>
+              <div>
+                <p>Job Position</p>
+                <div className={classes.wrapper}>
+                  <i className="fas fa-user fa-3x"></i>
+                  <Chip style={{marginLeft: "4%", marginTop: "5%"}} label={job.jobPosition} color="secondary" variant="default"></Chip>
+                </div>
+              </div>
             </div>
             <Typography variant="body2"  component="p">
               {jobDesc+"..."}
@@ -213,7 +260,7 @@ const deleteJob = async (jobId)=>{
   )
   &&
   (
-    <TextField
+    <StyledInput
       label="Number of students placed"
       fullWidth
       variant="outlined"

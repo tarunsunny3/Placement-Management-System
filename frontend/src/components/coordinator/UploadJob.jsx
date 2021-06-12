@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import url from '../../apiUrl.js';
-import {  ThemeProvider, CssBaseline,Typography,InputBase, Grid,Button, FormControl, FormControlLabel, FormLabel, Radio,RadioGroup} from '@material-ui/core';
+import { CssBaseline,Typography, Grid,Button, FormControl, FormControlLabel, FormLabel, Radio,RadioGroup} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import {cities} from "./cities";
@@ -233,24 +233,24 @@ let courses1: CourseType[]= availableCourses;
     }
     setJobDesc(event.target.value);
   }
-  const handleSelectedCourses1 = (event, values)=>{
-    console.log("Values is ", values);
-    if(values.length > 0){
-      setErrors({...errors, "courses" : ""});
-    }else{
-      setErrors({...errors, "courses" : "Please select atleast one course"});
-    }
-    setSelectedCourses(values);
-  }
+  // const handleSelectedCourses1 = (event, values)=>{
+  //   console.log("Values is ", values);
+  //   if(values.length > 0){
+  //     setErrors({...errors, "courses" : ""});
+  //   }else{
+  //     setErrors({...errors, "courses" : "Please select atleast one course"});
+  //   }
+  //   setSelectedCourses(values);
+  // }
 
-  const handleSelectedCourses = (event)=>{
-    if(event.target.value.length > 0){
-      setErrors({...errors, "courses" : ""});
-    }else{
-      setErrors({...errors, "courses" : "Please select atleast one course"});
-    }
-    setSelectedCourses([...selectedCourses, event.target.value]);
-  }
+  // const handleSelectedCourses = (event)=>{
+  //   if(event.target.value.length > 0){
+  //     setErrors({...errors, "courses" : ""});
+  //   }else{
+  //     setErrors({...errors, "courses" : "Please select atleast one course"});
+  //   }
+  //   setSelectedCourses([...selectedCourses, event.target.value]);
+  // }
 // const handleCourses = async (event, newValue)=>{
 //   console.log("Newvalue is ", newValue);
 //     if(newValue.length === 0){

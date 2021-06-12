@@ -18,15 +18,9 @@ const ViewAllJobs = () => {
   const classes = useStyles();
   const enabled = classes.enabled, disabled = classes.disabled;
   const {user} = React.useContext(AppContext);
-  // console.log(user.details);
   const [type, setType] = useState("default");
-  // const [disable2, setDisable2] = useState(false);
-  // const [color1, setColor1] = useState("black");
-  // const [color2, setColor2] = useState("white");
   const [class1, setClass1] = useState(enabled);
-  console.log(class1);
   const [class2, setClass2] = useState(disabled);
-  // let disable1 = false, disable2 = false;
   const handleClick = (type)=>{
     setType(type);
     if(type==="default"){
@@ -36,7 +30,6 @@ const ViewAllJobs = () => {
       setClass1(disabled);
       setClass2(enabled);
     }
-
   }
   return (
     <div>
