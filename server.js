@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const path = require('path');
 const routes= require('./routes/routes.js');
 const jobRoutes = require('./routes/jobRoutes.js');
-const profileRoutes = require('./routes/profileRoute.js');
 const cookieParser = require('cookie-parser');
 const app = express();
 const cors= require('cors');
@@ -27,7 +26,6 @@ app.get('/', (req, res)=>{
 })
 app.use('/api', routes);
 app.use('/job', jobRoutes);
-app.use('/profile', profileRoutes);
 //Serve  static files
 // if(process.env.NODE_ENV == 'production'){
 // 	app.use(express.static(path.resolve(__dirname, 'frontend', 'build')));
