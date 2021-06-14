@@ -20,8 +20,14 @@ router.get('/decodedUser', requireAuth, async (req, res)=>{
 
 //Logout
 router.get('/logout', requireAuth,(req, res)=>{
-  res.clearCookie('token');
-  res.sendStatus(200);
+  try{
+    res.clearCookie('token');
+    res.sendStatus(200);
+  }catch(e){
+    console.log("Logout error is ", e);
+    res.sendStatus(404);
+  }
+
 })
 
 router.post('/sign_up', async (req, res)=>{
