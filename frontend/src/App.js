@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
+// import axiosConfig from './axiosConfig';
 import axios from 'axios';
-import url from './apiUrl.js';
 import AppContext from './components/AppContext';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Login from './components/Login';
@@ -27,7 +27,7 @@ function App() {
 
   React.useEffect(()=>{
     async function fetchUser() {
-       const res = await axios.get(`${url}/api/decodedUser`, {withCredentials: true});
+       const res = await axios.get('/api/decodedUser');
        const data = res.data;
        setUser(data.user);
      }

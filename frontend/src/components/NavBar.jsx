@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import url from '../apiUrl.js';
 import {withRouter} from 'react-router-dom';
 import axios from 'axios';
 import AppContext from './AppContext';
@@ -74,7 +73,7 @@ const  NavBar = (props)=> {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   // const user = userDetails.user;
   const isMenuOpen = Boolean(anchorEl);
-  // console.log(user);
+  console.log("User is ", user);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -111,7 +110,8 @@ const  NavBar = (props)=> {
     history.push(pageURL);
   }
   const Logout = async  ()=>{
-    await axios.get(`${url}/api/logout`);
+    const d = await axios.get('/api/logout');
+    console.log(d);
     setLoggedIn(false);
     history.push('/login');
   }

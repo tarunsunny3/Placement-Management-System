@@ -68,12 +68,13 @@ router.post('/sign_in', async (req, res)=>{
     if(!match) {
       res.json({success: false, message: "Incorrect password"});
     }else{
+
         let reg=false;
         const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
         if(user.details === undefined){
           reg = true;
         }
-        res.cookie('token',token, {maxAge: 10 * 24 * 60 * 60 , httpOnly: false, sameSite: "none", secure: process.env.NODE_ENV==='production'?true:false});
+        res.cookie('token',token, {maxAge: 10 * 24 * 60 * 60 , httpOnly: false});
         console.log("ROUTES cookie is ", req.cookies);
         res.status(200).json({
             success: true,

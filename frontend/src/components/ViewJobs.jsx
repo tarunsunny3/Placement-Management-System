@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
-import url from '../apiUrl.js';
-import axios from 'axios';
+import axiosConfig from '../axiosConfig';
 import AppContext from './AppContext';
 import useFetch from "react-fetch-hook";
 import { makeStyles } from '@material-ui/core/styles';
@@ -65,7 +64,7 @@ const ViewJobs =  (props) => {
   React.useEffect(() => {
     let mounted  = true;
     setLoading(true);
-    axios.get(`${url}/job/getJobs`).then((response)=>{
+    axiosConfig.get('/job/getJobs').then((response)=>{
       let jobs = response.data.jobs;
       if(user != null){
         if(mounted){

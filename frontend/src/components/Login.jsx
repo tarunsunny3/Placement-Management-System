@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
-import url from '../apiUrl.js';
+import axios from 'axios';
 import {Redirect} from 'react-router-dom'
 import welcomeImage from './welcome.png';
-import axios from 'axios';
 import {withRouter} from 'react-router-dom';
 import AppContext from './AppContext';
 import Avatar from '@material-ui/core/Avatar';
@@ -115,7 +114,7 @@ const  Login = (props) => {
      const data = {
        username, password
      }
-     const res = await axios.post(`${url}/api/sign_in`,data, {withCredentials: true});
+     const res = await axios.post('/api/sign_in',data);
      const d = res.data;
      console.log(d);
 
