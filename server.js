@@ -17,7 +17,7 @@ connection();
 app.use(express.urlencoded({
 	extended: true
 }))
-app.use(cors({credentials: true, origin: true}));
+app.use(cors({credentials: true, origin: '*'}));
 app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }))
 app.use(bodyParser.json({ extended: true, limit: "50mb" }));
