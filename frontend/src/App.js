@@ -29,6 +29,7 @@ function App() {
     async function fetchUser() {
        const res = await axios.get('/api/decodedUser');
        const data = res.data;
+       console.log("Data is ", data);
        setUser(data.user);
      }
      fetchUser();

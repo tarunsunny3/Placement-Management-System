@@ -73,7 +73,7 @@ const  NavBar = (props)=> {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   // const user = userDetails.user;
   const isMenuOpen = Boolean(anchorEl);
-  console.log("User is ", user);
+  // console.log("User is ", user);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

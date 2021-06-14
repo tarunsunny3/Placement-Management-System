@@ -27,12 +27,12 @@ app.get('/', (req, res)=>{
 app.use('/api', routes);
 app.use('/job', jobRoutes);
 //Serve  static files
-// if(process.env.NODE_ENV == 'production'){
-// 	app.use(express.static(path.resolve(__dirname, 'frontend', 'build')));
-// 	app.get('*', (req, res)=>{
-// 		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-// 	})
-// }
+if(process.env.NODE_ENV == 'production'){
+	app.use(express.static(path.resolve(__dirname, 'frontend', 'build')));
+	app.get('*', (req, res)=>{
+		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+	})
+}
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
