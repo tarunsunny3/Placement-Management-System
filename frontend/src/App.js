@@ -27,7 +27,7 @@ function App() {
 
   React.useEffect(()=>{
     async function fetchUser() {
-       const res = await axios.get(`${url}/api/decodedUser`);
+       const res = await axios.get(`${url}/api/decodedUser`, {withCredentials: true});
        const data = res.data;
        setUser(data.user);
      }
