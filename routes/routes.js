@@ -21,7 +21,7 @@ router.get('/decodedUser', requireAuth, async (req, res)=>{
 //Logout
 router.get('/logout', requireAuth,(req, res)=>{
   try{
-    res.clearCookie('token');
+  res.cookie("token", "", { maxAge: -1})
     res.sendStatus(200);
   }catch(e){
     console.log("Logout error is ", e);
