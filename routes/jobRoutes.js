@@ -110,8 +110,20 @@ router.get("/getJobs", (req, res)=>{
 )
 });
 
+//Get Job by ID
+
+router.get("/job/:id", async (req, res)=>{
+  const id = req.params.id;
+  const job = await Job.findOne({_id: id});
+  if(job){
+    res.json({success: true, job});
+  }else{
+    res.json({success: false});
+  }
+})
+
 //Upload a JOB
-router.post('/uploadJob', (req, res)=>{
+router.post('/uploadJob', async (req, res)=>{
   const {company,
   location,
   jobDesc,
@@ -137,11 +149,19 @@ const job = new Job({
   year,
   dateOfExpiry
 })
-job.save();
-res.json({
-  success: true,
-  data: job
-})
+try{
+  await job.save();
+  res.json({
+    success: true,
+    data: job
+  })
+}catch(e){
+  console.log(e);
+  res.json({
+    success: false
+  })
+}
+
 });
 
 router.post('/updateJob', requireAuth, async (req, res)=>{
@@ -150,7 +170,7 @@ router.post('/updateJob', requireAuth, async (req, res)=>{
     const job = await Job.findOneAndUpdate({_id}, updateData, {
     new: true
     });
-    console.log(job);
+    console.log("New job is ", job);
     res.json({
       success: true
     });

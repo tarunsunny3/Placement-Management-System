@@ -38,14 +38,21 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     justifyContent: "space-evenly"
   },
-  headerItem: {color: "black" , backgroundColor: "pink"},
+  headerItem: {
+    width: "100%",
+    marginRight: "10%",
+    cursor: "pointer"
+  },
   iconText: {
     marginLeft: "10px"
   },
   sectionDesktop: {
      display: 'none',
      [theme.breakpoints.up('md')]: {
+       width: "50vw",
        display: 'flex',
+       alignItems: "center",
+       justifyContent: "space-around"
      },
    },
    sectionMobile: {
@@ -191,6 +198,15 @@ const  NavBar = (props)=> {
 
 
             <div className={classes.sectionDesktop}>
+              <div>
+                <p className={classes.headerItem} onClick = {(event)=>onButtonClick(event, "/view")}>View Jobs</p>
+              </div>
+
+            <div>
+              <p className={classes.headerItem} onClick = {(event)=>onButtonClick(event, "/job")}>Upload Jobs</p></div>
+              <div>
+                <p style={{fontWeight: "700"}}>{user.username}</p>
+              </div>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -216,7 +232,6 @@ const  NavBar = (props)=> {
                 onClose={()=>setAnchorEl(null)}
               >
 
-              {user.username}
               <MenuItem onClick={(e)=>handleMenuClick(e, "/profile")}><VisibilityIcon /><span className={classes.iconText}>View Profile</span></MenuItem>
               <MenuItem onClick={(e)=>handleMenuClick(e, "/updateProfile")}><EditTwoToneIcon /><span className={classes.iconText}>Edit Profile</span></MenuItem>
               <MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon className={classes.menuIcons}/><span className={classes.iconText}>Logout</span></MenuItem>

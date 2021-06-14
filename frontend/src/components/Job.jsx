@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import axios from 'axios';
 import url from '../apiUrl.js';
-import {withRouter} from 'react-router-dom';
+import {withRouter, useHistory} from 'react-router-dom';
 import AppContext from './AppContext';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -25,8 +25,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import Chip from '@material-ui/core/Chip';
 import Tooltip from '@material-ui/core/Tooltip';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import EditIcon from '@material-ui/icons/Edit';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -107,6 +106,7 @@ const StyledInput = withStyles({
 
 })(TextField);
 const Job = (props) => {
+  const mainHistory = useHistory();
   const {job, type, currPage, setCurrPage, location, history} = props;
   const urlToServer = encodeURI(`${url}/job/file/${job._id}`);
   const jobNotExpired = (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry) > (new Date())));
@@ -179,12 +179,29 @@ const deleteJob = async (jobId)=>{
         <CardActionArea>
           {
             (user && user.role!=="Student") &&
-            <Tooltip title="Close/Delete this Job?" placement="right">
-              <CloseIcon style={{float: "right", padding: "5%"}} onClick={()=>deleteJob(job._id)}/>
-            </Tooltip>
+              jobNotExpired && job.isOpen === true
+              &&
+
+              <Tooltip title="Close/Delete this Job?" placement="right">
+                <CloseIcon style={{float: "right", padding: "5%"}} onClick={()=>deleteJob(job._id)}/>
+              </Tooltip>
+              // :
+              // <Tooltip title="Re-open this Job?" placement="right">
+              //   <CloseIcon style={{float: "right", padding: "5%"}} onClick={()=>deleteJob(job._id)}/>
+              // </Tooltip>
           }
           <CardContent >
-            <Typography  variant="h5" component="h2">
+            {
+              jobNotExpired && job.isOpen!==false
+              &&
+              <Tooltip title="Update this Job?" placement="right">
+            <EditIcon onClick={()=>{
+                  mainHistory.push("/job", {id: job._id, type: "update"})
+                }}/>
+            </Tooltip>
+            }
+
+            <Typography  style={{textAlign: "center"}} variant="h5" component="h2">
             {job.companyName}
             </Typography>
             <div className={classes.chips}>

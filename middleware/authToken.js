@@ -4,7 +4,7 @@ const requireAuth = async(req, res, next) => {
     try {
         //const token = await req.headers['x-access-token'];
         const token = await req.cookies.token || '';
-        console.log("REq cookies is ", req.cookies);
+        // console.log("REq cookies is ", req.cookies);
         // check json web token exists & is verified
         if (token) {
             // console.log(process.env.JWT_SECRET);
