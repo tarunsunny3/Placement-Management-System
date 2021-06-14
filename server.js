@@ -17,7 +17,7 @@ connection();
 app.use(express.urlencoded({
 	extended: true
 }))
-app.use(cors({credentials: false, origin: ['https://uoh-plms.netlify.app', 'http://localhost:3000']}));
+app.use(cors({credentials: true, origin: ['https://uoh-plms.netlify.app', 'http://localhost:3000']}));
 app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }))
 app.use(bodyParser.json({ extended: true, limit: "50mb" }));
