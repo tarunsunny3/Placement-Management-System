@@ -1,5 +1,4 @@
 import React, {useState, useContext} from 'react'
-import url from '../../../apiUrl.js';
 import AppContext from '../../AppContext';
 import {Redirect} from 'react-router-dom';
 import axios from 'axios';
@@ -76,7 +75,7 @@ const BasicReg = (props) => {
   React.useEffect(() => {
     let mounted = true;
     async function fetchCourses() {
-      const res = await axios.get(`${url}/job/getCourses`);
+      const res = await axios.get('/job/getCourses');
       const data = res.data;
       if(mounted){
         setAvailableCourses(data.courses);

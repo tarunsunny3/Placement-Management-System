@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {withRouter} from 'react-router-dom';
-import url from '../../apiUrl.js';
+import {withRouter, useHistory} from 'react-router-dom';
 import { CssBaseline,Typography, Grid,Button, FormControl, FormControlLabel, FormLabel, Radio,RadioGroup} from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -23,6 +22,8 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+
+import CurrencyFormat from 'react-currency-format';
 const filter = createFilterOptions();
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -103,6 +104,7 @@ const StyledInput = withStyles({
 const UploadJob = (props) => {
   const classes = useStyles();
   const state = props.location.state;
+  const history = useHistory();
   const [availableCompanies, setCompanies] = useState([]);
   const [company, setCompany] = useState("");
   const [location, setLocation] = useState("");
@@ -120,19 +122,26 @@ const UploadJob = (props) => {
   const [dumCourses, setDumcourse] = useState([]);
   const [dateOfExpiry, setDate] = useState(new Date().setMonth((new Date().getMonth())+3));
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [salary, setSalary] = useState("");
   //Interface to store courses
   interface CourseType {
     inputValue?: string;
     courseName: string;
   }
   React.useEffect(() => {
+    if(state && state.alert!==undefined){
+      setAlert(true);
+      setOpen(true);
+      setMessage(state.message);
+    }
     async function fetchCourses() {
       setLoading(true);
-      const res = await axios.get(`${url}/job/getCourses`);
+      const res = await axios.get('/job/getCourses');
       const data = res.data;
       setAvailableCourses(data.courses);
-      if(state){
-        const res1 = await axios.get(`${url}/job/job/${state.id}`);
+      if(state && state.type==="update"){
+        const res1 = await axios.get(`/job/job/${state.id}`);
         const d = res1.data;
         if(d.success){
           const {companyName, location, dateOfExpiry, jobPosition,jobType, jobDesc, minCgpa, salaryPackage, courses, gateScore} = d.job;
@@ -190,27 +199,34 @@ let courses1: CourseType[]= availableCourses;
   if(Object.keys(tempErrors).length===0){
 
       let data = {
-        company, location, jobPos,salaryPackage, jobType,jobDesc, courses: selectedCourses, minCgpa: gpa, year: new Date().getFullYear(), dateOfExpiry
+        company, location, jobPosition: jobPos, salaryPackage, jobType,jobDesc, courses: selectedCourses, minCgpa: gpa, year: new Date().getFullYear(), dateOfExpiry
       }
       if(gateScore !== null){
         data["gateScore"] = gateScore;
        }
-       if(state){
-         const res = await axios.post(`${url}/job/updateJob`,{_id: state.id, updateData: data}, {withCredentials: true});
+       if(state && state.type==="update"){
+         const res = await axios.post('/job/updateJob',{_id: state.id, updateData: data}, {withCredentials: true});
          const d = res.data;
          console.log(d);
          if(d.success){
+           history.push("/view", {alert: true, id: state.id, currPage: state.currPage});
+         }else{
            setAlert(true);
            setOpen(true);
-           window.scrollTo(0, 0)
+           setMessage("Couldn't update the job");
          }
+
        }else{
-         const res = await axios.post(`${url}/job/uploadJob`,data, {withCredentials: true});
+
+         const res = await axios.post('/job/uploadJob',data, {withCredentials: true});
          const d = res.data;
          if(d.success){
+           history.go(0);
+           history.push("/job", {alert: true, message: "Job posted successfully!!"})
+         }else{
            setAlert(true);
            setOpen(true);
-           window.scrollTo(0, 0)
+           setMessage("Couldn't post the job");
          }
        }
     }
@@ -222,7 +238,7 @@ let courses1: CourseType[]= availableCourses;
   useEffect(() => {
     async function fetchCompanyNames() {
 
-      let response = await axios.get(`${url}/job/getCompanyNames`);
+      let response = await axios.get('/job/getCompanyNames');
       // setCompanies(respons)
       setCompanies(response.data.companyNames);
 
@@ -249,13 +265,17 @@ let courses1: CourseType[]= availableCourses;
     }
   }
   const handlePackage = (event)=>{
-    if(event.target.value.length > 0){
-      setErrors({...errors, "salaryPackage" : ""});
-    }else{
-      setErrors({...errors, "salaryPackage" : "Please enter the salary salaryPackage"});
+      if((Number(event.target.value)<0 || isNaN(Number(event.target.value)) || event.target.value.length === 0)){
+          setErrors({...errors, "salaryPackage" : "Please enter a valid value"});
+          setPackage("");
+      }else{
+        setErrors({...errors, "salaryPackage" : ""});
+        setPackage(event.target.value);
+        console.log(event.target.value);
+        setSalary(new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR'}).format(event.target.value));
+      }
     }
-    setPackage(event.target.value);
-  }
+
   const handleLocation1 = (event, values)=>{
     if(values){
       setErrors({...errors, "location" : ""});
@@ -388,13 +408,13 @@ const handleCourses = async (event, newValue)=>{
       setErrors({...errors, "courses" : "Please select atleast one course"});
       return;
     }
-
+    setErrors({...errors, "courses": ""});
     setDumcourse(newValue);
     let courses = [];
     newValue.map((val)=>{
       if(typeof val === "string"){
         courses.push(val);
-      }else if(val.inputValue != undefined && val.inputValue !== ""){
+      }else if(val.inputValue !== undefined && val.inputValue !== ""){
         courses.push(val.inputValue);
       }else{
         courses.push(val.courseName);
@@ -405,6 +425,7 @@ const handleCourses = async (event, newValue)=>{
 const handleDate = (date: Date | null) => {
     setDate(date);
   };
+
   return (
     loading?
     <Backdrop  open={open} onClick={()=>setOpen(false)}>
@@ -433,16 +454,11 @@ const handleDate = (date: Date | null) => {
             </IconButton>
           }
           >
-          {
-          state === undefined ?
-            "Job Posted successfully!"
-            :
-            "Job Updated Successfully!"
-          }
+          {message}
           </Alert>
         </Collapse>}
         <Typography variant="h3" className={classes.heading}>
-          {state===undefined ? "Post Job" : "Update Job"}
+          {state===undefined || state.type===undefined ? "Post Job" : "Update Job"}
         </Typography>
         <form onSubmit={(e)=>handleSubmit(e)}className={classes.form} noValidate autoComplete="off">
           <Grid container spacing={8}>
@@ -613,19 +629,27 @@ const handleDate = (date: Date | null) => {
             }
 
           <Grid item xs={12} sm={6}>
-          <StyledInput
-            label="Salary Package"
-            // className={classes.textField}
-            value={salaryPackage}
-            error={(errors["salaryPackage"]) ? true : false}
-            onChange={(event)=>{
-              handlePackage(event)}}
-              helperText={errors["salaryPackage"]}
-              variant="outlined"
-              startadornment={<InputAdornment position="start">$</InputAdornment>}
-              fullWidth
-              required
-            />
+            <StyledInput
+               label="Salary Package"
+               // className={classes.textField}
+               value={salaryPackage}
+               error={(errors["salaryPackage"]) ? true : false}
+               onChange={(event)=>{
+                 handlePackage(event)
+               }
+               }
+               placeholder="Enter salary"
+               type="number"
+               helperText={errors["salaryPackage"]==="" ? "Enter salary like 1000 for thousand in numbers": errors["salaryPackage"]}
+               variant="outlined"
+               fullWidth
+               required
+               />
+             {
+             salaryPackage.length > 0
+             &&
+             <p>{salary}</p>
+             }
         </Grid>
         </Grid>
         <Grid container spacing={8}>
@@ -681,7 +705,7 @@ const handleDate = (date: Date | null) => {
     color="primary"
     className={classes.submit}
     >
-    {state===undefined ? "Post job" : "Update Job"}
+    {state===undefined || state.alert!==undefined ? "Post job" : "Update Job"}
     </Button>
   </form>
 </div>

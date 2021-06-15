@@ -8,20 +8,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import EditTwoToneIcon from '@material-ui/icons/EditTwoTone';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useTheme } from '@material-ui/core/styles';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import Badge from '@material-ui/core/Badge';
-import Avatar from '@material-ui/core/Avatar';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -174,9 +168,9 @@ const  NavBar = (props)=> {
 
               (<>
               <div className={classes.headerItems}>
-                <Button variant="contained" className = {classes.headerItem} onClick = {(event)=>onButtonClick(event, "/login")}>Login</Button>
-                <Button variant="contained" className = {classes.headerItem} onClick = {(e)=>onButtonClick(e, "/register")}> Register</Button>
-                <MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon className={classes.menuIcons}/><span className={classes.iconText}>Logout</span></MenuItem>
+                <Button variant="contained" onClick = {(event)=>onButtonClick(event, "/login")}>Login</Button>
+                <Button variant="contained" onClick = {(e)=>onButtonClick(e, "/register")}> Register</Button>
+                <MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon /><span>Logout</span></MenuItem>
               </div>
               </>)
             :

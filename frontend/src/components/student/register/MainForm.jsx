@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import url from '../../../apiUrl.js';
 import BasicReg from './BasicReg';
 import SecondRegPage from './SecondRegPage';
 import ThirdRegPage from './ThirdRegPage';
@@ -39,7 +38,7 @@ const MainForm = () => {
 const handleSubmit = async (e)=>{
     e.preventDefault();
     console.log("Details are ", details);
-    const res = await axios.post(`${url}/api/register_details`, details, {withCredentials: true});
+    const res = await axios.post('/api/register_details', details, {withCredentials: true});
     console.log(res.data);
 }
 const nextStep = ()=>{
@@ -60,12 +59,12 @@ const handleCourse = async (event, newValue) => {
       }
       if (typeof newValue === 'string') {
         setDetails({...details, courseName: newValue});
-        const res = await axios.post(`${url}/job/addCourse`, {"courseName": newValue}, {withCredentials: true});
+        const res = await axios.post('/job/addCourse', {"courseName": newValue}, {withCredentials: true});
         console.log(res.data);
       } else if(newValue && newValue.inputValue) {
         // Create a new value from the user input
         setDetails({...details, courseName: newValue.inputValue});
-        const res = await axios.post(`${url}/job/addCourse`, {"courseName": newValue.inputValue}, {withCredentials: true});
+        const res = await axios.post('/job/addCourse', {"courseName": newValue.inputValue}, {withCredentials: true});
         console.log(res.data);
       } else {
         setDetails({...details, courseName: newValue.courseName});

@@ -1,4 +1,13 @@
 const mongoose = require('mongoose');
+var schemaOptions = {
+  timestamps: true,
+  toJSON: {
+    virtuals: true
+  },
+  toObject: {
+    virtuals: true
+  }
+};
 
 const jobSchema = new mongoose.Schema({
   companyName: String,
@@ -10,7 +19,7 @@ const jobSchema = new mongoose.Schema({
   gateScore: Number,
   courses: Array,
   year: Number,
-  salaryPackage: Number,
+  salaryPackage: String,
   dateOfExpiry: Date,
   closingDate: Date,
   isOpen: {
@@ -24,6 +33,6 @@ const jobSchema = new mongoose.Schema({
       ref: "User"
     }
   ]
-});
+}, schemaOptions);
 
 module.exports = mongoose.model('Job', jobSchema);

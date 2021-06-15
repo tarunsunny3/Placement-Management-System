@@ -49,6 +49,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '2%',
     flexBasis:'25%'
   },
+  noJobs:{
+    textAlign: "center",
+    color: "red",
+    fontSize: "50px",
+    fontWeight: "400"
+  }
 })
 );
 const ViewJobs =  (props) => {
@@ -57,63 +63,94 @@ const ViewJobs =  (props) => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currPage, setCurrPage] = useState(1);
-  const [jobsPerPage, setJobsPerPage] = useState(3);
+  const [jobsPerPage, setJobsPerPage] = useState(2);
   const [open, setOpen] = useState(true);
   const [option, setOption] = useState("");
+const filterCompany = (Jobs, companyName)=>{
+    if(companyName !== null){
+       Jobs = Jobs.filter((job)=>job.companyName.toLowerCase()===companyName.toLowerCase());
+    }
+   return Jobs;
+}
 
+const filterCourse = (Jobs, courses)=>{
+  console.log("Courses ", courses);
+  if(courses !== null && courses.length > 0){
+    Jobs = Jobs.filter((job)=>courses.some((course)=>job.courses.includes(course)));
+  }
+  return Jobs;
+}
   React.useEffect(() => {
     let mounted  = true;
     setLoading(true);
     axios.get('/job/getJobs').then((response)=>{
-      let jobs = response.data.jobs;
+      let Jobs = response.data.jobs;
       if(user != null){
-        if(mounted){
+        // if(mounted){
           if(user.role !== "Student"){
+
             //It is a Coordinator
             if(props.type==="open"){
+              //Set the option for which current page is displaying
               setOption("open");
-              setJobs(jobs.filter((job)=>(job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date())))));
+              Jobs = Jobs.filter((job)=>(job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
             }else{
               //Closed jobs are those whose isOpen value is false
               //and Date of expiry is crossed
-              setOption("close");
-              setJobs(jobs.filter((job)=>job.isOpen===false || (job.dateOfExpiry !== undefined && new Date(job.dateOfExpiry) < (new Date()))));
+              setOption("closed");
+              Jobs = Jobs.filter((job)=>job.isOpen===false || (job.dateOfExpiry !== undefined && new Date(job.dateOfExpiry) < (new Date())));
             }
           }else{
             if(props.type==="default"){
               setOption("applied");
-              setJobs(jobs.filter((job)=>!job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date())))));
+              Jobs = Jobs.filter((job)=>!job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
             }else{
               setOption("unapplied");
-              setJobs(jobs.filter(job=>job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date())))));
+              Jobs = Jobs.filter(job=>job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
             }
           }
+          if(props.filter !== undefined && Object.keys(props.filter).length >0){
+            let jobs = Jobs;
+            const {company, courses, date} = props.filter;
+            // console.log(jobs);
+            if(company !== undefined && company !== ''){
+              jobs = filterCompany(Jobs, company);
+            }
+            if(courses !== undefined && courses.length > 0){
+              jobs = filterCourse(Jobs, courses)
+            }
+            Jobs = jobs;
+          }
+          setJobs(Jobs);
           setLoading(false);
         }
-      }
+      // }
     });
     return function cleanup() {
             mounted = false
     }
-  }, [props, currPage]);
-
+  }, [props.type, props.filter, currPage]);
     const indexOfLastJob = currPage * jobsPerPage;
     const indexOfFirstJob = indexOfLastJob - jobsPerPage;
-
+    let currJobs = [];
     //Get current Jobs to be displayed on that particular page
+    if(indexOfFirstJob >= jobs.length){
+      currJobs = jobs;
+    }else{
+      currJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
+    }
 
-    const currJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
 
     const noJobsMessage = ()=>{
         switch(option){
           case "open":
-            return <p>No Jobs are available</p>
+            return <p className={classes.noJobs}>No Jobs are available<span style={{display: "block"}}><i className="far fa-frown"></i></span></p>
           case "closed":
-            return <p>No closed/out dated jobs are available</p>
+            return <p className={classes.noJobs}>No closed/out dated jobs are available<span style={{display: "block"}}><i className="far fa-frown"></i></span></p>
           case "applied":
-            return <p>No Jobs available to apply</p>
+            return <p className={classes.noJobs}>No Jobs available to apply<span style={{display: "block"}}><i className="far fa-frown"></i></span></p>
           case "unapplied":
-            return <p>You have applied for no jobs in the past</p>
+            return <p className={classes.noJobs}>You have applied for no jobs in the past<span style={{display: "block"}}><i className="far fa-frown"></i></span></p>
           default:
             return <p></p>
       }
@@ -129,7 +166,6 @@ const ViewJobs =  (props) => {
         noJobsMessage()
       :
       <div>
-
          <div className={classes.gridList}>
 
         {

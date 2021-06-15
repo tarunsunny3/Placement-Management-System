@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import axios from 'axios';
-import url from '../apiUrl.js';
 import {withRouter, useHistory} from 'react-router-dom';
 import AppContext from './AppContext';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
@@ -26,6 +25,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Chip from '@material-ui/core/Chip';
 import Tooltip from '@material-ui/core/Tooltip';
 import EditIcon from '@material-ui/icons/Edit';
+import ObjectId from 'bson-objectid';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -48,6 +48,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     marginTop: '2%'
+  },
+  cardBackgroundNormal:{
+    backgroundColor: "#f4eee8"
+  },
+  cardBackgroundUpdated:{
+    backgroundColor: "#DDFFBC"
   },
   gridList:{
     display: 'flex',
@@ -73,6 +79,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexWrap: 'wrap',
     direction: 'row',
+    width: "30vw",
+    [theme.breakpoints.down("sm")]:{
+      width: "100%"
+    },
     justifyContent: "space-around",
     // alignItems: "center"
   },
@@ -84,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
   wrapper:{
     display: "flex",
     flexDirection: "row",
-    // justifyContent: "center",
+    justifyContent: "center",
     // alignItems: "center"
   }
 })
@@ -107,8 +117,10 @@ const StyledInput = withStyles({
 })(TextField);
 const Job = (props) => {
   const mainHistory = useHistory();
+  const state = props.location.state;
+  const jobRef = React.useRef(null);
   const {job, type, currPage, setCurrPage, location, history} = props;
-  const urlToServer = encodeURI(`${url}/job/file/${job._id}`);
+  const urlToServer = encodeURI(`/job/file/${job._id}`);
   const jobNotExpired = (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry) > (new Date())));
   const {user} = React.useContext(AppContext);
   const classes = useStyles();
@@ -122,8 +134,31 @@ const Job = (props) => {
   const [alert, setAlert] = useState({open: false, type: "", message: ""});
   const [disabled, setDisabled] = useState(false);
   const [closed, setClosed] = useState(false);
+  const [message, setMessage] = useState(null);
   const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const formattedDate = new Date(job.dateOfExpiry).toLocaleDateString('en-US', dateOptions);
+
+  React.useEffect(()=>{
+    let mounted = true;
+    if(state && state.alert !== undefined){
+      if(mounted){
+        setCurrPage(state.currPage);
+        setMessage({message: "Job updated successfully", id: state.id});
+        if(job._id === state.id){
+            jobRef.current.focus();
+            jobRef.current.removeAttribute("tabIndex");
+        }
+        setTimeout(()=>{
+
+          state.alert = undefined;
+          setMessage(null);
+        }, 3000);
+      }
+    }
+    return function cleanup() {
+            mounted = false
+    }
+  }, []);
   const handleApplyClick = (event)=>{
     setDialogOpen(true);
   }
@@ -132,7 +167,7 @@ const Job = (props) => {
     setDialogOpen(false);
     setAlert({open: true, type: "success", message: "Successfully applied to the job"});
     setApplied(true);
-    const res =  await axios.post(`${url}/job/addUserToJob`, {jobId}, {withCredentials: true});
+    const res =  await axios.post('/job/addUserToJob', {jobId}, {withCredentials: true});
 
   }
 const handleDialogClose = () => {;
@@ -150,7 +185,7 @@ const closeJob = async (jobId)=>{
       isOpen: false
     }
   }
-  const res = await axios.post(`${url}/job/updateJob`, data, {withCredentials: true})
+  const res = await axios.post('/job/updateJob', data, {withCredentials: true})
   setAlert({open: true, type: "success", message: "Closed the Job successfully"});
   // props.setRefresh(true);
   setDisabled(true);
@@ -164,44 +199,50 @@ const deleteJob = async (jobId)=>{
     }
   }
   setAlert({open: true, type: "success", message: "Deleted the Job successfully"});
-  const res = await axios.post(`${url}/job/updateJob`, data, {withCredentials: true})
+  const res = await axios.post('/job/updateJob', data, {withCredentials: true})
   setClosed(true);
 }
+
+
 // const downloadExcelFile = async ()=>{
 //   const res = await axios.get("/job/file", {withCredentials: true});
 //   console.log(res);
 // }
   return (
-    <div className={classes.gridItem} key={job._id}>
+
+
+
+
+    <div  className={classes.gridItem} key={job._id}>
+      <p>{message !== null && message.id === job._id && message.message}</p>
       { !closed &&
       <div>
-      <Card style={{backgroundColor: "#f4eee8"}} className={classes.root}>
+      <Card  ref={jobRef} tabIndex="-1" className={message===null || message.id !== job._id ? `${classes.root} ${classes.cardBackgroundNormal}`: `${classes.root} ${classes.cardBackgroundUpdated}`}>
         <CardActionArea>
           {
             (user && user.role!=="Student") &&
               jobNotExpired && job.isOpen === true
               &&
-
+              <>
               <Tooltip title="Close/Delete this Job?" placement="right">
                 <CloseIcon style={{float: "right", padding: "5%"}} onClick={()=>deleteJob(job._id)}/>
               </Tooltip>
+
+              <Tooltip title="Update this Job?" placement="right">
+                <EditIcon style={{float: "left", padding: "5%"}} onClick={()=>{
+                  mainHistory.push("/job", {id: job._id, type: "update", currPage})
+                }}/>
+            </Tooltip>
+            </>
               // :
               // <Tooltip title="Re-open this Job?" placement="right">
               //   <CloseIcon style={{float: "right", padding: "5%"}} onClick={()=>deleteJob(job._id)}/>
               // </Tooltip>
           }
           <CardContent >
-            {
-              jobNotExpired && job.isOpen!==false
-              &&
-              <Tooltip title="Update this Job?" placement="right">
-            <EditIcon onClick={()=>{
-                  mainHistory.push("/job", {id: job._id, type: "update"})
-                }}/>
-            </Tooltip>
-            }
 
-            <Typography  style={{textAlign: "center"}} variant="h5" component="h2">
+
+            <Typography  style={{textAlign: "center", margin: "auto"}} variant="h5" component="h2">
             {job.companyName}
             </Typography>
             <div className={classes.chips}>
@@ -217,7 +258,7 @@ const deleteJob = async (jobId)=>{
                 <p>Salary Package</p>
                 <div className={classes.wrapper}>
                   <i className="fas fa-rupee-sign fa-3x"></i>
-                  <Chip style={{marginLeft: "4%", marginTop: "5%"}} label={job.salaryPackage} color="primary" variant="default"></Chip>
+                <Chip style={{marginLeft: "4%", marginTop: "5%"}} label={new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR'}).format(Number(job.salaryPackage))} color="primary" variant="default"></Chip>
                 </div>
               </div>
               <div>
@@ -244,14 +285,15 @@ const deleteJob = async (jobId)=>{
 
               job.dateOfExpiry !== undefined
               &&
-              <>
-              <p><b>Apply by</b></p>
+              <div>
+                <p tabIndex="0" ref={jobRef} className={classes.wrapper} ><b>Apply by</b></p>
               <div className={classes.wrapper}>
+
                 <i className="fas fa-hourglass-half fa-3x"></i>
                 <Chip style={{marginLeft: "4%", marginTop: "1%"}} label={formattedDate} color="primary" variant="default"></Chip>
               </div>
                {/*<Chip label={"Date of Expiry: " + formattedDate} className={`${classes.chip} ${classes.chips}`} color="primary" variant="default"></Chip>*/}
-            </>
+            </div>
             }
 
           </CardContent>

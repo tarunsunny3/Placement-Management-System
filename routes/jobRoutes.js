@@ -166,6 +166,7 @@ try{
 
 router.post('/updateJob', requireAuth, async (req, res)=>{
   const { _id, updateData} = req.body;
+  console.log("Updated Data is ", updateData);
   try{
     const job = await Job.findOneAndUpdate({_id}, updateData, {
     new: true
