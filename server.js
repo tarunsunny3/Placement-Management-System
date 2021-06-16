@@ -26,10 +26,8 @@ if(process.env.NODE_ENV == 'production'){
 	app.get('/', (req, res)=>{
 		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
 	})
-	app.use('/api', routes);
-	app.use('/job', jobRoutes);
 }
-app.use(cors({credentials: true, origin: ['https://uoh-plms.netlify.app', 'http://localhost:3000'], "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",}));
+app.use(cors({credentials: true, origin: true, "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",}));
 app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }))
 app.use(bodyParser.json({ extended: true, limit: "50mb" }));
