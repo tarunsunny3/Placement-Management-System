@@ -121,7 +121,7 @@ const  NavBar = (props)=> {
       onClose={handleMobileMenuClose}
     >
       {
-        user.role==="Coordinator"
+        user !== undefined && user.role==="Coordinator"
         &&
         <MenuItem onClick={(e)=>handleMenuClick(e, "/job")}><VisibilityIcon /><span className={classes.iconText}>Upload Job</span></MenuItem>
       }
@@ -164,7 +164,7 @@ const  NavBar = (props)=> {
             UoH
           </Typography>
           {
-            (user===null || user.id === null) ?
+            (user===undefined || user===null || user.id === null) ?
 
               (<>
               <div className={classes.headerItems}>
