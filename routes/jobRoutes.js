@@ -193,19 +193,16 @@ router.post('/addUserToJob', requireAuth, async (req, res)=>{
 
   try {
     const doc = await job.save();
-    const user = await User.findOne({_id: userID});
-    user.appliedJobs.push(jobId);
-    const updatedUser = await user.save();
-    // const populatedJob = await Job.findOne({_id: jobId}).populate("users");
-    // console.log(populatedJob);
-    // console.log(updatedUser);
-    console.log(doc);
     res.json({
       success: true
     })
 
   } catch (e) {
     console.log(e);
+    res.json({
+      success: false
+    })
+
   }
 })
 

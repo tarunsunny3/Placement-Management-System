@@ -165,9 +165,15 @@ const Job = (props) => {
   const applyJob = async (jobId)=>{
 
     setDialogOpen(false);
-    setAlert({open: true, type: "success", message: "Successfully applied to the job"});
-    setApplied(true);
+
     const res =  await axios.post('/job/addUserToJob', {jobId}, {withCredentials: true});
+    if(res.data.success){
+      setAlert({open: true, type: "success", message: "Successfully applied to the job"});
+      setApplied(true);
+    }else{
+      setAlert({open: true, type: "error", message: "Couldn't apply for the job"});
+      setApplied(false);
+    }
 
   }
 const handleDialogClose = () => {;
