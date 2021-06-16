@@ -24,6 +24,9 @@ if(process.env.NODE_ENV == 'production'){
 	app.get('/', (req, res)=>{
 		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
 	})
+	app.get('*', (req, res)=>{
+		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+	})
 }
 app.use(cors({credentials: true, origin: ['https://uoh-plms.netlify.app', 'http://localhost:3000'], "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",}));
 app.use(cookieParser());
