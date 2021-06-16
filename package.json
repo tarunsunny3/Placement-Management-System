@@ -8,7 +8,6 @@
     "start": "node server.js",
     "start-watch": "nodemon server.js",
     "devStart": "concurrently \"npm run start-watch\" \"cd frontend && npm start\" ",
-    "heroku-postbuild": "cd frontend && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "author": "Tarun",
   "license": "ISC",
