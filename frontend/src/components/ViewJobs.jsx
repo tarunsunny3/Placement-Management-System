@@ -74,12 +74,17 @@ const filterCompany = (Jobs, companyName)=>{
 }
 
 const filterCourse = (Jobs, courses)=>{
-  console.log("Courses ", courses);
   if(courses !== null && courses.length > 0){
     Jobs = Jobs.filter((job)=>courses.some((course)=>job.courses.includes(course)));
   }
   return Jobs;
+
 }
+const filterJobType = (Jobs, jobType)=>{
+  Jobs = Jobs.filter((job)=>job.jobType===jobType);
+  return Jobs;
+}
+
   React.useEffect(() => {
     let mounted  = true;
     setLoading(true);
@@ -111,13 +116,16 @@ const filterCourse = (Jobs, courses)=>{
           }
           if(props.filter !== undefined && Object.keys(props.filter).length >0){
             let jobs = Jobs;
-            const {company, courses, date} = props.filter;
+            const {company, courses, date, jobType} = props.filter;
             // console.log(jobs);
             if(company !== undefined && company !== ''){
-              jobs = filterCompany(Jobs, company);
+              jobs = filterCompany(jobs, company);
             }
             if(courses !== undefined && courses.length > 0){
-              jobs = filterCourse(Jobs, courses)
+              jobs = filterCourse(jobs, courses)
+            }
+            if(jobType !== undefined){
+              jobs = filterJobType(jobs, jobType);
             }
             Jobs = jobs;
           }

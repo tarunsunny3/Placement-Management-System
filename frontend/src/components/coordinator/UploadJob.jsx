@@ -13,17 +13,12 @@ import Alert from '@material-ui/lab/Alert';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
+import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
 
-import CurrencyFormat from 'react-currency-format';
 const filter = createFilterOptions();
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -682,8 +677,6 @@ const handleDate = (date: Date | null) => {
 
         <Grid container justify="space-around">
           <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
             format="dd/MM/yyyy"
             margin="normal"
             id="date-of-expiry"

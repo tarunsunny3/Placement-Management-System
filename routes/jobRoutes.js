@@ -1,3 +1,4 @@
+/*jshint esversion: 8 */
 const express = require('express');
 const router = express.Router();
 var mongoXlsx = require('mongo-xlsx');
@@ -13,7 +14,7 @@ router.get('/file/:jobId', async (req, res)=>{
   const populatedJob = await Job.findOne({_id: jobId}).populate({
     path: "users",
     select: "details"
-  })
+  });
   // console.log(populatedJob);
   let userDetails = [];
   populatedJob.users.map((user, key)=>{
@@ -25,13 +26,10 @@ router.get('/file/:jobId', async (req, res)=>{
     userDetails.push(data);
   })
   console.log(userDetails);
-  // let newJobs = [];
-  // jobs.map((job, key)=>{
-  //
-  // })
-  let workbook = new excel.Workbook(); //creating workbook
-	let worksheet = workbook.addWorksheet('User Details of '+populatedJob.companyName); //creating worksheet
 
+  let workbook = new excel.Workbook(); //creating workbook
+ //creating worksheet
+let worksheet = workbook.addWorksheet('User Details of '+populatedJob.companyName, {headerFooter:{firstHeader: "Hello Exceljs", firstFooter: "Hello World"}});
 	//  WorkSheet Header
 	worksheet.columns = [
 		{ header: 'Id', key: 'id', width: 40 },
@@ -61,6 +59,83 @@ router.get('/file/:jobId', async (req, res)=>{
     }
   });
 })
+
+
+router.post('/report/', async (req, res)=>{
+  const {jobId, firstName, lastName, email, phone} = req.body;
+  const populatedJob = await Job.findOne({_id: jobId}).populate({
+    path: "users",
+    select: "details"
+  });
+  let userDetails = [];
+  let excelColumnLabels = [];
+  if(firstName !== undefined && firstName != ""){
+    excelColumnLabels.push({header: "First Name", key: firstName, width: 40});
+  }
+  if(lastName !== undefined && lastName != ""){
+    excelColumnLabels.push({header: "Last Name", key: lastName, width: 40});
+  }
+  if(email !== undefined && email != ""){
+    excelColumnLabels.push({header: "Email", key: email, width: 30});
+  }
+  if(phone !== undefined && phone != ""){
+    excelColumnLabels.push({header: "Phone", key: phone, width: 20});
+  }
+  populatedJob.users.map((user, key)=>{
+    const details = user.details;
+    let values = {};
+    if(firstName !== ""){
+      values[firstName] = details.firstName;
+    }
+    if(lastName !== ""){
+      values[lastName] = details.lastName;
+    }
+    if(email !== ""){
+      values[email] = details.email;
+    }
+    if(phone !== ""){
+      values[phone] = details.phone;
+    }
+    userDetails.push(values);
+  });
+console.log(excelColumnLabels);
+  let workbook = new excel.Workbook(); //creating workbook
+	 //creating worksheet
+   	let worksheet = workbook.addWorksheet('User Details of '+populatedJob.companyName, {headerFooter:{firstHeader: "Hello Exceljs", firstFooter: "Hello World"}});
+	//  WorkSheet Header
+	worksheet.columns = excelColumnLabels;
+
+	// Add Array Rows
+	worksheet.addRows(userDetails);
+  const fileName = "students_applied_" + populatedJob.companyName + ".xlsx" ;
+	// Write to File
+	try{
+    await workbook.xlsx.writeFile(fileName);
+    console.log(userDetails);
+    res.send({success: true, fileName});
+  }catch(e){
+    res.json({success: false})
+  }
+
+});
+router.get('/download/:fileName', (req, res)=>{
+  console.log("Hello");
+  const fileName= req.params.fileName;
+  res.download(path.resolve(fileName), (err)=>{
+    if(err){
+      console.log("Errrrror is ", err);
+    }else{
+      console.log("Success");
+      fileSystem.unlinkSync(path.resolve(fileName));
+      // const stats = fileSystem.statSync(path.resolve(fileName));
+      // const fileSizeInBytes = stats.size;
+      // //Delete the file just downloaded from the server after some time
+      // setTimeout(()=>{
+      //     fileSystem.unlinkSync(path.resolve(fileName));
+      // }, (fileSizeInBytes/2))
+    }
+  });
+});
 //Get all company companyNames
 router.get('/getCompanyNames', (req, res)=>{
   Job.find({}, (err, jobs)=>{

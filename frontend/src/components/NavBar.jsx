@@ -108,6 +108,7 @@ const  NavBar = (props)=> {
     console.log(d);
     setLoggedIn(false);
     history.push('/login');
+
   }
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (

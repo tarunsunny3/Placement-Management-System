@@ -18,18 +18,28 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import CloseIcon from '@material-ui/icons/Close';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     height: "100vh"
   },
   enabled:{
-    backgroundColor: "green",
-    color: "white"
+    '&':{
+      backgroundColor: "green",
+      color: "white"
+    }
+
   },
   disabled:{
-    backgroundColor: "#A9A9A9",
-    color: "black"
+    '&':{
+      backgroundColor: "#A9A9A9",
+      color: "black"
+    }
+
   },
   company:{
     marginTop: "5%",
@@ -43,7 +53,15 @@ const useStyles = makeStyles((theme) => ({
   },
   paper:{
     background: '#EAE2B6',
-    color: 'black'
+    color: 'black',
+    [theme.breakpoints.down('md')]:{
+        width: "90vw"
+    }
+  },
+  course:{
+    '& .MuiChip-root':{
+      backgroundColor: '#FFC074'
+    }
   }
 }));
 const StyledInput = withStyles({
@@ -72,10 +90,12 @@ const ViewAllJobs = () => {
   const [availableCourses, setAvailableCourses] = useState([]);
   const [company, setCompany] = useState("");
   const [courses, setCourses] = useState([]);
+  const [jobType, setJobType] = useState("");
   const [dumCourses, setDumcourse] = useState([]);
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
-  const [days, setDays] = useState("1");
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   useEffect(() => {
     async function fetchCompanyNames() {
       let response = await axios.get('/job/getCompanyNames');
@@ -114,20 +134,27 @@ const ViewAllJobs = () => {
     setDumcourse(newValue);
     setCourses(courses);
   }
-  const handleDaysFilter = (e)=>{
-    setDays(e.target.value);
+  const handleJobType = (e)=>{
+    setJobType(e.target.value);
+  }
+  const handleDate = (type, date)=>{
+    if(type==="start"){
+      setStartDate(date);
+    }else if(type==="end"){
+      setEndDate(date);
+    }
   }
   const handleFilterForm = (e)=>{
     e.preventDefault();
     setOpen(!open);
-    setFilter({"courses": courses, "company": company});
+    setFilter({"courses": courses, "company": company, "jobType": jobType});
   }
   return (
 
     <div className={classes.root}>
-        <Button onClick={()=>setOpen(!open)}>Show Filter Options</Button>
+
       <Drawer variant="temporary" classes={{paper: classes.paper}} anchor='left' open={open} onClose={()=>setOpen(false)}>
-        <h1 style={{textAlign: "center"}}>Filter Options</h1>
+        <h1 style={{textAlign: "center"}}>Filter Options <span style={{float: "right", paddingRight: "10%"}} onClick={()=>setOpen(false)}><CloseIcon/></span></h1>
 
       <Grid container direction="column" justify="flex-start" alignItems="center">
 
@@ -166,6 +193,7 @@ const ViewAllJobs = () => {
             options={availableCourses}
             freeSolo
             value={dumCourses}
+            className={classes.course}
             getOptionSelected={(option, value) => value.courseName === option.courseName}
           selectOnFocus
           clearOnBlur
@@ -198,32 +226,67 @@ const ViewAllJobs = () => {
       </Grid>
     }
       </Grid>
-      <FormControl style={{marginTop: "10%"}}component="fieldset">
-  <FormLabel component="legend">Filter by days</FormLabel>
-  <RadioGroup name="gender1" value={days} onChange={(e)=>handleDaysFilter(e)}>
-    <FormControlLabel value="1" control={<Radio />} label="Last 1 day" />
-    <FormControlLabel value="week" control={<Radio />} label="Last Week" />
-    <FormControlLabel value="month" control={<Radio />} label="Last month" />
-    <FormControlLabel value="year"  control={<Radio />} label="Last Year" />
-  </RadioGroup>
+<MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Grid container justify="space-around">
+        <KeyboardDatePicker
+          format="dd/MM/yyyy"
+          margin="normal"
+          id="start"
+          label="Start Date"
+          placeholder="Select start date"
+          value={startDate}
+          onChange={(date)=>handleDate("start", date)}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+    </Grid>
+    <Grid container justify="space-around">
+      <KeyboardDatePicker
+        format="dd/MM/yyyy"
+        margin="normal"
+        id="end"
+        label="Till ?"
+        value={endDate}
+        onChange={(date)=>handleDate("end", date)}
+        KeyboardButtonProps={{
+          'aria-label': 'change date',
+        }}
+      />
+  </Grid>
+
+  </MuiPickersUtilsProvider>
+<FormControl style={{marginTop: "10%"}}component="fieldset">
+<FormLabel component="legend">Job Type</FormLabel>
+<RadioGroup name="gender1" value={jobType} onChange={(e)=>handleJobType(e)}>
+<FormControlLabel value="full" control={<Radio />} label="Full Time" />
+<FormControlLabel value="intern"  control={<Radio />} label="Internship" />
+</RadioGroup>
 </FormControl>
 
       <Button style={{width: "50%",marginLeft: "20%", marginTop: "5%"}}  variant="contained" color="primary" type="submit">Filter</Button>
         </form>
+
 </Grid>
   </Drawer>
       {
         user != null && user.role === "Student"
         ?
+        <>
+
         <ButtonGroup fullWidth={true} variant="contained" aria-label="contained primary button group">
           <Button variant="contained" className={class1} onClick={()=>handleClick("default")} >Unapplied Jobs</Button>
-        <Button variant="contained" className={class2} onClick={()=>handleClick("applied")} >Applied Jobs</Button>
+          <Button variant="contained" className={class2} onClick={()=>handleClick("applied")} >Applied Jobs</Button>
+
         </ButtonGroup>
+        </>
         :
+        <>
         <ButtonGroup fullWidth={true} variant="contained" aria-label="contained primary button group">
           <Button variant="contained" className={class1} onClick={()=>handleClick("open")} >Open Jobs</Button>
-        <Button variant="contained" className={class2} onClick={()=>handleClick("closed")} >Closed Jobs</Button>
+          <Button variant="contained" className={class2} onClick={()=>handleClick("closed")} >Closed Jobs</Button>
         </ButtonGroup>
+        </>
       }
 
       {
@@ -232,17 +295,29 @@ const ViewAllJobs = () => {
         (
           type==="default" || type===undefined
             ?
-            <ViewJobs key={1} type="default" filter={filter}/>
+            <>
+              <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
+              <ViewJobs key={1} type="default" filter={filter}/>
+            </>
             :
-            <ViewJobs key={2} type="applied" filter={filter}/>
+            <>
+              <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
+              <ViewJobs key={2} type="applied" filter={filter}/>
+            </>
         )
         :
         (
           type==="open" || type === undefined
             ?
+            <>
+              <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
               <ViewJobs key={3} type="open" filter={filter}/>
+            </>
             :
+            <>
+              <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
               <ViewJobs key={4} type="close" filter={filter}/>
+            </>
         )
 
       }

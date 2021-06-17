@@ -12,6 +12,7 @@ import ViewJobs from './components/ViewJobs';
 import ViewAllJobs from './components/ViewAllJobs';
 import UploadImage from './components/Profile.jsx';
 import UpdateProfile from './components/UpdateProfile';
+import ViewReports from './components/coordinator/ViewReports';
 import { ThemeProvider } from "@material-ui/core";
 import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import Brightness3Icon from "@material-ui/icons/Brightness3";
@@ -53,6 +54,7 @@ function App() {
         <Route exact path="/profile" render={(props) => <UploadImage type="pdf" {...props} />} />
         <Route exact path="/job" component={UploadJob} />
         <Route exact path="/view" component={ViewAllJobs} />
+        <Route path="/viewReports" component={ViewReports} />
         <Route exact path="/viewJobs" render={(props) => <ViewJobs type="applied" {...props} />} />
       </Switch>
 </AppContext.Provider>

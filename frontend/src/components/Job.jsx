@@ -120,7 +120,7 @@ const Job = (props) => {
   const state = props.location.state;
   const jobRef = React.useRef(null);
   const {job, type, currPage, setCurrPage, location, history} = props;
-  const urlToServer = encodeURI(`/job/file/${job._id}`);
+  const urlToServer = encodeURI(`http://localhost:8080/job/file/${job._id}`);
   const jobNotExpired = (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry) > (new Date())));
   const {user} = React.useContext(AppContext);
   const classes = useStyles();
@@ -361,7 +361,10 @@ const deleteJob = async (jobId)=>{
             </>
           }
         placement="right-end">
-          <Button variant="contained" color="primary" href={urlToServer}>
+          {/* <Button variant="contained" color="primary" href={urlToServer}>
+          Download
+          </Button> */}
+          <Button variant="contained" color="primary" onClick={()=>history.push("/viewReports", {jobID: job._id})}>
           Download
           </Button>
       </Tooltip>

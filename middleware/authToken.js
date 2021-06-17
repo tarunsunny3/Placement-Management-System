@@ -19,7 +19,6 @@ const requireAuth = async(req, res, next) => {
 
                 } else {
                     // res.json({ decoded });
-                    console.log(decodedToken);
                     req.decoded = decodedToken;
                     next();
                 }

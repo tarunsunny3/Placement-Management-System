@@ -17,18 +17,20 @@ connection();
 app.use(express.urlencoded({
 	extended: true
 }))
-
-//Serve  static files
-if(process.env.NODE_ENV == 'production'){
-	app.use(express.static(path.resolve(__dirname, 'frontend', 'build')));
-	app.get('/', (req, res)=>{
-		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-	})
-}
 app.use(cors({credentials: true, origin: true, "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",}));
 app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }))
 app.use(bodyParser.json({ extended: true, limit: "50mb" }));
+//Serve  static files
+if(process.env.NODE_ENV == 'production'){
+	app.use(express.static(path.resolve(__dirname, 'frontend', 'build')));
+	app.use('/api', routes);
+	app.use('/job', jobRoutes);
+	app.get('/', (req, res)=>{
+		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+	})
+}
+
 app.get('/', (req, res)=>{
 	res.send("Server up and running");
 })
