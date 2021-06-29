@@ -31,8 +31,6 @@ var userSchema = new mongoose.Schema({
         required: [true, 'Password required'],
     },
     details: userDetailsSchema,
-    profilePicturePath: String,
-    resumePDFPath: String,
     appliedJobs: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job"

@@ -18,6 +18,10 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleOutlineTwoToneIcon from '@material-ui/icons/RemoveCircleOutlineTwoTone';
 import AddCircleOutlineTwoToneIcon from '@material-ui/icons/AddCircleOutlineTwoTone';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
+import { DatePicker } from "@material-ui/pickers";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -67,7 +71,6 @@ const BasicReg = (props) => {
   const classes = useStyles();
   const [availableCourses, setAvailableCourses] = useState([]);
 
-
   interface CourseType {
     inputValue?: string;
     courseName: string;
@@ -88,7 +91,7 @@ const BasicReg = (props) => {
   }, [])
 
 let courses1: CourseType[]= availableCourses;
-const {gradesInputArray, handleChange, handleCourse, values, handleAddField, handleRemoveField, handleSemGrade, nextStep} = props.props;
+const {gradesInputArray, handleChange, handleCourse, values, handleAddField, handleRemoveField, handleSemGrade, nextStep, semestersError} = props.props;
 const goNext = (e)=>{
   e.preventDefault();
   nextStep();
@@ -112,6 +115,8 @@ const goNext = (e)=>{
   justify="space-around"
   alignItems="center"
     spacing={6}>
+
+    <Grid container spacing={8}>
 <Grid item xs={12} sm={6}>
     <StyledInput
       autoFocus
@@ -131,24 +136,17 @@ const goNext = (e)=>{
   variant="outlined"
 />
 </Grid>
-<Grid item xs={12} sm={6}>
-    <StyledInput
-      required
-      label="Branch Name"
-      value={values.branchName}
-      onChange={(event)=> handleChange("branchName", event)}
-      variant="outlined"
-    />
-    </Grid>
+</Grid>
+
+      <Grid container spacing={8}>
     <Grid item xs={12} sm={6}>
-    <FormControl component="fieldset">
-         <FormLabel component="legend">Gender</FormLabel>
-         <RadioGroup aria-label="gender" name="gender1" value={values.gender} onChange={(event)=>handleChange("gender", event)}>
-           <FormControlLabel value="female" control={<Radio />} label="Female" />
-           <FormControlLabel value="male" control={<Radio />} label="Male" />
-           <FormControlLabel value="other" control={<Radio />} label="Other" />
-         </RadioGroup>
-       </FormControl>
+      <StyledInput
+        required
+        label="Branch Name"
+        value={values.branchName}
+        onChange={(event)=> handleChange("branchName", event)}
+        variant="outlined"
+      />
      </Grid>
 <Grid item xs={12} sm={6}>
   <Autocomplete
@@ -206,17 +204,19 @@ const goNext = (e)=>{
 )}
 />
 </Grid>
-<Grid item xs={12} sm={6}>
-    <StyledInput
-      required
-      type="number"
-      label="Number of semesters"
-      value={values.semesters}
-      onChange={(event)=> handleChange("semesters", event)}
-      variant="outlined"
-    />
-    </Grid>
+</Grid>
+<Grid container spacing={8}>
 
+  <Grid item xs={12} sm={6}>
+      <StyledInput
+        required
+        type="phone"
+        label="Enter your phone number"
+        value={values.phone}
+        onChange={(event)=> handleChange("phone", event)}
+        variant="outlined"
+      />
+  </Grid>
     <Grid item xs={12} sm={6}>
         <StyledInput
           required
@@ -228,30 +228,61 @@ const goNext = (e)=>{
           variant="outlined"
         />
         </Grid>
+</Grid>
 
-        <Grid item xs={12} sm={6}>
-            <StyledInput
-              required
-              type="phone"
-              label="Enter your phone number"
-              value={values.phone}
-              onChange={(event)=> handleChange("phone", event)}
-              variant="outlined"
+<Grid container spacing={8}>
+<Grid item xs={12} sm={4}>
+  <FormControl style={{marginLeft: "3%"}} component="fieldset">
+       <FormLabel component="legend">Gender</FormLabel>
+       <RadioGroup row aria-label="gender" name="gender1" value={values.gender} onChange={(event)=>handleChange("gender", event)}>
+         <FormControlLabel value="Female" control={<Radio />} label="Female" />
+       <FormControlLabel value="Male" control={<Radio />} label="Male" />
+     <FormControlLabel value="Other" control={<Radio />} label="Other" />
+       </RadioGroup>
+     </FormControl>
+</Grid>
+
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid item xs={12} sm={4}>
+            <DatePicker
+              minDate={Date(2022)}
+              views={["year"]}
+              label="Year of Graduation"
+              value={values.yearOfGrad}
+              onChange={(date)=>handleChange("yearOfGrad", date)}
             />
-            </Grid>
-{
-  gradesInputArray.length === 0 &&
-  <div>
+        </Grid>
+      </MuiPickersUtilsProvider>
 
+      <Grid item xs={12} sm={4}>
+          <StyledInput
+            required
+            type="number"
+            label="Number of semesters"
+            value={values.semesters}
+            onChange={(event)=> handleChange("semesters", event)}
+            variant="outlined"
+            helperText={semestersError.message}
+            error={!semestersError.isTrue}
+          />
+          </Grid>
+      </Grid>
+{
+  values.semesters !== "" && semestersError.isTrue && gradesInputArray.length === 0 &&
+<Grid item xs={12} sm={6}>
     <Typography variant="h6">Add field to enter grades for each sem? <span><IconButton onClick={()=>handleAddField()}><AddCircleOutlineTwoToneIcon /></IconButton></span></Typography>
-  </div>
+    </Grid>
 }
+
 {
   gradesInputArray.map((val, key)=>{
+
+    const autoFocus = key === gradesInputArray.length-1;
       return (
-        <div key={key}>
+<Grid item xs={12} sm={3} key={key}>
 
         <StyledInput
+          autoFocus={autoFocus}
           name="grade"
           required
           value={val.grade}
@@ -260,16 +291,18 @@ const goNext = (e)=>{
           variant="outlined"
           onChange= {(event)=>handleSemGrade(event, key)}
         />
-      <IconButton onClick={()=>handleAddField()}><AddCircleOutlineTwoToneIcon /></IconButton>
-      <IconButton onClick={(event)=>handleRemoveField(key)}><RemoveCircleOutlineTwoToneIcon/></IconButton>
+      {
+        key === gradesInputArray.length-1 && key < Number(values.semesters)-1 &&   <IconButton onClick={(key)=>handleAddField(key)}><AddCircleOutlineTwoToneIcon /></IconButton>
+      }
 
-      </div>
+      <IconButton onClick={(event)=>handleRemoveField(key)}><RemoveCircleOutlineTwoToneIcon/></IconButton>
+</Grid>
       )
     })
 }
-<Button color="primary" fullWidth variant="contained" onClick={(e)=>goNext(e)}>Next</Button>
-
 </Grid>
+<Button style={{marginTop: "5%"}} color="primary" fullWidth variant="contained" onClick={(e)=>goNext(e)}>Next</Button>
+
 
     </form>
 

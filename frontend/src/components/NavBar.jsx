@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 
 const  NavBar = (props)=> {
   const {history} = props;
-  const {user, setLoggedIn} = React.useContext(AppContext);
+  const {user, setUser, setLoggedIn} = React.useContext(AppContext);
   const theme = useTheme();
   // const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const classes = useStyles();
@@ -105,6 +105,7 @@ const  NavBar = (props)=> {
   }
   const Logout = async  ()=>{
     const d = await axios.get('/api/logout');
+    setUser({id: null, role: null, username: null});
     console.log(d);
     setLoggedIn(false);
     history.push('/login');
@@ -196,12 +197,23 @@ const  NavBar = (props)=> {
               <div>
                 <p className={classes.headerItem} onClick = {(event)=>onButtonClick(event, "/view")}>View Jobs</p>
               </div>
+              {
+                user.role === "Coordinator" && <div>
+                  <p className={classes.headerItem}  onClick = {(event)=>onButtonClick(event, "/job")}>Upload Jobs</p>
 
-            <div>
-              <p className={classes.headerItem} onClick = {(event)=>onButtonClick(event, "/job")}>Upload Jobs</p></div>
-              <div>
-                <p style={{fontWeight: "700"}}>{user.username}</p>
               </div>
+
+              }
+              {
+                user.role==="Coordinator" &&
+                  <p style={{cursor: "pointer"}} onClick={(e)=>onButtonClick(e, "/viewReports")}>View Reports</p>
+              }
+
+                <div>
+                <p style={{fontWeight: "700"}}>{user.username}</p>
+
+              </div>
+              <p>{user.role}</p>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -227,8 +239,9 @@ const  NavBar = (props)=> {
                 onClose={()=>setAnchorEl(null)}
               >
 
+
               <MenuItem onClick={(e)=>handleMenuClick(e, "/profile")}><VisibilityIcon /><span className={classes.iconText}>View Profile</span></MenuItem>
-              <MenuItem onClick={(e)=>handleMenuClick(e, "/updateProfile")}><EditTwoToneIcon /><span className={classes.iconText}>Edit Profile</span></MenuItem>
+              <MenuItem onClick={(e)=>handleMenuClick(e, "/studentReg/update")}><EditTwoToneIcon /><span className={classes.iconText}>Edit Profile</span></MenuItem>
               <MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon className={classes.menuIcons}/><span className={classes.iconText}>Logout</span></MenuItem>
                 </Menu>
                 {/* {renderMenu} */}

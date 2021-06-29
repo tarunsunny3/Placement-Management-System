@@ -1,18 +1,8 @@
 import React, {useState} from 'react'
 import axios from 'axios';
 import AppContext from './AppContext';
-import useFetch from "react-fetch-hook";
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import Pagination from '@material-ui/lab/Pagination';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import Job from './Job';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -84,6 +74,13 @@ const filterJobType = (Jobs, jobType)=>{
   Jobs = Jobs.filter((job)=>job.jobType===jobType);
   return Jobs;
 }
+const filterDate = (Jobs, startDate, endDate)=>{
+  // const jsStartDate = new Date(startDate);
+  // const jsEndDate = new Date(endDate);
+
+  Jobs = Jobs.filter((job)=> new Date(job.createdAt) >= startDate &&  new Date(job.createdAt) <= endDate);
+  return Jobs;
+}
 
   React.useEffect(() => {
     let mounted  = true;
@@ -116,16 +113,19 @@ const filterJobType = (Jobs, jobType)=>{
           }
           if(props.filter !== undefined && Object.keys(props.filter).length >0){
             let jobs = Jobs;
-            const {company, courses, date, jobType} = props.filter;
-            // console.log(jobs);
+            const {company, courses, jobType, startDate, endDate} = props.filter;
+            console.log("JobType is ", jobType);
             if(company !== undefined && company !== ''){
               jobs = filterCompany(jobs, company);
             }
             if(courses !== undefined && courses.length > 0){
               jobs = filterCourse(jobs, courses)
             }
-            if(jobType !== undefined){
+            if(jobType !== ""){
               jobs = filterJobType(jobs, jobType);
+            }
+            if(startDate !== undefined && endDate !== undefined){
+              jobs = filterDate(jobs, startDate, endDate);
             }
             Jobs = jobs;
           }
@@ -180,7 +180,7 @@ const filterJobType = (Jobs, jobType)=>{
 
           currJobs.map((job, key)=>{
             return (
-              <Job job={job} key={Math.random() * currPage} setCurrPage={setCurrPage} currPage={currPage}{...props}/>
+              <Job job={job} key={Math.random() * currPage} setCurrPage={setCurrPage} currPage={currPage} {...props}/>
             )
         })
       }

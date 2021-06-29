@@ -7,13 +7,15 @@ import Login from './components/Login';
 import Register from './components/Register';
 import NavBar from './components/NavBar';
 import UploadJob from './components/coordinator/UploadJob';
-import MainForm from './components/student/register/MainForm.jsx';
+import MainForm from './components/student/register/MainForm';
 import ViewJobs from './components/ViewJobs';
 import ViewAllJobs from './components/ViewAllJobs';
-import UploadImage from './components/Profile.jsx';
-import UpdateProfile from './components/UpdateProfile';
+import UploadFile from './components/UploadFile';
+import ForgotPassword from './components/ForgotPassword';
 import ViewReports from './components/coordinator/ViewReports';
-import { ThemeProvider } from "@material-ui/core";
+import ViewProfile from './components/student/ViewProfile';
+import Unauthorized from './components/Unauthorized';
+import ProtectedRoute from './components/ProtectedRoute';
 import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import Brightness3Icon from "@material-ui/icons/Brightness3";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
@@ -49,13 +51,15 @@ function App() {
       <Switch>
         <Route exact path="/register" component={Register}/>
         <Route exact path="/login" component={Login} />
-        <Route exact path="/studentReg" component={MainForm} />
-        <Route exact path="/updateProfile" component={UpdateProfile} />
-        <Route exact path="/profile" render={(props) => <UploadImage type="pdf" {...props} />} />
-        <Route exact path="/job" component={UploadJob} />
-        <Route exact path="/view" component={ViewAllJobs} />
-        <Route path="/viewReports" component={ViewReports} />
-        <Route exact path="/viewJobs" render={(props) => <ViewJobs type="applied" {...props} />} />
+        <Route exact path="/forgotPass" component={ForgotPassword} />
+        <ProtectedRoute role="Student" exact path="/studentReg/:type" component={MainForm} />
+        <ProtectedRoute role="both" exact path="/profile" component={ViewProfile} />
+        <Route exact path="/file" render={(props) => <UploadFile type="doc" {...props} />} />
+        <ProtectedRoute exact path="/job" role="Coordinator" component={UploadJob} />
+        <ProtectedRoute exact path="/view" role="both" component={ViewAllJobs} />
+        <ProtectedRoute path="/viewReports" role="Coordinator" component={ViewReports} />
+        <ProtectedRoute exact path="/viewJobs" render={(props) => <ViewJobs type="applied" {...props} />} />
+        <Route exact path="/unauthorized" component={Unauthorized}/>
       </Switch>
 </AppContext.Provider>
     </Router>

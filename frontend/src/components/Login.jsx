@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
 
 const  Login = (props) => {
   const {history} = props;
-  const {setLoggedIn} = React.useContext(AppContext);
+  const {setLoggedIn, setUser} = React.useContext(AppContext);
   const classes = useStyles();
   const [username, setUsername] = useState("18mcme14");
   const [password, setPassword] = useState("9603877545");
@@ -119,10 +119,11 @@ const  Login = (props) => {
      console.log(d);
 
      if(d.success){
+       setUser({id: "1"});
        setLoggedIn(true);
        if(d.result.role==="Student"){
          if(d.reg){
-           history.push('/studentReg');
+           history.push('/studentReg/register');
          }else{
             history.push('/view');
          }
@@ -245,7 +246,7 @@ const  Login = (props) => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="/forgotPass" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>

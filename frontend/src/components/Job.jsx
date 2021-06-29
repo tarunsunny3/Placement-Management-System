@@ -7,13 +7,9 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import Pagination from '@material-ui/lab/Pagination';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import Dialog from '@material-ui/core/Dialog';
@@ -25,7 +21,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Chip from '@material-ui/core/Chip';
 import Tooltip from '@material-ui/core/Tooltip';
 import EditIcon from '@material-ui/icons/Edit';
-import ObjectId from 'bson-objectid';
+import Modal from '@material-ui/core/Modal';
+import UploadFile from './UploadFile';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -34,6 +31,14 @@ const useStyles = makeStyles((theme) => ({
       // width: '100%',
     },
   },
+  paper: {
+   position: 'absolute',
+   width: 400,
+   backgroundColor: theme.palette.background.paper,
+   border: '2px solid #000',
+   boxShadow: theme.shadows[5],
+   padding: theme.spacing(2, 4, 3),
+ },
   form: {
     // width: '100%', // Fix IE 11 issue.
     margin: theme.spacing(3),
@@ -135,6 +140,7 @@ const Job = (props) => {
   const [disabled, setDisabled] = useState(false);
   const [closed, setClosed] = useState(false);
   const [message, setMessage] = useState(null);
+  const [modal, setModal] = useState(false)
   const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const formattedDate = new Date(job.dateOfExpiry).toLocaleDateString('en-US', dateOptions);
 
@@ -209,7 +215,26 @@ const deleteJob = async (jobId)=>{
   setClosed(true);
 }
 
+const handleOfferLetter = async (offerLetterLink)=>{
+  let updateData = {};
 
+  if(user !== undefined && user.details !== undefined){
+    const userDetails = user.details;
+    userDetails.offerLettersLinks = [...userDetails.offerLettersLinks, {jobID: job._id, link: offerLetterLink}];
+    updateData = {
+      details: userDetails
+    }
+  }else{
+    const userDetails = user.details;
+    userDetails.offerLettersLinks = [{jobID: job._id, link: offerLetterLink}];
+    updateData = {
+      details: userDetails
+    }
+  }
+
+  const res = await axios.post("/api/updateUserDetails", {updateData});
+  console.log(res.data);
+}
 // const downloadExcelFile = async ()=>{
 //   const res = await axios.get("/job/file", {withCredentials: true});
 //   console.log(res);
@@ -314,6 +339,9 @@ const deleteJob = async (jobId)=>{
            >Apply
          </Button>
         }
+        {
+          type === "applied" &&  <Button variant="contained" onClick={()=>setModal(true)} color="secondary">Upload Offer Letter </Button>
+        }
         </CardActions>
         <CardActions>
 {
@@ -405,6 +433,19 @@ const deleteJob = async (jobId)=>{
     </Snackbar>
   )
 }
+
+<Modal open={modal} onClose={()=>setModal(false)} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
+       {
+         <>
+         <div style={{left: '0', right: '0', top: '0', marginLeft: "auto", marginRight: "auto"}}className={classes.paper}>
+           <p>Select the offer letter</p>
+           <UploadFile handleOfferLetter={handleOfferLetter} type="doc" name="offerLetter" saveFolder="offerLetters"/>
+         </div>
+
+         </>
+       }
+ </Modal>
+
 </div>
 
   )

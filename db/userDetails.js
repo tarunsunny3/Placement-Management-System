@@ -47,6 +47,7 @@ gender:{
         'Other'
     ]
 },
+offerLettersLinks: [{jobID: mongoose.Schema.ObjectId, link: String}],
 courseName: String,
 semesters: Number,
 semesterWisePercentage: Array,
@@ -56,6 +57,7 @@ branchName: String,
 gateScore: Number,
 ugPercentage: Number,
 pgPercentage: Number,
+yearOfGrad: Number,
 otherAcademicsName: String,
 otherAcademicPercentage: Number
 }, schemaOptions);

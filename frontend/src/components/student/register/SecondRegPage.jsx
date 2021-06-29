@@ -1,6 +1,6 @@
 import React from 'react'
 import AppContext from '../../AppContext';
-import UploadImage from '../../Profile';
+import Upload from '../../UploadFile';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -57,11 +57,7 @@ const SecondRegPage = (props) => {
   }else{
     spacing = 8;
   }
-  const {handleChange} = props;
-  const goNext = (e)=>{
-    e.preventDefault();
-    props.nextStep();
-  }
+  const {handleChange, handleSubmit} = props;
   const goBack = (e)=>{
     e.preventDefault();
     props.prevStep();
@@ -139,14 +135,17 @@ const SecondRegPage = (props) => {
     <div className={classes.form}>
     <Grid container spacing={spacing}>
       <Grid item xs={12} sm={6}>
-<UploadImage {...props} type="image"/>
+<p>Choose the profile Picture</p>
+<Upload {...props} type="image" name="profilePicture" saveFolder="images"/>
 </Grid>
 <Grid item xs={12} sm={6}>
-<UploadImage {...props}  type="pdf"/>
+<p>Choose the Resume File</p>
+<Upload {...props} name="resume" type="doc" saveFolder="resumes"/>
 </Grid>
 </Grid>
-<Button style={{marginTop: "4%"}}variant="contained" fullWidth color="primary"onClick={(e)=>goNext(e)}>Next</Button>
 <Button style={{marginTop: "2%"}}variant="contained" fullWidth color="secondary"onClick={(e)=>goBack(e)}>Back</Button>
+<Button onClick={(e)=>handleSubmit(e)} style={{marginTop: "2%"}}variant="contained" fullWidth  color="primary">Submit</Button>
+
 </div>
 
     </div>

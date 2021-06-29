@@ -194,7 +194,7 @@ let courses1: CourseType[]= availableCourses;
   if(Object.keys(tempErrors).length===0){
 
       let data = {
-        company, location, jobPosition: jobPos, salaryPackage, jobType,jobDesc, courses: selectedCourses, minCgpa: gpa, year: new Date().getFullYear(), dateOfExpiry
+        company, location, jobPosition: jobPos, salaryPackage, jobType, jobDesc, courses: selectedCourses, minCgpa: gpa, year: new Date().getFullYear(), dateOfExpiry
       }
       if(gateScore !== null){
         data["gateScore"] = gateScore;
@@ -472,6 +472,8 @@ const handleDate = (date: Date | null) => {
                   <StyledInput
                     {...params}
                     label="Company name"
+                    value={company}
+                    onChange={(e)=>setCompany(e.target.value)}
                     error={(errors["company"]) ? true : false}
                     helperText={errors["company"]}
                     variant="outlined"

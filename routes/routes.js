@@ -96,14 +96,14 @@ router.post('/sign_in', async (req, res)=>{
 //Basic Details basic_registration
 
 router.post('/register_details', requireAuth, async (req, res)=>{
-  const {firstName, lastName, branchName, courseName, semesters, phone, email, semGrades, pg, ug, gateScore,twelfthCgpa, tenthCgpa, profilePictureLink, resumeLink} = req.body;
+  const {firstName, lastName, gender, branchName, courseName, semesters, phone, email, semGrades, pg, ug, gateScore,twelfthCgpa, tenthCgpa, profilePictureLink, resumeLink} = req.body;
   try{
     const username = await req.decoded.username;
     const user = await User.findOne({username});
     user.details = {
       firstName, lastName, courseName, semesters, phone,email,semesterWisePercentage: semGrades, branchName,
        gateScore, ugPercentage: ug, pgPercentage:pg,
-       tenthCgpa, twelfthCgpa, profilePictureLink, resumeLink
+       tenthCgpa, twelfthCgpa, profilePictureLink, resumeLink, gender
     }
     try{
       const updated = await user.save();
@@ -124,5 +124,24 @@ router.post('/register_details', requireAuth, async (req, res)=>{
     success: false
   })
 }
+});
+router.post("/updateUserDetails", requireAuth,  async (req, res)=>{
+  const userID = req.decoded.id;
+  const {jobID, updateData} = req.body;
+  try{
+      const user = await User.findOneAndUpdate({_id: userID}, updateData, {new: true});
+      console.log(user);
+      res.json({
+        success: true
+      })
+  }catch(e){
+    res.json({
+      success: false,
+      message: "could not update the user details"
+    })
+  }
 })
+
+//Get User details by id
+
 module.exports = router;

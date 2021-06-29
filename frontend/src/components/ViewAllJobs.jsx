@@ -94,8 +94,8 @@ const ViewAllJobs = () => {
   const [dumCourses, setDumcourse] = useState([]);
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   useEffect(() => {
     async function fetchCompanyNames() {
       let response = await axios.get('/job/getCompanyNames');
@@ -147,7 +147,7 @@ const ViewAllJobs = () => {
   const handleFilterForm = (e)=>{
     e.preventDefault();
     setOpen(!open);
-    setFilter({"courses": courses, "company": company, "jobType": jobType});
+    setFilter({courses, company, jobType, startDate, endDate});
   }
   return (
 

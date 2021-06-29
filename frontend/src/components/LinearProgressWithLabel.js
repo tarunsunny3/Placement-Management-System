@@ -12,7 +12,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number, u
         <LinearProgress variant="determinate" value={value} />
       </Box>
       <Box style={{width: "20%"}}>
-        <Typography variant="body2" color="textSecondary">{value}%</Typography>
+        <Typography variant="h4" color="textSecondary">{value}%</Typography>
       </Box>
     </Box>
   )

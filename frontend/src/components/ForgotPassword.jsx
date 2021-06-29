@@ -64,29 +64,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Register() {
+export default function ForgotPassword() {
   const classes = useStyles();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [confPassword, setConfPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const handleClickShowPassword = () => {
-   setShowPassword(!showPassword);
- };
 
- const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-   event.preventDefault();
- };
 
  const handleSubmit = async (event)=>{
    event.preventDefault();
-   setErrors({"user": ""});
    let tempErrors = {};
    if(username.length === 0){
      tempErrors["username"] = "Please enter the  username";
    }
    if(password.length === 0){
      tempErrors["password"] = "Please enter the password";
+   }
+   if(confPassword.length === 0){
+     tempErrors["confPassword"] = "Please enter the confirm password";
+   }
+   if(password!== "" && confPassword !== "" && password !== confPassword){
+     tempErrors["passErr"] = "Both the passwords should be same";
    }
    setErrors(tempErrors);
    console.log(tempErrors);
@@ -99,8 +98,6 @@ export default function Register() {
      console.log(d);
      if(d.success){
        window.location.replace('/login');
-     }else{
-       setErrors({"user": d.message});
      }
    }
  }
@@ -108,7 +105,6 @@ export default function Register() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -126,39 +122,32 @@ export default function Register() {
                 label="Username"
                 autoFocus
                 value={username}
-                error={(errors["username"]) || errors["user"] ? true : false}
-                helperText={errors["username"] || errors["user"]}
-                onChange={(event)=>{setErrors({...errors, username:"", user: ""});setUsername(event.target.value)}}
+                error={(errors["username"]) ? true : false}
+                helperText={errors["username"]}
+                onChange={(event)=>{setErrors({...errors, username:""});setUsername(event.target.value)}}
               />
 
-            <FormControl  className={clsx(classes.textField)}  variant="outlined">
-          <InputLabel   error={errors["password"]?true:false} required htmlFor="outlined-adornment-password" >Password</InputLabel>
-        <OutlinedInput
+
+        <TextField
+              fullWidth
+              margin="normal"
+              label="Password"
               variant="outlined"
-              id="standard-adornment-password"
-              type={showPassword ? 'text' : 'password'}
               value={password}
               error={errors["password"]?true:false}
+              helperText={errors["password"]}
               onChange={(event)=>{setErrors({...errors, password:""});setPassword(event.target.value)}}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-
-              }
-                labelWidth={85}
-            />
-          <FormHelperText style={{color: 'red'}}>{errors["password"]}</FormHelperText>
-              </FormControl>
-            {/* </Grid> */}
-
-          {/* </Grid> */}
+        />
+<TextField
+      label = "Confirm Password"
+      fullWidth
+      margin="normal"
+      variant="outlined"
+      value={confPassword}
+      error={errors["confPassword"] || errors["passErr"]?true:false}
+      helperText={errors["confPassword"] ||  errors["passErr"] }
+      onChange={(event)=>{setErrors({...errors, confPassword:""});setConfPassword(event.target.value)}}
+/>
           <Button
             type="submit"
             fullWidth
