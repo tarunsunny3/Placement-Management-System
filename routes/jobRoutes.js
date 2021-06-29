@@ -192,7 +192,7 @@ router.get('/download/:fileName', (req, res)=>{
 });
 
 router.get('/downloadZip', (req, res)=>{
-  let tobeZipped = fileSystem.readdirSync(path.resolve('reports'));
+  let tobeZipped = fileSystem.readdirSync('./reports');
   let zip = new AdmZip();
   for(let i =0; i< tobeZipped.length;i++){
     zip.addLocalFile('./reports/'+tobeZipped[i]);

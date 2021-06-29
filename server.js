@@ -9,7 +9,7 @@ const jobRoutes = require('./routes/jobRoutes.js');
 const cookieParser = require('cookie-parser');
 const app = express();
 const cors= require('cors');
-
+const fs = require('fs');
 const connection= require('./db/connection');
 //Connect to Database
 connection();
@@ -21,6 +21,12 @@ app.use(cors({credentials: true, origin: true, "methods": "GET,HEAD,PUT,PATCH,PO
 app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }))
 app.use(bodyParser.json({ extended: true, limit: "50mb" }));
+fs.mkdir("./reports",  (err) => {
+	if (err) {
+			return console.error(err);
+	}
+	console.log('Directory created successfully!');
+});
 //Serve  static files
 if(process.env.NODE_ENV == 'production'){
 	app.use(express.static(path.resolve(__dirname, 'frontend', 'build')));
