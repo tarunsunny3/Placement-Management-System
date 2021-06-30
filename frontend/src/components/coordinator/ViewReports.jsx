@@ -244,9 +244,10 @@ const handleSubmit = async ()=>{
       }
     }
     if(count === 1){
-        window.open(encodeURI(`${url}/job/download/${encodeURIComponent(fileName)}`));
+        window.location.assign(encodeURI(`${url}/job/download/${encodeURIComponent(fileName)}`));
+        // window.open(encodeURI(`${url}/job/download/${encodeURIComponent(fileName)}`));
     }else{
-      window.open(encodeURI(`${url}/job/downloadZip`));
+      window.location.assign(encodeURI(`${url}/job/downloadZip`));
     }
     setLoading(false);
     setDownloadCount(0);
@@ -310,7 +311,7 @@ const handleSubmit = async ()=>{
           </Grid>
         </MuiPickersUtilsProvider>
 {
-  selectionModel.length >1 &&
+  selectionModel.length >= 1 &&
         <Grid item xs={12} sm={2}>
           <ExcelFile
             filename="job-data"
