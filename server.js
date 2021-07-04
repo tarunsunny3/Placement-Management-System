@@ -11,34 +11,40 @@ const app = express();
 const cors= require('cors');
 const fs = require('fs');
 const connection= require('./db/connection');
+const helmet = require("helmet");
+const compression = require("compression");
 //Connect to Database
 connection();
-
+app.use(helmet());
+app.use(compression());
 app.use(express.urlencoded({
 	extended: true
-}))
+}));
 app.use(cors({credentials: true, origin: true, "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",}));
 app.use(cookieParser());
-app.use(express.json({ limit: '1mb' }))
+app.use(express.json({ limit: '1mb' }));
 app.use(bodyParser.json({ extended: true, limit: "50mb" }));
-fs.mkdir("./reports",  (err) => {
-	if (err) {
-			return console.error(err);
-	}
-	console.log('Directory created successfully!');
-});
+if(!fs.existsSync('./reports')){
+	fs.mkdir("./reports",  (err) => {
+		if (err) {
+			console.error(err);
+		}
+		console.log('Directory created successfully!');
+	});
+}
+
 //Serve  static files
 if(process.env.NODE_ENV == 'production'){
 	app.use(express.static(path.resolve(__dirname, 'frontend', 'build')));
 	app.use('/api', routes);
 	app.use('/job', jobRoutes);
 	app.get('/', (req, res)=>{
-		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-	})
+		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+	});
 	app.get('/*', (req, res)=>{
-		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-	})
-}
+		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+	});
+};
 
 app.get('/', (req, res)=>{
 	res.send("Server up and running");

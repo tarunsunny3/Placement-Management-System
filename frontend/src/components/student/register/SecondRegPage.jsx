@@ -47,7 +47,7 @@ const StyledInput = withStyles({
 })(TextField);
 const SecondRegPage = (props) => {
   const {user} = React.useContext(AppContext);
-  const {values } = props;
+  const {values, errors} = props;
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -68,13 +68,16 @@ const SecondRegPage = (props) => {
       <Typography variant="h4" className={classes.heading}>
           Academic Details
         </Typography>
-    <form className={classes.form} noValidate autoComplete="on">
+    <form className={classes.form} name="academicDetails" noValidate autoComplete="on">
       <Grid container spacing={spacing}>
         <Grid item xs={12} sm={6}>
     <StyledInput
       required
+      name="tenthCgpa"
       value={props.values.tenthCgpa}
-      onChange={(event)=> handleChange("tenthCgpa", event)}
+      error={errors["tenthCgpa"] !== undefined && errors["tenthCgpa"] !== ""}
+      helperText={errors['tenthCgpa'] ||  ""}
+      onChange={(event)=> handleChange("tenthCgpa", event, "Please enter the 10th CGPA")}
       variant="outlined"
       label="10th Standard CGPA"
       fullWidth
@@ -84,8 +87,11 @@ const SecondRegPage = (props) => {
 <StyledInput
   required
   label="12th CGPA"
+  name="twelfthCgpa"
   value={props.values.twelfthCgpa}
-  onChange={(event)=> handleChange("twelfthCgpa", event)}
+  error={errors["twelfthCgpa"] !== undefined && errors["twelfthCgpa"] !== ""}
+  helperText={errors['twelfthCgpa'] ||  ""}
+  onChange={(event)=> handleChange("twelfthCgpa", event, "Please enter the 12th CGPA")}
   variant="outlined"
   fullWidth
 />

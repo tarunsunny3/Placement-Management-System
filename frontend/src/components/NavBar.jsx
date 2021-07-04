@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {withRouter} from 'react-router-dom';
 import axios from 'axios';
+import Darkmode from 'darkmode-js';
 import AppContext from './AppContext';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -172,7 +173,7 @@ const  NavBar = (props)=> {
               <div className={classes.headerItems}>
                 <Button variant="contained" onClick = {(event)=>onButtonClick(event, "/login")}>Login</Button>
                 <Button variant="contained" onClick = {(e)=>onButtonClick(e, "/register")}> Register</Button>
-                <MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon /><span>Logout</span></MenuItem>
+              {/*<MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon /><span>Logout</span></MenuItem>*/}
               </div>
               </>)
             :

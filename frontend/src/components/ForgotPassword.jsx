@@ -109,7 +109,7 @@ export default function ForgotPassword() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Forgot Password
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
               <TextField
@@ -160,7 +160,7 @@ export default function ForgotPassword() {
           <Grid container justify="flex-end">
             <Grid item>
               <Link href="/login" variant="body2">
-                Already have an account? Sign in
+                Sign in?
               </Link>
             </Grid>
           </Grid>
