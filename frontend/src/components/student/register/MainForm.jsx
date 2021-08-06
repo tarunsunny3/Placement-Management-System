@@ -7,7 +7,7 @@ import ThirdRegPage from './ThirdRegPage';
 import axios from 'axios';
 const MainForm = (props) => {
   const {type} = useParams();
-  const {user} = React.useContext(AppContext);
+  const {user, setLoggedIn, loggedIn} = React.useContext(AppContext);
   const [details, setDetails] = useState({firstName: "", lastName:"", email: "", phone: "", gender: "", branchName: "",courseName: "", semesters: "", twelfthCgpa: "", tenthCgpa: "", semGrades: [], ug: "", pg: "", gateScore: "", profilePictureLink: "", yearOfGrad: new Date(), resumeLink: ""});
   const [currPage, setCurrPage] = useState(1);
   const [gradesInputArray, setGradesInputArray] = useState([]);
@@ -100,10 +100,11 @@ const handleSubmit = async (e)=>{
     setErrors(tempErrors);
     if(Object.entries(tempErrors).length === 0){
       console.log("Details are ", details);
-      const res0 = await axios.post('/job/addCourse', {"courseName": details.courseName}, {withCredentials: true});
-      console.log(res0.data);
       const res = await axios.post('/api/register_details', details, {withCredentials: true});
       console.log(res.data);
+      alert("Successfully updated the values");
+      setLoggedIn(!loggedIn)
+      props.history.push("/profile");
     }else{
       alert("Please remove all the errors and then proceed");
     }
@@ -131,9 +132,9 @@ const nextStep = ()=>{
     }
   }
   setErrors(tempErrors);
-  if(flag === 0){
+  // if(flag === 0){
     setCurrPage(currPage+1);
-  }
+  // }
 }
 const prevStep = () =>{
   setCurrPage(currPage-1);
@@ -188,10 +189,14 @@ const handleCourse = async (event, newValue, errorMessage) => {
       }
       if (typeof newValue === 'string') {
         setDetails({...details, courseName: newValue});
+        const res0 = await axios.post('/job/addCourse', {"courseName": newValue}, {withCredentials: true});
+        console.log(res0.data);
 
       } else if(newValue && newValue.inputValue) {
         // Create a new value from the user input
         setDetails({...details, courseName: newValue.inputValue});
+        const res0 = await axios.post('/job/addCourse', {"courseName": newValue.inputValue}, {withCredentials: true});
+        console.log(res0.data);
       } else {
         setDetails({...details, courseName: newValue.courseName});
       }

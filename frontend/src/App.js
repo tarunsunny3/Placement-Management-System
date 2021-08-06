@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import AppContext from './components/AppContext';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import HomePage from './components/HomePage';
 import Login from './components/Login';
 import Register from './components/Register';
 import NavBar from './components/NavBar';
@@ -49,6 +50,7 @@ function App() {
 <AppContext.Provider value={userDetails}>
       <NavBar/>
       <Switch>
+        <Route exact path="/" component={HomePage}/>
         <Route exact path="/register" component={Register}/>
         <Route exact path="/login" component={Login} />
         <Route exact path="/forgotPass" component={ForgotPassword} />

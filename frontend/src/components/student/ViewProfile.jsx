@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import AppContext from '../AppContext';
 import IconButton from '@material-ui/core/IconButton';
@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import './ViewProfile.css';
 const StyledInput = withStyles({
   root: {
     '& fieldset': {
@@ -79,32 +80,103 @@ const ViewProfile = () => {
     if(res.data.success){
       history.go(0);
     }
-
   }
   return (
     <div>
-      <p>Username: {user.username}</p>
-      <p>Role: {user.role}</p>
-      {
-        user.role === "Student" &&
-          <>
-          <p>Email: {user.details.email}</p>
-          <p>Phone: {user.details.phone}</p>
-          <p>Gender: {user.details.gender}</p>
+
+      <div style={{margin: "auto", textAlign: "center"}}>
+        {
+          user.details === undefined || user.details.profilePictureLink === undefined
+          ?
+          <p>Loading...</p>
+          :
+           // <Avatar alt="Remy Sharp" src={user.details.profilePictureLink} />
+           <>
+            <img src={user.details.profilePictureLink} style={{width: "500px", height: "400px",objectFit: "contain", marginTop: "2%"}}  alt="user profile"/>
+           </>
+
+        }
+        <div>
+
+          
+        <table className="table">
+          <tbody>
+          <tr>
+            <td>
+              Username
+            </td>
+            <td>
+              {user.username}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Role
+            </td>
+            <td>
+              {user.role}
+            </td>
+          </tr>
+          {
+            user.role==="Student" &&
+            <>
+          <tr>
+            <td>
+              Email
+            </td>
+            <td>
+              {user.details.email}
+            </td>
+          </tr>
+
+        <tr>
+          <td>
+            Phone Number
+          </td>
+          <td>
+            {user.details.phone}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Gender
+          </td>
+          <td>
+            {user.details.gender}
+          </td>
+        </tr>
+
         {
           user.details.semesterWisePercentage.map((grade, key)=>{
-            return <p key={key}>Semester {key+1} is {grade} </p>
-          })
-        }
+            return (
+              <tr key={key}>
+                <td>
+                  Semester {key+1}
+                </td>
+                <td>
+                  {grade}
+                </td>
+              </tr>
+          )
+        })
+      }
+</>
+
+    }
+  </tbody>
+    </table>
+          </div>
         {
           user.details.semesters > user.details.semesterWisePercentage.length &&
           <>
+          {console.log(user.details.semesters, user.details.semesterWisePercentage.length)}
             <p>You have to enter <b>{user.details.semesters - user.details.semesterWisePercentage.length} </b>more semesters Grades</p>
           {
             gradesInputArray.length === 0 &&
             <h3>Add field to enter grades for each sem? <span><IconButton onClick={()=>handleAddField()}><AddCircleOutlineTwoToneIcon /></IconButton></span></h3>
           }
             <form onSubmit={(e)=>handleSubmit(e)}>
+              <Grid container direction="column" justify="space-around" alignItems="center">
           {
 
             gradesInputArray.map((val, key)=>{
@@ -112,9 +184,10 @@ const ViewProfile = () => {
               key += len;
               const autoFocus = (key-len) === gradesInputArray.length-1;
                 return (
-          <Grid item xs={12} sm={3} key={key}>
+                  <Grid item xs={12} sm={2} key={key}>
 
                   <StyledInput
+                    margin="normal"
                     autoFocus={autoFocus}
                     name="grade"
                     required
@@ -132,7 +205,9 @@ const ViewProfile = () => {
           </Grid>
                 )
               })
+
           }
+          </Grid>
           {
             gradesInputArray.length >  0 &&
             <Button type="submit" variant="contained" color="primary" >Submit</Button>
@@ -141,9 +216,7 @@ const ViewProfile = () => {
 
           </>
         }
-          </>
-      }
-
+      </div>
     </div>
   )
 }

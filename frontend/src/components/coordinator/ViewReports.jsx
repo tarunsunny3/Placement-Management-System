@@ -129,7 +129,7 @@ const ViewReports = (props) => {
       data: resultJobs.filter((job, key)=>selectionModel.includes(key+1)).map(job=>
         [
           {value: job.companyName, style: { font: {sz: "14"}}},
-          {value: job.noOfStudentsPlaced || "", style: { font: {sz: "14"}}}
+          {value: job.noOfStudentsPlaced || "N/A", style: { font: {sz: "14"}}}
         ]
       )
     }
@@ -244,7 +244,7 @@ const handleSubmit = async ()=>{
       }
     }
     if(count === 1){
-        window.location.assign(encodeURI(`${url}/job/download/${encodeURIComponent(fileName)}`));
+        window.location.assign(encodeURI(`${url}/job/download/${fileName}`));
         // window.open(encodeURI(`${url}/job/download/${encodeURIComponent(fileName)}`));
     }else{
       window.location.assign(encodeURI(`${url}/job/downloadZip`));

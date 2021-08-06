@@ -13,6 +13,7 @@
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
+    "browser-image-compression": "^1.0.14",
     "bson-objectid": "^2.0.1",
     "currency-formatter": "^1.5.7",
     "darkmode-js": "^1.5.7",

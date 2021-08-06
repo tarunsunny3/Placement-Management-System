@@ -265,13 +265,18 @@ router.get('/getCourses', (req, res)=>{
   })
 });
 //Add a new Course
-router.post('/addCourse',  (req, res)=>{
+router.post('/addCourse',  async (req, res)=>{
   const {courseName} =  req.body;
-  // console.log(data);
-  // console.log(courseName);
-  const newCourse = new Course({courseName});
-  newCourse.save();
-  res.send({success: true});
+  const course = await Course.findOne({courseName});
+  //If the course is not present already then add it
+  if(course === null){
+    const newCourse = new Course({courseName});
+    await newCourse.save();
+    res.send({success: true});
+  }else{
+    res.send({success: false, message: "Couldn't add the course"});
+  }
+
 })
 
 router.get("/getJobs", (req, res)=>{

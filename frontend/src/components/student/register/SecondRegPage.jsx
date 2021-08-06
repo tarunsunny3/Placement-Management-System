@@ -74,7 +74,7 @@ const SecondRegPage = (props) => {
     <StyledInput
       required
       name="tenthCgpa"
-      value={props.values.tenthCgpa}
+      value={props.values.tenthCgpa || ""}
       error={errors["tenthCgpa"] !== undefined && errors["tenthCgpa"] !== ""}
       helperText={errors['tenthCgpa'] ||  ""}
       onChange={(event)=> handleChange("tenthCgpa", event, "Please enter the 10th CGPA")}
@@ -88,7 +88,7 @@ const SecondRegPage = (props) => {
   required
   label="12th CGPA"
   name="twelfthCgpa"
-  value={props.values.twelfthCgpa}
+  value={props.values.twelfthCgpa || ""}
   error={errors["twelfthCgpa"] !== undefined && errors["twelfthCgpa"] !== ""}
   helperText={errors['twelfthCgpa'] ||  ""}
   onChange={(event)=> handleChange("twelfthCgpa", event, "Please enter the 12th CGPA")}
@@ -105,7 +105,7 @@ const SecondRegPage = (props) => {
     <StyledInput
     required
     label="Gate Score"
-    value={props.values.gateScore}
+    value={props.values.gateScore || ""}
     onChange={(event)=> handleChange("gateScore", event)}
     variant="outlined"
     fullWidth
@@ -120,7 +120,7 @@ const SecondRegPage = (props) => {
     <StyledInput
     required
     label="UG Percentage"
-    value={props.values.ug}
+    value={props.values.ug || ""}
     onChange={(event)=> handleChange("ug", event)}
     variant="outlined"
     fullWidth
@@ -130,7 +130,7 @@ const SecondRegPage = (props) => {
   <StyledInput
   required
   label="PG Percentage"
-  value={props.values.pg}
+  value={props.values.pg || ""}
   onChange={(event)=> handleChange("pg", event)}
   variant="outlined"
   fullWidth

@@ -1,0 +1,14 @@
+.table td{
+  /* padding-left: 60%; */
+  padding-bottom: 5%;
+}
+.table{
+  margin: auto;
+  text-align: justify;
+}
+.table td:nth-child(odd){
+  margin-left: 2%;
+}
+.table td:nth-child(even){
+  padding-left: 40%;
+}

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import {Redirect} from 'react-router-dom'
-import welcomeImage from './welcome.png';
+import welcomeImage from './images/welcome.png';
 import {withRouter} from 'react-router-dom';
 import AppContext from './AppContext';
 import Avatar from '@material-ui/core/Avatar';

@@ -43,6 +43,7 @@ var userSchema = new mongoose.Schema({
 
 // Hashes the password before saving it in database
 userSchema.pre("save", function(next) {
+
     if(!this.isModified("password")) {
         return next();
     }
@@ -52,6 +53,7 @@ userSchema.pre("save", function(next) {
 
 // returns unhashed version of password to compare
 userSchema.methods.comparePassword = function(plaintext, callback) {
+    console.log(this.password, bcrypt.compareSync(plaintext, this.password));
     return callback(null, bcrypt.compareSync(plaintext, this.password));
 };
 

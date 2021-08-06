@@ -5,12 +5,14 @@ import {v4 as uuidv4} from 'uuid';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
-
+import AppContext from './AppContext';
+import imageCompression from 'browser-image-compression';
 class Upload extends React.Component {
-
+  static contextType = AppContext;
   constructor(props){
     super(props);
-    this.state ={
+    this.state = {
+      user: null,
       storageRef: storage.ref(),
       percentUploaded: 0,
       uploadTask: null,
@@ -18,10 +20,13 @@ class Upload extends React.Component {
       uploadState: "",
       fileErrors: [],
       alertOpen: true
-    }
+    };
+  }
+  componentDidMount(){
+    this.setState({user: this.context.user});
+    console.log("Context data is ", this.context);
   }
   addFile = (event) => {
-    // event.preventDefault();
     const file = event.target.files[0];
 
     if (file) {
@@ -78,18 +83,42 @@ class Upload extends React.Component {
   )
   }
   //Set the location where we want to store these images in firebase storage
-  uploadFile = (file) => {
+  uploadFile = async (file) => {
       // console.log(file);
+      console.log(this.state.user._id);
       if(file !== null){
-        const fileType = this.props.type;
         let filePath="";
       // location in storage you want to create/send file to
 
+      if(this.state.user !== null){
+        filePath = `/${this.props.saveFolder}/${this.state.user._id}-${file.name}`;
+      }else{
+        //If in some case we are not able to get the user id then we use random uuid
        filePath = `/${this.props.saveFolder}/${uuidv4()}-${file.name}`;
+     }
 
         this.setState({
           uploadState: "uploading"
-        })
+        });
+        console.log('originalFile instanceof Blob', file instanceof Blob); // true
+        console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
+
+  const options = {
+    maxSizeMB: 0.01,
+    maxWidthOrHeight: 1920,
+    useWebWorker: true
+  }
+  let compressedFile = null;
+  try {
+    compressedFile = await imageCompression(file, options);
+    console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+    console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+  } catch (error) {
+    console.log(error);
+  }
+        if(compressedFile !== null){
+          file = compressedFile;
+        }
         this.setState({
           uploadTask: this.state.storageRef.child(filePath).put(file)
         },
