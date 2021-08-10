@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 // import axiosConfig from './axiosConfig';
 import axios from 'axios';
+import bg from './components/images/bg.jpg';
 import AppContext from './components/AppContext';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import HomePage from './components/HomePage';
@@ -65,7 +66,6 @@ function App() {
       </Switch>
 </AppContext.Provider>
     </Router>
-
     </>
   );
 }

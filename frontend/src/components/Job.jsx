@@ -90,14 +90,18 @@ const useStyles = makeStyles((theme) => ({
     direction: 'row',
     width: "30vw",
     [theme.breakpoints.down("sm")]:{
-      width: "100%"
+      width: "100%",
+      margin: "5% auto 3% auto",
     },
     justifyContent: "space-around",
     // alignItems: "center"
   },
   chipItem:{
-    // marginTop: "100%",
+    
     marginLeft: "20%",
+    [theme.breakpoints.down("sm")]:{
+     marginTop: "100%",
+    },
     // marginRight: "50%"
   },
   wrapper:{

@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import bg from '../images/bg.jpg';
 import {withRouter, useHistory} from 'react-router-dom';
 import { CssBaseline,Typography, Grid,Button, FormControl, FormControlLabel, FormLabel, Radio,RadioGroup} from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
@@ -24,13 +25,21 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     height: "100vh",
+   
     '& .MuiTextField-root': {
       margin: theme.spacing(1),
       width: '25ch',
     },
+   
   },
   paper: {
-    maxWidth: "70%",
+    [theme.breakpoints.up("md")]:{
+      maxWidth: "70%",
+    },
+
+    [theme.breakpoints.down("md")]:{
+      minWidth: "85%",
+    },
     marginTop: theme.spacing(8),
     marginLeft: theme.spacing(4),
     marginRight: theme.spacing(4),
@@ -38,8 +47,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     borderRadius: '20px',
-    // justifyContent: 'center',
-    // justifyItems: 'center',
     backgroundColor: "#f4eee8"
   },
 
@@ -434,7 +441,9 @@ const handleDate = (date: Date | null) => {
     :
 <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
-    <Grid container direction="column" justify="flex-start" alignItems="center">
+    <Grid style={{backgroundImage: `url(${bg})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",}} container direction="column" justify="flex-start" alignItems="center">
       <CssBaseline />
 
     <div  className={classes.paper}>

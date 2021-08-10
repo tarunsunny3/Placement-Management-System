@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import axios from 'axios';
+import bg from './images/bg.jpg';
 import AppContext from './AppContext';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';

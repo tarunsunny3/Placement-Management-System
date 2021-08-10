@@ -167,7 +167,7 @@ const ViewProfile = () => {
     </table>
           </div>
         {
-          user.details.semesters > user.details.semesterWisePercentage.length &&
+          user.details !== undefined && user.details.semesters !== undefined  && user.details.semesters > user.details.semesterWisePercentage.length &&
           <>
           {console.log(user.details.semesters, user.details.semesterWisePercentage.length)}
             <p>You have to enter <b>{user.details.semesters - user.details.semesterWisePercentage.length} </b>more semesters Grades</p>

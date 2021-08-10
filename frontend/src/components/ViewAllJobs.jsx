@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios';
 import AppContext from './AppContext';
+import bg from './images/bg.jpg';
 import ViewJobs from './ViewJobs';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -25,7 +26,10 @@ import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    height: "100vh"
+    height: "100vh",
+    backgroundImage: `url(${bg})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover"
   },
   enabled:{
     '&':{

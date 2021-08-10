@@ -19,6 +19,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useTheme } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Avatar from '@material-ui/core/Avatar';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -32,11 +33,32 @@ const useStyles = makeStyles((theme) => ({
   headerItems:{
     display: "flex",
     flex: 1,
-    justifyContent: "space-evenly"
+    justifyContent: "space-evenly",
+  },
+  headerButton:{
+    '&:hover':{
+      backgroundColor: "#FFDAB9"
+    },
+    backgroundColor: "white",
+    color: "black",
+    cursor: "pointer",
+  },
+  currentHeaderItem: {
+    cursor: "pointer",
+    backgroundColor: "#BCFFB9",
+    color: "black",
+    padding: "5px 10px",
+    borderRadius: "10px"
   },
   headerItem: {
-    width: "100%",
-    marginRight: "10%",
+    '&:hover':{
+      backgroundColor: "pink",
+      padding: "10px 10px  5px 10px",
+      color: "black",
+    },
+    // width: "100%",
+    // marginRight: "10%",
+    
     cursor: "pointer"
   },
   iconText: {
@@ -74,6 +96,7 @@ const  NavBar = (props)=> {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+    handleMobileMenuClose();
   };
 
   const handleMobileMenuClose = () => {
@@ -104,6 +127,14 @@ const  NavBar = (props)=> {
 
   const onButtonClick = (event, pageURL) => {
     event.preventDefault();
+    // let items = document.querySelectorAll("#header-item");
+    // for(let i = 0 ; i < items.length; i++){
+    //   if(items[i].className.includes("currentHeader")){
+    //     items[i].className = "";
+    //     items[i].className = classes.headerItem;
+    //   }
+    // }
+    // event.target.className = classes.currentHeaderItem;
     history.push(pageURL);
   }
   const Logout = async  ()=>{
@@ -128,21 +159,14 @@ const  NavBar = (props)=> {
       {
         user !== undefined && user.role==="Coordinator"
         &&
-        <MenuItem onClick={(e)=>handleMenuClick(e, "/job")}><VisibilityIcon /><span className={classes.iconText}>Upload Job</span></MenuItem>
+        <MenuItem onClick={(e)=>{handleMenuClick(e, "/job"); handleMobileMenuClose();}}><CloudUploadIcon /><span className={classes.iconText}>Upload Job</span></MenuItem>
       }
 
-      <MenuItem onClick={(e)=>handleMenuClick(e, "/view")}><VisibilityIcon /><span className={classes.iconText}>View Jobs</span></MenuItem>
+      <MenuItem onClick={(e)=>{handleMenuClick(e, "/view"); handleMobileMenuClose();}}><VisibilityIcon /><span className={classes.iconText}>View Jobs</span></MenuItem>
 
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
+      <AccountCircle />
+        <span className={classes.iconText}>Profile</span>
       </MenuItem>
     </Menu>
   );
@@ -176,8 +200,8 @@ const  NavBar = (props)=> {
 
               (<>
               <div className={classes.headerItems}>
-                <Button variant="contained" onClick = {(event)=>onButtonClick(event, "/login")}>Login</Button>
-                <Button variant="contained" onClick = {(e)=>onButtonClick(e, "/register")}> Register</Button>
+                <Button className={classes.headerButton} style={{marginRight: "10%"}} variant="contained" onClick = {(event)=>onButtonClick(event, "/login")}>Login</Button>
+                <Button className={classes.headerButton} variant="contained" onClick = {(e)=>onButtonClick(e, "/register")}> Register</Button>
               {/*<MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon /><span>Logout</span></MenuItem>*/}
               </div>
               </>)
@@ -201,25 +225,26 @@ const  NavBar = (props)=> {
 
             <div className={classes.sectionDesktop}>
               <div>
-                <p className={classes.headerItem} onClick = {(event)=>onButtonClick(event, "/view")}>View Jobs</p>
+                {console.log(history.location.pathname)}
+                <p className={history.location.pathname !== '/view' ? classes.headerItem: classes.currentHeaderItem} onClick = {(event)=>onButtonClick(event, "/view")}>View Jobs</p>
               </div>
               {
                 user.role === "Coordinator" && <div>
-                  <p className={classes.headerItem}  onClick = {(event)=>onButtonClick(event, "/job")}>Upload Jobs</p>
+                  <p className={history.location.pathname !== '/job' ? classes.headerItem: classes.currentHeaderItem} onClick = {(event)=>onButtonClick(event, "/job")}>Upload Jobs</p>
 
               </div>
 
               }
               {
                 user.role==="Coordinator" &&
-                  <p style={{cursor: "pointer"}} onClick={(e)=>onButtonClick(e, "/viewReports")}>View Reports</p>
+                  <p  className={history.location.pathname !== '/viewReports' ? classes.headerItem: classes.currentHeaderItem} onClick={(e)=>onButtonClick(e, "/viewReports")}>View Reports</p>
               }
 
                 <div>
-                <p style={{fontWeight: "700"}}>{user.username}</p>
-
+                {/* <p style={{fontWeight: "700"}}>{user.username}</p>
+                <p>{user.role}</p> */}
               </div>
-              <p>{user.role}</p>
+             
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -257,17 +282,6 @@ const  NavBar = (props)=> {
 
         )
           }
-          <div className={classes.sectionMobile}>
-          <IconButton
-            aria-label="show more"
-            aria-controls={mobileMenuId}
-            aria-haspopup="true"
-            onClick={handleMobileMenuOpen}
-            color="inherit"
-          >
-            <MoreIcon />
-          </IconButton>
-        </div>
         {renderMobileMenu}
 
         </Toolbar>

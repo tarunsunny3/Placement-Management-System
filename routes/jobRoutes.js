@@ -120,7 +120,7 @@ router.post('/report/', async (req, res)=>{
       values["phone"] = details && details.phone ? details.phone : "";
     }
     if(resume !== ""){
-      if(!details){
+      if(details===undefined || details.resumeLink === undefined){
         values["resume"] = "";
       }else{
           values["resume"] = {text: "resumeLink", hyperlink: details.resumeLink};
