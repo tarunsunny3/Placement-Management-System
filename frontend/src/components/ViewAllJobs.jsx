@@ -152,7 +152,7 @@ const ViewAllJobs = () => {
   return (
 
     <div className={classes.root}>
-
+       
       <Drawer variant="temporary" classes={{paper: classes.paper}} anchor='left' open={open} onClose={()=>setOpen(false)}>
         <h1 style={{textAlign: "center"}}>Filter Options <span style={{float: "right", paddingRight: "10%"}} onClick={()=>setOpen(false)}><CloseIcon/></span></h1>
 
@@ -296,6 +296,7 @@ const ViewAllJobs = () => {
           type==="default" || type===undefined
             ?
             <>
+
               <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
               <ViewJobs key={1} type="default" filter={filter}/>
             </>
@@ -310,11 +311,13 @@ const ViewAllJobs = () => {
           type==="open" || type === undefined
             ?
             <>
+            
               <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
               <ViewJobs key={3} type="open" filter={filter}/>
             </>
             :
             <>
+            
               <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
               <ViewJobs key={4} type="close" filter={filter}/>
             </>

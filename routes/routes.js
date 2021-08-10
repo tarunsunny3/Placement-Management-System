@@ -173,6 +173,43 @@ router.post("/sendEmail", (req, res)=>{
 
   res.json({success: true, otp});
 })
+router.post("/sendJobUpdateEmail", async (req, res)=>{
+  const message = req.body.message;
+  const courses = req.body.courses;
+  console.log("Message is ", message);
+  console.log("Courses", courses);
+ 
+  let users = await User.find({});
+  console.log("Old Length is ", users.length);
+  // console.log("Boolean is ", user.details !== undefined && user.details.courseName && courses.includes(user.details.courseName));
+  users = users.filter((user)=>
+  {
+    console.log(user.details !== undefined && user.details.courseName !== undefined && courses.includes(user.details.courseName));
+    return user.details !== undefined && user.details.courseName !== undefined && courses.includes(user.details.courseName)
+  } 
+  );
+  // console.log("New Length is ", users.length);
+  users.map((user)=>{
+    // console.log(user.username);
+    if(user.details !== undefined && user.details.email !== undefined){
+       var mailOptions = {
+        from: 'tarunsunny3@gmail.com',
+        to: user.details.email,
+        subject: 'UoH New Job Update!!',
+        html: `<p>A new job has been posted....do check it out!</p><h2 style="font-size: 40px;">${message}</h2>`
+      };
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+    }
+  });
+  
+  res.json({success: true});
+})
 
 router.post("/changePassword", async (req, res)=>{
   let {username, newPassword} = req.body;

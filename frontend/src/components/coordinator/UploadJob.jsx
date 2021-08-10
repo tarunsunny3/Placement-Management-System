@@ -205,19 +205,20 @@ let courses1: CourseType[]= availableCourses;
          console.log(d);
          if(d.success){
            history.push("/view", {alert: true, id: state.id, currPage: state.currPage});
+           const res = axios.post('/api/sendJobUpdateEmail', {message: `${company} - ${jobPos}`, courses: selectedCourses});
          }else{
            setAlert(true);
            setOpen(true);
            setMessage("Couldn't update the job");
          }
-
        }else{
 
-         const res = await axios.post('/job/uploadJob',data, {withCredentials: true});
+         const res = await axios.post('/job/uploadJob', data, {withCredentials: true});
          const d = res.data;
          if(d.success){
            history.go(0);
-           history.push("/job", {alert: true, message: "Job posted successfully!!"})
+           history.push("/job", {alert: true, message: "Job posted successfully!!"});
+           const res = axios.post('/sendJobUpdateEmail', {message: `${company} - ${jobPos}`, courses: selectedCourses});
          }else{
            setAlert(true);
            setOpen(true);
@@ -291,9 +292,13 @@ let courses1: CourseType[]= availableCourses;
   }
   const handleGpa = (event)=>{
     if(event.target.value.length > 0){
-      setErrors({...errors, "gpa" : ""});
-    }else{
-      setErrors({...errors, "gpa" : "Please enter a value in the range (0-100)"});
+      let gpa = event.target.value;
+      if(Number(gpa) < 0 || Number(gpa) > 100){
+        setErrors({...errors, "gpa" : "Please enter a value in the range (0-100)"});
+      }else{
+        setErrors({...errors, "gpa" : ""});
+      }
+      
     }
     setGpa(event.target.value);
   }

@@ -81,7 +81,31 @@ const filterDate = (Jobs, startDate, endDate)=>{
   Jobs = Jobs.filter((job)=> new Date(job.createdAt) >= startDate &&  new Date(job.createdAt) <= endDate);
   return Jobs;
 }
-
+const showJobsIfEligible = (job, status, user)=>{
+  let res = false;
+  let cumGPA = -1;
+  if(job.minCgpa != null){
+    if(user.details !== undefined && user.details.semesterWisePercentage !== undefined){
+      let semesters = user.details.semesterWisePercentage;
+      let sum = 0;
+      if(semesters.length > 0){
+        const reducer = (sum, currentValue) => sum + currentValue;
+        sum = semesters.reduce(reducer);
+        cumGPA = sum / semesters.length;
+      }
+    }
+  }
+    if(status === "unapplied"){
+      res = !job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date())));
+      if(job.minCgpa !== null){
+        res = res && cumGPA >= job.minCgpa;
+      }
+    }else if(status === "applied"){
+      res = job.users.includes(user.id);
+    }
+    res = res && job.courses.includes(user.details.courseName);
+    return res;
+}
   React.useEffect(() => {
     let mounted  = true;
     setLoading(true);
@@ -95,20 +119,27 @@ const filterDate = (Jobs, startDate, endDate)=>{
             if(props.type==="open"){
               //Set the option for which current page is displaying
               setOption("open");
+
               Jobs = Jobs.filter((job)=>(job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
             }else{
               //Closed jobs are those whose isOpen value is false
               //and Date of expiry is crossed
               setOption("closed");
+              // Jobs = Jobs.filter((job)=>showJobsIfEligible(job, "closed", user));
               Jobs = Jobs.filter((job)=>job.isOpen===false || (job.dateOfExpiry !== undefined && new Date(job.dateOfExpiry) < (new Date())));
             }
           }else{
             if(props.type==="default"){
               setOption("applied");
-              Jobs = Jobs.filter((job)=>!job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
+              // Unapplied jobs
+              Jobs = Jobs.filter((job)=>showJobsIfEligible(job, "unapplied", user));
+              
+              // Jobs = Jobs.filter((job)=>!job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
             }else{
               setOption("unapplied");
-              Jobs = Jobs.filter(job=>job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
+              //Applied Jobs
+              Jobs = Jobs.filter((job)=>showJobsIfEligible(job, "applied", user));
+              // Jobs = Jobs.filter(job=>job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
             }
           }
           if(props.filter !== undefined && Object.keys(props.filter).length >0){

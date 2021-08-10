@@ -108,55 +108,63 @@ router.post('/report/', async (req, res)=>{
     const details = user.details;
     let values = {};
     if(firstName !== ""){
-      values[firstName] = details.firstName;
+      values["firstName"] = details && details.firstName ? details.firstName : "";
     }
     if(lastName !== ""){
-      values[lastName] = details.lastName;
+      values["lastName"] = details && details.lastName ? details.lastName : "";
     }
     if(email !== ""){
-      values[email] = details.email;
+      values["email"] = details &&details.email ? details.email : "";
     }
     if(phone !== ""){
-      values[phone] = details.phone;
+      values["phone"] = details && details.phone ? details.phone : "";
     }
     if(resume !== ""){
-      if(details.resumeLink === undefined){
-        values[resume] = "";
+      if(!details){
+        values["resume"] = "";
       }else{
-          values[resume] = {text: "resumeLink", hyperlink: details.resumeLink};
+          values["resume"] = {text: "resumeLink", hyperlink: details.resumeLink};
       }
     }
     if(offerletter !== ""){
-      const links = details.offerLettersLinks;
-      let flag = false;
-      for(let i = 0; i< links.length; i++){
-        if(links[i].jobID == jobId){
-          values[offerletter] = {text: "offerLetterLink", hyperlink: links[i].link};
-          flag = true;
-          break;
+
+      if(details === undefined){
+          values["offerletter"] = "";
+      }else{
+        if(details.offerLettersLinks === undefined){
+          values["offerletter"] = "";
+        }else{
+          const links = details.offerLettersLinks;
+          let flag = false;
+          for(let i = 0; i< links.length; i++){
+            if(links[i].jobID == jobId){
+              values["offerletter"] = {text: "offerLetterLink", hyperlink: links[i].link};
+              flag = true;
+              break;
+            }
+          }
         }
+
       }
-      if(!flag){
-        values[offerletter] = "";
-      }
+
     }
     if(gender !== ""){
-      values[gender] = details.gender;
+      values["gender"] = details && details.gender ? details.gender : "";
     }
     if(branchName !== ""){
-      values[branchName] = details.branchName;
+      values["branchName"] = details && details.branchName ? details.branchName : "";
     }
     if(ugPercentage !== ""){
-      values[ugPercentage] = details.ugPercentage;
+      values["ugPercentage"] = details && details.ugPercentage ? details.ugPercentage : "";
     }
     if(pgPercentage !== ""){
-      values[pgPercentage] = details.pgPercentage;
+      values["pgPercentage"] = details && details.pgPercentage ? details.pgPercentage : "";
     }
     if(tenthCgpa !== ""){
-      values[tenthCgpa] = details.tenthCgpa;
+      values["tenthCgpa"] = details && details.tenthCgpa ? details.tenthCgpa : "";
     }
     if(twelfthCgpa !== ""){
-      values[twelfthCgpa] = details.twelfthCgpa;
+      values["twelfthCgpa"] = details && details.twelfthCgpa ? details.twelfthCgpa : "";
     }
     userDetails.push(values);
   });

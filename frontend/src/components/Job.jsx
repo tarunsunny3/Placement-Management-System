@@ -23,6 +23,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import EditIcon from '@material-ui/icons/Edit';
 import Modal from '@material-ui/core/Modal';
 import UploadFile from './UploadFile';
+import Badge from '@material-ui/core/Badge';
+import CheckIcon from '@material-ui/icons/Check';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -55,7 +57,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '2%'
   },
   cardBackgroundNormal:{
-    backgroundColor: "#f4eee8"
+    backgroundColor: "#f4eee8",
+    backgroundColor: "#F8EDED"
+
   },
   cardBackgroundUpdated:{
     backgroundColor: "#DDFFBC"
@@ -125,7 +129,6 @@ const Job = (props) => {
   const state = props.location.state;
   const jobRef = React.useRef(null);
   const {job, type, currPage, setCurrPage, location, history} = props;
-  const urlToServer = encodeURI(`http://localhost:8080/job/file/${job._id}`);
   const jobNotExpired = (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry) > (new Date())));
   const {user} = React.useContext(AppContext);
   const classes = useStyles();
@@ -249,18 +252,20 @@ const handleOfferLetter = async (offerLetterLink)=>{
       { !closed &&
       <div>
       <Card  ref={jobRef} tabIndex="-1" className={message===null || message.id !== job._id ? `${classes.root} ${classes.cardBackgroundNormal}`: `${classes.root} ${classes.cardBackgroundUpdated}`}>
-        <CardActionArea>
-          {
+       
+
+            <div style={{width: "100%", padding: "2% 0",  backgroundColor: "#907FA4", color: "white"}}>
+            {
             (user && user.role!=="Student") &&
               jobNotExpired && job.isOpen === true
               &&
               <>
-              <Tooltip title="Close/Delete this Job?" placement="right">
-                <CloseIcon style={{float: "right", padding: "5%"}} onClick={()=>deleteJob(job._id)}/>
+              <Tooltip title="Close/Delete this Job?" placement="top">
+                <CloseIcon style={{float: "right", paddingRight: "5%", marginTop: "1%"}} onClick={()=>deleteJob(job._id)}/>
               </Tooltip>
 
               <Tooltip title="Update this Job?" placement="right">
-                <EditIcon style={{float: "left", padding: "5%"}} onClick={()=>{
+                <EditIcon style={{float: "left", paddingLeft: "5%", marginTop: "1%"}} onClick={()=>{
                   mainHistory.push("/job", {id: job._id, type: "update", currPage})
                 }}/>
             </Tooltip>
@@ -270,12 +275,25 @@ const handleOfferLetter = async (offerLetterLink)=>{
               //   <CloseIcon style={{float: "right", padding: "5%"}} onClick={()=>deleteJob(job._id)}/>
               // </Tooltip>
           }
-          <CardContent >
-
-
-            <Typography  style={{textAlign: "center", margin: "auto"}} variant="h5" component="h2">
-            {job.companyName}
-            </Typography>
+              <Typography  style={{textAlign: "center", margin: "auto"}} variant="h5" component="h2">
+              {job.companyName}
+              <div style={{float: "right", paddingRight: "10%"}}>
+              <Tooltip title="Number of applicants" placement="right">
+                  <Badge   anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }} badgeContent={job.users.length} color="primary">
+                <CheckIcon />
+              </Badge>
+              </Tooltip>
+              </div>
+              
+             
+              </Typography>
+            </div>
+            <CardActionArea>
+         
+         <CardContent>
             <div className={classes.chips}>
               <div>
                 <p>Location</p>
@@ -301,9 +319,10 @@ const handleOfferLetter = async (offerLetterLink)=>{
               </div>
             </div>
             <Typography variant="body2"  component="p">
-              {jobDesc+"..."}
+              {job.jobDesc.length > 70 ?  jobDesc+"..." : jobDesc}
               {
                 job.jobDesc.length > 70 &&
+
                 (jobDesc.length <= 70
                 ?
                 <a href="!#" onClick={(event)=>onClickMore(event, job.jobDesc)}>more</a>
@@ -337,6 +356,7 @@ const handleOfferLetter = async (offerLetterLink)=>{
              variant="contained"
              color="primary"
            >Apply
+         
          </Button>
         }
         {

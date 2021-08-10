@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {withRouter} from 'react-router-dom';
+import uoh_logo from './images/uoh_logo.png';
 import axios from 'axios';
 import Darkmode from 'darkmode-js';
 import AppContext from './AppContext';
@@ -17,6 +18,7 @@ import EditTwoToneIcon from '@material-ui/icons/EditTwoTone';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useTheme } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import Avatar from '@material-ui/core/Avatar';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -163,9 +165,12 @@ const  NavBar = (props)=> {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            UoH
+          
+          <Avatar style={{cursor: "pointer"}} onClick={()=>window.location.href = "/"} alt="Uoh Logo" src={uoh_logo} />
+          <Typography style={{cursor: "pointer"}} onClick={()=>window.location.href = "/"} variant="h6" className={classes.title}>
+            &nbsp;UoH
           </Typography>
+        
           {
             (user===undefined || user===null || user.id === null) ?
 

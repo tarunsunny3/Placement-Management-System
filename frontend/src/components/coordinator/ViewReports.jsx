@@ -113,7 +113,7 @@ const ViewReports = (props) => {
   const [downloadCount, setDownloadCount] = useState(0);
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'open', headerName: 'Open?', type: 'boolean', width: 200 },
+    { field: 'open', headerName: 'Status', type: 'boolean', width: 200 },
     { field: 'companyName', headerName: 'Company Name', width: 200 },
     { field: 'location', headerName: 'Location', width: 200 },
     { field: 'salaryPackage', headerName: 'Salary Package', width: 200, type: 'number' },
@@ -123,13 +123,15 @@ const ViewReports = (props) => {
   const DataSet = [
     {
       columns:[
-        {title: "Company Name", style: {font: { sz: "18", bold: true}}, width: {wpx: 150}},
-        {title: "Students Placed", style: {font: { sz: "18", bold: true}}, width: {wpx: 150}},
+        {title: "Company Name", style: {font: { sz: "18", bold: true}}, width: {wpx: 180}},
+        {title: "Students Placed", style: {font: { sz: "18", bold: true}}, width: {wpx: 180}},
+        {title: "Salary Package", style: {font: { sz: "18", bold: true}}, width: {wpx: 180}},
       ],
       data: resultJobs.filter((job, key)=>selectionModel.includes(key+1)).map(job=>
         [
           {value: job.companyName, style: { font: {sz: "14"}}},
-          {value: job.noOfStudentsPlaced || "N/A", style: { font: {sz: "14"}}}
+          {value: job.noOfStudentsPlaced || "N/A", style: { font: {sz: "14"}}},
+          {value: job.salaryPackage, style: {font : {sz: "14"}}}
         ]
       )
     }
