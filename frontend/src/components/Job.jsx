@@ -76,9 +76,12 @@ const useStyles = makeStyles((theme) => ({
       flexBasis:'30%',
     },
     [theme.breakpoints.down("sm")]:{
-      width: "90vw"
+      width: "100vw"
+    },
+    [theme.breakpoints.between('sm', 'md')]:{
+      width: "80vw",
+      flexBasis:'40%',
     }
-
   },
   chip:{
     backgroundColor: 'orange'
@@ -90,8 +93,9 @@ const useStyles = makeStyles((theme) => ({
     direction: 'row',
     width: "30vw",
     [theme.breakpoints.down("sm")]:{
-      width: "100%",
-      margin: "5% auto 3% auto",
+
+      width: "80%",
+      margin: "10% auto 3% auto",
     },
     justifyContent: "space-around",
     // alignItems: "center"

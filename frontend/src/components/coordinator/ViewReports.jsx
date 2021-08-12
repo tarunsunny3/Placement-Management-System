@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import axios from 'axios';
 import url from '../../apiUrl';
 import LinearProgressWithLabel from '../LinearProgressWithLabel';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 import { DataGrid } from '@material-ui/data-grid';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -254,12 +254,38 @@ const handleSubmit = async ()=>{
     setLoading(false);
     setDownloadCount(0);
 }
+const labels = resultJobs.filter((job, key)=>selectionModel.includes(key+1)).map(job=>
+  job.companyName
+)
+const data1 = resultJobs.filter((job, key)=>selectionModel.includes(key+1)).map(job=>
+  job.noOfStudentsPlaced || 10
+)
+const data = {
+  labels: labels,
+  datasets: [
+    {
+      label: 'Dataset 1',
+      data: data1,
+      backgroundColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+      ],
+      // backgroundColor: Object.values(Utils.CHART_COLORS),
+    }
+  ]
+};
 
   return (
     <div>
           <CssBaseline />
 
-
+         
+          <Link to="/visualize"> Show Chart</Link>
+          
   <Grid container direction="column" justify="flex-start" alignItems="center">
 
       <form className={classes.form} noValidate>

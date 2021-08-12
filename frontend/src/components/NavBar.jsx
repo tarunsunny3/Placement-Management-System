@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {withRouter} from 'react-router-dom';
-import uoh_logo from './images/uoh_logo.png';
+import uoh_logo from './images/hcu.jpg';
 import axios from 'axios';
 import Darkmode from 'darkmode-js';
 import AppContext from './AppContext';
@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
     // marginRight: theme.spacing(2),
   },
   title: {
+
+    marginTop: "1%",
+    marginLeft: "-1%",
     flexGrow: 1,
   },
   headerItems:{
@@ -189,11 +192,14 @@ const  NavBar = (props)=> {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          
-          <Avatar style={{cursor: "pointer"}} onClick={()=>window.location.href = "/"} alt="Uoh Logo" src={uoh_logo} />
-          <Typography style={{cursor: "pointer"}} onClick={()=>window.location.href = "/"} variant="h6" className={classes.title}>
-            &nbsp;UoH
+        <Typography variant="h6" className={classes.title}>
+        <img onClick={()=>window.location.href = "/"}  style={{ maxHeight: (window.innerHeight/14)}} src={uoh_logo}/>
           </Typography>
+          
+          {/* <Avatar style={{cursor: "pointer"}} onClick={()=>window.location.href = "/"} alt="Uoh Logo" src={uoh_logo} /> */}
+          {/* <Typography style={{cursor: "pointer"}} onClick={()=>window.location.href = "/"} variant="h6" className={classes.title}>
+            &nbsp;UoH
+          </Typography> */}
         
           {
             (user===undefined || user===null || user.id === null) ?

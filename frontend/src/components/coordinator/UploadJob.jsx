@@ -441,9 +441,7 @@ const handleDate = (date: Date | null) => {
     :
 <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
-    <Grid style={{backgroundImage: `url(${bg})`,
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",}} container direction="column" justify="flex-start" alignItems="center">
+    <Grid  container direction="column" justify="flex-start" alignItems="center">
       <CssBaseline />
 
     <div  className={classes.paper}>

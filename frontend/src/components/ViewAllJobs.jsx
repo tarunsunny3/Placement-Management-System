@@ -26,10 +26,10 @@ import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    height: "100vh",
-    backgroundImage: `url(${bg})`,
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover"
+    // height: "100vh",
+    // backgroundImage: `url(${bg})`,
+    // backgroundRepeat: "no-repeat",
+    // backgroundSize: "cover"
   },
   enabled:{
     '&':{
@@ -316,7 +316,7 @@ const ViewAllJobs = () => {
             ?
             <>
             
-              <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
+              <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span></Button>
               <ViewJobs key={3} type="open" filter={filter}/>
             </>
             :
@@ -328,7 +328,6 @@ const ViewAllJobs = () => {
         )
 
       }
-
     </div>
   )
 }

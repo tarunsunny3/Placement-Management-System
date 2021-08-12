@@ -226,23 +226,7 @@ const showJobsIfEligible = (job, status, user)=>{
       </div>
     )
 
-  // return (
-  //   <div>
-  //
-  //      <div className={classes.gridList}>
-  //        {
-  //       currJobs.map((job, key)=>{
-  //         return (
-  //           <Job job={job} key={key}/>
-  //         )
-  //       })
-  //     }
-  //   </div>
-  //   <div className={classes.pagination} >
-  //   <Pagination  showFirstButton showLastButton color="primary" count={Math.ceil(jobs.length/jobsPerPage)} page={currPage} onChange={(event: React.ChangeEvent<unknown>, value: number)=>setCurrPage(value)} />
-  //   </div>
-  //   </div>
-  // )
+ 
 }
 
 export default ViewJobs

@@ -21,6 +21,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import Brightness3Icon from "@material-ui/icons/Brightness3";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
+import Visualization from './components/coordinator/Visualization';
 function App() {
   const [theme, setTheme] = useState(true);
   const [user, setUser] = useState({});
@@ -55,6 +56,7 @@ function App() {
         <Route exact path="/register" component={Register}/>
         <Route exact path="/login" component={Login} />
         <Route exact path="/forgotPass" component={ForgotPassword} />
+        <Route exact path="/visualize" component={Visualization}/>
         <ProtectedRoute role="Student" exact path="/studentReg/:type" component={MainForm} />
         <ProtectedRoute role="both" exact path="/profile" component={ViewProfile} />
         <Route exact path="/file" render={(props) => <UploadFile type="doc" {...props} />} />

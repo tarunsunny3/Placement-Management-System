@@ -254,7 +254,8 @@ router.get('/getCompanyNames', (req, res)=>{
     }else{
       let companyNames = []
       jobs.map((val, key)=>{
-        companyNames.push(val.companyName);
+        if(!companyNames.includes(val.companyName))
+          companyNames.push(val.companyName);
       })
       res.json({companyNames});
     }
@@ -299,6 +300,25 @@ router.get("/getJobs", (req, res)=>{
   }
 )
 });
+//Get Jobs filtered by multiple company names
+router.post('/getFilteredJobs', (req, res)=>{
+  const companies = req.body.companies;
+  let resultJobs = [];
+  Job.find({}, (err, jobs)=>{
+    if(err){
+      res.json({success: false});
+    }else{
+      jobs.map((job)=>{
+        if(companies.includes(job.companyName)){
+          resultJobs.push(job);
+        }
+      });
+      res.json({success: true, jobs: resultJobs});
+    } 
+  })
+  
+})
+
 
 //Get Jobs by Course Name and Company Name
 router.get("/getjobs/:courseName/:companyName/:year", (req, res)=>{
