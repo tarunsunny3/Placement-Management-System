@@ -283,9 +283,10 @@ const handleOfferLetter = async (offerLetterLink)=>{
               //   <CloseIcon style={{float: "right", padding: "5%"}} onClick={()=>deleteJob(job._id)}/>
               // </Tooltip>
           }
-          { !isMobile &&
+          
               <Typography  style={{textAlign: "center", margin: "auto"}} variant="h5" component="h2">
               {job.companyName}
+              { !isMobile &&
               <div style={{float: "right", paddingRight: "10%"}}>
               <Tooltip title="Number of applicants" placement="right">
                   <Badge   anchorOrigin={{
@@ -297,10 +298,11 @@ const handleOfferLetter = async (offerLetterLink)=>{
               </Badge>
               </Tooltip>
               </div>
+}
               
              
               </Typography>
-}
+
             </div>
             <CardActionArea>
          
