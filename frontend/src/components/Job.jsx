@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import axios from 'axios';
 import {withRouter, useHistory} from 'react-router-dom';
 import AppContext from './AppContext';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -25,6 +25,7 @@ import Modal from '@material-ui/core/Modal';
 import UploadFile from './UploadFile';
 import Badge from '@material-ui/core/Badge';
 import CheckIcon from '@material-ui/icons/Check';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -134,6 +135,8 @@ const StyledInput = withStyles({
 })(TextField);
 const Job = (props) => {
   const mainHistory = useHistory();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const state = props.location.state;
   const jobRef = React.useRef(null);
   const {job, type, currPage, setCurrPage, location, history} = props;
@@ -246,10 +249,7 @@ const handleOfferLetter = async (offerLetterLink)=>{
   const res = await axios.post("/api/updateUserDetails", {updateData});
   console.log(res.data);
 }
-// const downloadExcelFile = async ()=>{
-//   const res = await axios.get("/job/file", {withCredentials: true});
-//   console.log(res);
-// }
+
   return (
 
 
@@ -283,6 +283,7 @@ const handleOfferLetter = async (offerLetterLink)=>{
               //   <CloseIcon style={{float: "right", padding: "5%"}} onClick={()=>deleteJob(job._id)}/>
               // </Tooltip>
           }
+          { !isMobile &&
               <Typography  style={{textAlign: "center", margin: "auto"}} variant="h5" component="h2">
               {job.companyName}
               <div style={{float: "right", paddingRight: "10%"}}>
@@ -290,14 +291,16 @@ const handleOfferLetter = async (offerLetterLink)=>{
                   <Badge   anchorOrigin={{
         vertical: 'top',
         horizontal: 'right',
-      }} badgeContent={job.users.length} color="primary">
+      }} badgeContent={job.users.length} showZero color="primary">
                 <CheckIcon />
+               
               </Badge>
               </Tooltip>
               </div>
               
              
               </Typography>
+}
             </div>
             <CardActionArea>
          
@@ -357,6 +360,10 @@ const handleOfferLetter = async (offerLetterLink)=>{
           </CardContent>
         </CardActionArea>
         <CardActions>
+          {
+            isMobile && <p>Number of applicants: {job.users.length}</p>
+          }
+          
         {
           type === "default" &&  <Button
              disabled={applied}

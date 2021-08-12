@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import Autocomplete , { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
@@ -10,7 +10,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import { Bar, Line } from 'react-chartjs-2';
 import CssBaseline from '@material-ui/core/CssBaseline';
-
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -55,6 +55,8 @@ const StyledInput = withStyles({
   
   })(TextField);
 const Visualization = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const classes = useStyles();
     const [availableCompanies, setAvailableCompanies] = useState([]);
     const [selectedCompanies, setSelectedCompanies] = useState([]);
@@ -73,6 +75,7 @@ const Visualization = () => {
          
           if(res.data.success){
             const jobs = res.data.jobs;
+            console.log(jobs);
             if(selectedCompanies.length >= 2){
             let map = new Map();
            
@@ -112,7 +115,8 @@ const Visualization = () => {
                   'rgb(153, 102, 255)',
                   'rgb(201, 203, 207)'
                 ],
-                borderWidth: 1
+                borderWidth: 1,
+                barPercentage: 0.3
               }]
             };
             setChartData({type: "Bar", data});
@@ -122,14 +126,16 @@ const Visualization = () => {
             //Show the data of the last 10 years
             let years = [], values=[];
             const currYear = new Date().getFullYear();
-            for(let gap = 10; gap >= 0 ; gap--){
+            for(let gap = 3; gap >= 0 ; gap--){
               years.push(currYear-gap);
             }
             jobs.map(job=>{
               if(job.companyName === selectedCompanies[0]){
-                values.push(job.noOfStudentsPlaced);
+                values.push(job.noOfStudentsPlaced || 5);
               }
             });
+            
+            console.log(values);
             const data = {
               labels: years,
               datasets: [{
@@ -155,10 +161,12 @@ const Visualization = () => {
                     error.length > 0 && <p>{error}</p>
                 }
 
-          
-                    
+<div style={{color: "green", fontWeight: "600", marginLeft: "2%"}}>
+        <p>Selecting one company will display a line chart of year-wise number of students placed</p>
+        <p>Selecting multiple companies gives the BAR chart</p>
+        </div>
   <Grid container direction="column" justify="center" alignItems="center">
-
+      
 <form className={classes.form} noValidate>
 <Grid container  alignItems="center" spacing={8}>
   <Grid item xs={12} sm={6}>
@@ -200,21 +208,38 @@ const Visualization = () => {
             <Button fullWidth variant="contained" color="primary" onClick={()=>showChart()}> Show Chart</Button>
             </Grid>
 </Grid>
-            <Grid container spacing={4}>
-              <Grid item xs={12} sm={8}>
-              <div id="myChartDiv" style={{display: 'none' }}>
+
+</form>
+          
+          </Grid>
+            {
+              isMobile ? 
+              <div id="myChartDiv" style={{display: 'none'}}>
+              <div style={{marginLeft: "5%", width: "80vw", height: "70vh"}}>
+                <b style={{color: "crimson"}}>Best Viewed in Desktop</b>
+                
+                  {
+                    chartData.type.length > 0 &&
+                    chartData.type === "Bar" ?   <Bar data={chartData.data}/> : <Line data={chartData.data} options={{spanGaps: true}}/>
+                  }
+        
+                </div>
+              </div>
+                :
+                <div id="myChartDiv" style={{display: 'none'}}>
+                <div style={{marginLeft: "5%", width: "80vw", height: "100vh"}}>
                 {
                   chartData.type.length > 0 &&
                   chartData.type === "Bar" ?   <Bar data={chartData.data}/> : <Line data={chartData.data} options={{spanGaps: true}}/>
                 }
        
       </div>
-              </Grid>
-            </Grid>
+            
+            </div>
+            }
+            
+              
 
-            </form>
-          
-        </Grid>
       
         </div>
     )

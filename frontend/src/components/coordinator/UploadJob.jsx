@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     [theme.breakpoints.down("md")]:{
-      minWidth: "85%",
+      maxWidth: "85%",
     },
     marginTop: theme.spacing(8),
     marginLeft: theme.spacing(4),

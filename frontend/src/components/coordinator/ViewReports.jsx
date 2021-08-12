@@ -284,7 +284,11 @@ const data = {
           <CssBaseline />
 
          
-          <Link to="/visualize"> Show Chart</Link>
+   
+            <Button style={{marginTop: "2%", marginLeft: "1%"}} component={Link} to={'/visualize'} variant="contained" color="primary">
+              Show Charts
+            </Button>
+       
           
   <Grid container direction="column" justify="flex-start" alignItems="center">
 

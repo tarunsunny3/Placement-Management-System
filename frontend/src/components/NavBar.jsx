@@ -18,7 +18,7 @@ import EditTwoToneIcon from '@material-ui/icons/EditTwoTone';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useTheme } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import Avatar from '@material-ui/core/Avatar';
+import AssessmentIcon from '@material-ui/icons/Assessment';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -162,7 +162,10 @@ const  NavBar = (props)=> {
       {
         user !== undefined && user.role==="Coordinator"
         &&
+        <>
         <MenuItem onClick={(e)=>{handleMenuClick(e, "/job"); handleMobileMenuClose();}}><CloudUploadIcon /><span className={classes.iconText}>Upload Job</span></MenuItem>
+        <MenuItem onClick={(e)=>{handleMenuClick(e, "/viewReports"); handleMobileMenuClose();}}><AssessmentIcon /><span className={classes.iconText}>View Reports</span></MenuItem>
+        </>
       }
 
       <MenuItem onClick={(e)=>{handleMenuClick(e, "/view"); handleMobileMenuClose();}}><VisibilityIcon /><span className={classes.iconText}>View Jobs</span></MenuItem>
