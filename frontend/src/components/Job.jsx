@@ -362,9 +362,7 @@ const handleOfferLetter = async (offerLetterLink)=>{
           </CardContent>
         </CardActionArea>
         <CardActions>
-          {
-            isMobile && <p>Number of applicants: {job.users.length}</p>
-          }
+          
           
         {
           type === "default" &&  <Button
@@ -381,6 +379,9 @@ const handleOfferLetter = async (offerLetterLink)=>{
         }
         </CardActions>
         <CardActions>
+        {
+            isMobile && <p>Number of applicants: {job.users.length}</p>
+          }
 {
   user != null && user.role==="Coordinator" && !disabled && (job.isOpen===false || !jobNotExpired)
   &&

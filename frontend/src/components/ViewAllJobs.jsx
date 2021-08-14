@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios';
 import AppContext from './AppContext';
-import bg from './images/bg.jpg';
 import ViewJobs from './ViewJobs';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -20,6 +19,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import CloseIcon from '@material-ui/icons/Close';
+import SearchIcon from '@material-ui/icons/Search';
+import IconButton from '@material-ui/core/IconButton';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
@@ -31,8 +32,33 @@ const useStyles = makeStyles((theme) => ({
     // backgroundRepeat: "no-repeat",
     // backgroundSize: "cover"
   },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  searchBar:{
+    
+    [theme.breakpoints.down("xs")]:{
+      marginLeft: "2%",
+      marginTop: "2%",
+      width: "85%",
+    },
+    [theme.breakpoints.up("md")]:{
+      marginLeft: "5%",
+      marginTop: "2%",
+      width: "70%"
+    },
+  },
+  filterButton:{
+    marginLeft: "2%",
+    marginTop: "2%"
+  },
   enabled:{
     '&':{
+      backgroundColor: "green",
+      color: "white"
+    },
+    '&:focus':{
       backgroundColor: "green",
       color: "white"
     }
@@ -78,6 +104,7 @@ const StyledInput = withStyles({
         borderLeftWidth: 7,
         padding: '4px !important', // override inline-style
     },
+    
   },
 
 })(TextField);
@@ -100,6 +127,7 @@ const ViewAllJobs = () => {
   const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [search, setSearch] = useState("");
   useEffect(() => {
     async function fetchCompanyNames() {
       let response = await axios.get('/job/getCompanyNames');
@@ -151,7 +179,14 @@ const ViewAllJobs = () => {
   const handleFilterForm = (e)=>{
     e.preventDefault();
     setOpen(!open);
-    setFilter({courses, company, jobType, startDate, endDate});
+    setFilter({courses, company, jobType, startDate, endDate, searchKeyword: search});
+  }
+  const getSearchResults = (searchParam)=>{
+    if(searchParam === undefined){
+      setFilter({searchKeyword: search});
+    }else{
+      setFilter({searchKeyword: ""});
+    }
   }
   return (
 
@@ -250,7 +285,7 @@ const ViewAllJobs = () => {
         format="dd/MM/yyyy"
         margin="normal"
         id="end"
-        label="Till ?"
+        label="End Date"
         value={endDate}
         onChange={(date)=>handleDate("end", date)}
         KeyboardButtonProps={{
@@ -273,7 +308,9 @@ const ViewAllJobs = () => {
 
 </Grid>
   </Drawer>
+  
       {
+        
         user != null && user.role === "Student"
         ?
         <>
@@ -292,7 +329,36 @@ const ViewAllJobs = () => {
         </ButtonGroup>
         </>
       }
-
+      
+      <Button className={classes.filterButton} variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span></Button>
+  
+      
+        <StyledInput 
+        className={classes.searchBar}
+        color="primary"
+        placeholder="Search for company name, position, description, location, etc"
+        onChange={(event)=>{
+          if(event.target.value.length === 0){
+            getSearchResults("");
+          }
+          setSearch(event.target.value);
+        }
+        }
+        value={search}
+        inputProps={{ 'aria-label': 'search' }}
+        onKeyPress={(key)=>{
+          if(key.code==='Enter'){
+            getSearchResults();
+          }
+        }}>
+          
+        </StyledInput>
+        <IconButton onClick={getSearchResults} type="submit" style={{marginTop: "2%"}} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+        
+      
+       
       {
         user != null && user.role === "Student"
         ?
@@ -300,13 +366,10 @@ const ViewAllJobs = () => {
           type==="default" || type===undefined
             ?
             <>
-
-              <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
               <ViewJobs key={1} type="default" filter={filter}/>
             </>
             :
             <>
-              <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
               <ViewJobs key={2} type="applied" filter={filter}/>
             </>
         )
@@ -315,14 +378,10 @@ const ViewAllJobs = () => {
           type==="open" || type === undefined
             ?
             <>
-            
-              <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span></Button>
               <ViewJobs key={3} type="open" filter={filter}/>
             </>
             :
             <>
-            
-              <Button style={{marginLeft: "2%", marginTop: "2%"}}variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span>Show Filter Options</Button>
               <ViewJobs key={4} type="close" filter={filter}/>
             </>
         )

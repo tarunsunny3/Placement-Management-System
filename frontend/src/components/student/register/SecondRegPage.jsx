@@ -69,7 +69,13 @@ const SecondRegPage = (props) => {
           Academic Details
         </Typography>
     <form className={classes.form} name="academicDetails" noValidate autoComplete="on">
-      <Grid container spacing={spacing}>
+    <Grid
+              container
+              direction="row"
+              justify="space-around"
+              alignItems="center"
+              spacing={6}
+            >
         <Grid item xs={12} sm={6}>
     <StyledInput
       required
@@ -96,11 +102,9 @@ const SecondRegPage = (props) => {
   fullWidth
 />
 </Grid>
-</Grid>
 {
   values.courseName.toLowerCase().includes("Mtech".toLowerCase()) &&
 (<div>
-  <Grid container spacing={spacing}>
     <Grid item xs={12} sm={12}>
     <StyledInput
     required
@@ -111,11 +115,9 @@ const SecondRegPage = (props) => {
     fullWidth
     />
 </Grid>
-</Grid>
 </div>)
 }
 
-<Grid container spacing={spacing}>
   <Grid item xs={12} sm={6}>
     <StyledInput
     required

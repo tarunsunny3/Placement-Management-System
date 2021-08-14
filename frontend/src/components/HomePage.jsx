@@ -7,13 +7,13 @@ const HomePage = () => {
     <div>
   <div className="bg">
 
-    <div style={{backgroundColor: "#FDD2BF",  textAlign: "center"}}>
-      <h1 style={{fontSize: "40px", marginTop: "-3px", color: "#3C5186", padding: "80px 200px"}}>
-        Welcome To Placement Management System
+    <div style={{backgroundColor: "#FDD2BF", display: "flex", direction: "column", justifyContent: "center", alignItems: "center"}}>
+      <h1 style={{textAlign: "center", fontSize: "40px", color: "#3C5186", paddingTop: "5%", paddingBottom: "5%"}}>
+        Welcome to Placement Management System
       </h1>
-        {/*<img src={bgImage} style={{width: "100vw", height: "100vh", objectFit: "cover"}} alt="background"/>*/}
+      
     </div>
-
+    <img src={bgImage} style={{width: "100%", height: "100vh", objectFit: "cover"}} alt="background"/>
     </div>
     <footer id="footer" className="footer">
         <div className="footer-content">

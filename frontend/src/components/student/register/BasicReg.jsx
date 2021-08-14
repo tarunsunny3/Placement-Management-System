@@ -125,7 +125,7 @@ const BasicReg = (props) => {
             Basic Details
           </Typography>
           <form className={classes.form} name="basicDetails" autoComplete="off">
-            <Grid
+            {/* <Grid
               container
               direction="row"
               justify="space-around"
@@ -369,6 +369,283 @@ const BasicReg = (props) => {
                   />
                 </Grid>
               </Grid>
+              {values.semesters !== "" &&
+                semestersError.isTrue &&
+                gradesInputArray.length === 0 && (
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6">
+                      Add field to enter grades for each sem?{" "}
+                      <span>
+                        <IconButton onClick={() => handleAddField()}>
+                          <AddCircleOutlineTwoToneIcon />
+                        </IconButton>
+                      </span>
+                    </Typography>
+                  </Grid>
+                )}
+
+              {gradesInputArray.map((val, key) => {
+                const autoFocus = key === gradesInputArray.length - 1;
+                return (
+                  <Grid item xs={12} sm={3} key={key}>
+                    <StyledInput
+                      autoFocus={autoFocus}
+                      name="grade"
+                      required
+                      value={val.grade}
+                      type="number"
+                      label={"Enter Grade for SEM " + (key + 1)}
+                      variant="outlined"
+                      onChange={(event) => handleSemGrade(event, key)}
+                    />
+                    {key === gradesInputArray.length - 1 &&
+                      key < Number(values.semesters) - 1 && (
+                        <IconButton onClick={(key) => handleAddField(key)}>
+                          <AddCircleOutlineTwoToneIcon />
+                        </IconButton>
+                      )}
+
+                    <IconButton onClick={(event) => handleRemoveField(key)}>
+                      <RemoveCircleOutlineTwoToneIcon />
+                    </IconButton>
+                  </Grid>
+                );
+              })}
+            </Grid> */}
+            <Grid
+              container
+              direction="row"
+              justify="space-around"
+              alignItems="center"
+              spacing={6}
+            >
+                <Grid item xs={12} sm={6}>
+                  <StyledInput
+                    autoFocus
+                    required
+                    label="First Name"
+                    name="firstName"
+                    value={values.firstName}
+                    error={errors["firstName"] && errors["firstName"] !== ""}
+                    helperText={errors["firstName"] || ""}
+                    onChange={(event) =>
+                      handleChange(
+                        "firstName",
+                        event,
+                        "Please enter the first name"
+                      )
+                    }
+                    variant="outlined"
+                  />
+                  </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledInput
+                    required
+                    label="Last Name"
+                    name="lastName"
+                    value={values.lastName}
+                    error={errors["lastName"] && errors["lastName"] !== ""}
+                    helperText={errors["lastName"] || ""}
+                    onChange={(event) =>
+                      handleChange(
+                        "lastName",
+                        event,
+                        "Please enter the last name"
+                      )
+                    }
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledInput
+                    required
+                    label="Branch Name"
+                    name="branchName"
+                    value={values.branchName}
+                    error={errors["branchName"] && errors["branchName"] !== ""}
+                    helperText={errors["branchName"] || ""}
+                    onChange={(event) =>
+                      handleChange(
+                        "branchName",
+                        event,
+                        "Please enter the Branch Name"
+                      )
+                    }
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Autocomplete
+                    name="course"
+                    id="course"
+                    options={courses1}
+                    value={values.courseName}
+                    freeSolo
+                    filterOptions={(options, params) => {
+                      const filtered = filter(options, params);
+
+                      // Suggest the creation of a new value
+                      let bool = false;
+                      options.map((val, key) => {
+                        if (val.courseName === params.inputValue) {
+                          bool = true;
+                        }
+                        return bool;
+                      });
+                      if (!bool) {
+                        if (params.inputValue !== "") {
+                          filtered.push({
+                            inputValue: params.inputValue,
+                            courseName: `Add "${params.inputValue}"?`,
+                          });
+                        }
+                      }
+                      return filtered;
+                    }}
+                    clearOnBlur
+                    handleHomeEndKeys
+                    getOptionLabel={(option) => {
+                      // Value selected with enter, right from the input
+                      if (typeof option === "string") {
+                        return option;
+                      }
+                      // Add "xxx" option created dynamically
+                      if (option.inputValue) {
+                        return option.inputValue;
+                      }
+                      // Regular option
+                      return option.courseName;
+                    }}
+                    onChange={(event, newValue) => {
+                      handleCourse(event, newValue, "Please select the course");
+                    }}
+                    renderOption={(option) => option.courseName}
+                    renderInput={(params) => (
+                      <StyledInput
+                        {...params}
+                        variant="outlined"
+                        label="Course"
+                        placeholder="Select your course"
+                        value={values.courseName}
+                        error={
+                          errors["course"] !== undefined &&
+                          errors["course"] !== ""
+                        }
+                        helperText={errors["course"] || ""}
+                        required
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledInput
+                    required
+                    type="tel"
+                    label="Enter your phone number"
+                    value={values.phone}
+                    error={
+                      errors["phone"] !== undefined && errors["phone"] !== ""
+                    }
+                    helperText={
+                      errors["phone"] !== undefined ? errors["phone"] : ""
+                    }
+                    onChange={(event) =>
+                      handleChange(
+                        "phone",
+                        event,
+                        "Please enter the mobile number"
+                      )
+                    }
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledInput
+                    required
+                    type="email"
+                    label="Enter your email"
+                    placeholder="EMAIL"
+                    value={values.email}
+                    error={
+                      errors["email"] !== undefined && errors["email"] !== ""
+                    }
+                    helperText={
+                      errors["email"] !== undefined ? errors["email"] : ""
+                    }
+                    onChange={(event) =>
+                      handleChange("email", event, "Please enter the email")
+                    }
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <FormControl
+                    style={{ marginLeft: "3%" }}
+                    error={errors !== undefined && errors["gender"]}
+                    component="fieldset"
+                  >
+                    <FormLabel component="legend" name="gender">
+                      Gender
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      aria-label="gender"
+                      name="gender1"
+                      value={values.gender}
+                      onChange={(event) => handleChange("gender", event)}
+                    >
+                      <FormControlLabel
+                        value="Female"
+                        control={<Radio />}
+                        label="Female"
+                      />
+                      <FormControlLabel
+                        value="Male"
+                        control={<Radio />}
+                        label="Male"
+                      />
+                      <FormControlLabel
+                        value="Other"
+                        control={<Radio />}
+                        label="Other"
+                      />
+                    </RadioGroup>
+                    <FormHelperText>{errors["gender"] || ""}</FormHelperText>
+                  </FormControl>
+                </Grid>
+
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Grid item xs={12} sm={4}>
+                    <DatePicker
+                      minDate={Date(2022)}
+                      views={["year"]}
+                      label="Year of Graduation"
+                      value={values.yearOfGrad}
+                      onChange={(date) => handleChange("yearOfGrad", date)}
+                    />
+                  </Grid>
+                </MuiPickersUtilsProvider>
+
+                <Grid item xs={12} sm={4}>
+                  <StyledInput
+                    required
+                    type="number"
+                    label="Number of semesters"
+                    value={values.semesters}
+                    onChange={(event) =>
+                      handleChange(
+                        "semesters",
+                        event,
+                        "Please enter the number of semesters"
+                      )
+                    }
+                    variant="outlined"
+                    helperText={
+                      semestersError.message || errors["semesters"] || ""
+                    }
+                    error={!semestersError.isTrue || errors["semesters"]}
+                  />
+                </Grid>
               {values.semesters !== "" &&
                 semestersError.isTrue &&
                 gradesInputArray.length === 0 && (

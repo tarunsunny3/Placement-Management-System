@@ -288,17 +288,15 @@ router.post('/addCourse',  async (req, res)=>{
 
 })
 
-router.get("/getJobs", (req, res)=>{
-
-  Job.find({}, (err, jobs)=>{
-    if(err){
-      throw err;
-    }else{
-      // console.log(jobs);
-      res.json({jobs});
-    }
+router.get("/getJobs", async (req, res)=>{
+  try{
+    const jobs = await Job.find({}).sort({'createdAt': '-1'});
+    res.json({jobs});
+  }catch(err){
+    console.log(err);
   }
-)
+ 
+
 });
 //Get Jobs filtered by multiple company names
 router.post('/getFilteredJobs', (req, res)=>{

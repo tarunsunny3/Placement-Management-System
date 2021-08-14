@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import AppContext from '../AppContext';
 import IconButton from '@material-ui/core/IconButton';
@@ -86,16 +86,17 @@ const ViewProfile = () => {
 
       <div style={{margin: "auto", textAlign: "center"}}>
         {
-          user.details === undefined || user.details.profilePictureLink === undefined
-          ?
-          <p>Loading...</p>
+          user.details === undefined ?  
+          <>
+            <p>Please finish the <Link to="/studentReg/register">registration</Link> first!!</p>
+          </>
           :
-           // <Avatar alt="Remy Sharp" src={user.details.profilePictureLink} />
-           <>
+          <>
+          {
+            user.details.profilePictureLink !== undefined &&
             <img src={user.details.profilePictureLink} style={{width: "500px", height: "400px",objectFit: "contain", marginTop: "2%"}}  alt="user profile"/>
-           </>
-
-        }
+          }
+       
         <div>
 
           
@@ -216,8 +217,12 @@ const ViewProfile = () => {
 
           </>
         }
+    
+      </>
+        }
       </div>
     </div>
+
   )
 }
 

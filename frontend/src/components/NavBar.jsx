@@ -59,9 +59,6 @@ const useStyles = makeStyles((theme) => ({
       padding: "10px 10px  5px 10px",
       color: "black",
     },
-    // width: "100%",
-    // marginRight: "10%",
-    
     cursor: "pointer"
   },
   iconText: {
@@ -70,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   sectionDesktop: {
      display: 'none',
      [theme.breakpoints.up('md')]: {
-       width: "50vw",
+       width: "35vw",
        display: 'flex',
        alignItems: "center",
        justifyContent: "space-around"
@@ -82,6 +79,9 @@ const useStyles = makeStyles((theme) => ({
        display: 'none',
      },
    },
+   currMenuItem:{
+     color: 'green'
+   }
 }));
 
 
@@ -196,21 +196,18 @@ const  NavBar = (props)=> {
       <AppBar position="static">
         <Toolbar>
         <Typography variant="h6" className={classes.title}>
-        <img onClick={()=>window.location.href = "/"}  style={{ maxHeight: (window.innerHeight/14)}} src={uoh_logo}/>
+        <img onClick={()=>window.location.href = "/"}  style={{ cursor: "pointer", maxHeight: (window.innerHeight/14)}} src={uoh_logo}/>
           </Typography>
           
-          {/* <Avatar style={{cursor: "pointer"}} onClick={()=>window.location.href = "/"} alt="Uoh Logo" src={uoh_logo} /> */}
-          {/* <Typography style={{cursor: "pointer"}} onClick={()=>window.location.href = "/"} variant="h6" className={classes.title}>
-            &nbsp;UoH
-          </Typography> */}
+        
         
           {
             (user===undefined || user===null || user.id === null) ?
 
               (<>
               <div className={classes.headerItems}>
-                <Button className={classes.headerButton} style={{marginRight: "10%"}} variant="contained" onClick = {(event)=>onButtonClick(event, "/login")}>Login</Button>
-                <Button className={classes.headerButton} variant="contained" onClick = {(e)=>onButtonClick(e, "/register")}> Register</Button>
+                <Button className={history.location.pathname !== '/login' ? classes.headerButton : classes.currentHeaderItem} style={{marginRight: "10%"}} variant="contained" onClick = {(event)=>onButtonClick(event, "/login")}>Login</Button>
+                <Button className={history.location.pathname !== '/register' ? classes.headerButton : classes.currentHeaderItem} variant="contained" onClick = {(e)=>onButtonClick(e, "/register")}> Register</Button>
               {/*<MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon /><span>Logout</span></MenuItem>*/}
               </div>
               </>)
@@ -230,30 +227,26 @@ const  NavBar = (props)=> {
               </IconButton>
           </div>
 
-
-
-            <div className={classes.sectionDesktop}>
-              <div>
-                {console.log(history.location.pathname)}
-                <p className={history.location.pathname !== '/view' ? classes.headerItem: classes.currentHeaderItem} onClick = {(event)=>onButtonClick(event, "/view")}>View Jobs</p>
-              </div>
-              {
-                user.role === "Coordinator" && <div>
-                  <p className={history.location.pathname !== '/job' ? classes.headerItem: classes.currentHeaderItem} onClick = {(event)=>onButtonClick(event, "/job")}>Upload Jobs</p>
-
-              </div>
-
-              }
-              {
-                user.role==="Coordinator" &&
-                  <p  className={history.location.pathname !== '/viewReports' ? classes.headerItem: classes.currentHeaderItem} onClick={(e)=>onButtonClick(e, "/viewReports")}>View Reports</p>
-              }
-
+         
+                <div className={classes.sectionDesktop}>
                 <div>
-                {/* <p style={{fontWeight: "700"}}>{user.username}</p>
-                <p>{user.role}</p> */}
-              </div>
+                      
+                  <p className={history.location.pathname !== '/view' ? classes.headerItem : classes.currentHeaderItem} onClick = {(event)=>onButtonClick(event, "/view")}>View Jobs</p>
+                </div>
+         {
+                user.role === "Coordinator" && 
+                <>
+            
+              <div>
+               
+                <p className={history.location.pathname !== '/job' ? classes.headerItem: classes.currentHeaderItem} onClick = {(event)=>onButtonClick(event, "/job")}>Upload Jobs</p>
+                </div>
+                <div>
+                <p  className={history.location.pathname !== '/viewReports' ? classes.headerItem: classes.currentHeaderItem} onClick={(e)=>onButtonClick(e, "/viewReports")}>View Reports</p>
              
+              </div>
+              </>
+}
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -280,18 +273,17 @@ const  NavBar = (props)=> {
               >
 
 
-              <MenuItem onClick={(e)=>handleMenuClick(e, "/profile")}><VisibilityIcon /><span className={classes.iconText}>View Profile</span></MenuItem>
-              <MenuItem onClick={(e)=>handleMenuClick(e, "/studentReg/update")}><EditTwoToneIcon /><span className={classes.iconText}>Edit Profile</span></MenuItem>
+              <MenuItem onClick={(e)=>handleMenuClick(e, "/profile")}><VisibilityIcon /><span className={history.location.pathname !== '/profile' ? classes.iconText : `${classes.iconText} ${classes.currMenuItem}`}>View Profile</span></MenuItem>
+              <MenuItem onClick={(e)=>handleMenuClick(e, "/studentReg/update")}><EditTwoToneIcon /><span className={history.location.pathname !== '/studentReg/update' ? classes.iconText : `${classes.iconText} ${classes.currMenuItem}`}>Edit Profile</span></MenuItem>
               <MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon className={classes.menuIcons}/><span className={classes.iconText}>Logout</span></MenuItem>
                 </Menu>
-                {/* {renderMenu} */}
             </div>
-
+            {renderMobileMenu}
           </div>
 
         )
           }
-        {renderMobileMenu}
+      
 
         </Toolbar>
       </AppBar>

@@ -7,6 +7,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import Job from './Job';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
@@ -82,6 +83,16 @@ const filterDate = (Jobs, startDate, endDate)=>{
   Jobs = Jobs.filter((job)=> new Date(job.createdAt) >= startDate &&  new Date(job.createdAt) <= endDate);
   return Jobs;
 }
+const filterSearch = (Jobs, searchKeyword)=>{
+  searchKeyword = searchKeyword.toLowerCase();
+  Jobs = Jobs.filter((job)=>{
+    return (
+      job.companyName.toLowerCase().includes(searchKeyword) || job.jobPosition.toLowerCase().includes(searchKeyword)
+      || job.jobDesc.toLowerCase().includes(searchKeyword) || job.location.toLowerCase().includes(searchKeyword)
+    )
+  })
+  return Jobs;
+}
 const showJobsIfEligible = (job, status, user)=>{
   let res = false;
   let cumGPA = -1;
@@ -130,35 +141,45 @@ const showJobsIfEligible = (job, status, user)=>{
               Jobs = Jobs.filter((job)=>job.isOpen===false || (job.dateOfExpiry !== undefined && new Date(job.dateOfExpiry) < (new Date())));
             }
           }else{
-            if(props.type==="default"){
-              setOption("applied");
-              // Unapplied jobs
-              Jobs = Jobs.filter((job)=>showJobsIfEligible(job, "unapplied", user));
-              
-              // Jobs = Jobs.filter((job)=>!job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
+            if(user.details !== undefined){
+              if(props.type==="default"){
+                setOption("applied");
+                // Unapplied jobs
+                Jobs = Jobs.filter((job)=>showJobsIfEligible(job, "unapplied", user));
+                
+                // Jobs = Jobs.filter((job)=>!job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
+              }else{
+                setOption("unapplied");
+                //Applied Jobs
+                Jobs = Jobs.filter((job)=>showJobsIfEligible(job, "applied", user));
+                // Jobs = Jobs.filter(job=>job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
+              }
             }else{
-              setOption("unapplied");
-              //Applied Jobs
-              Jobs = Jobs.filter((job)=>showJobsIfEligible(job, "applied", user));
-              // Jobs = Jobs.filter(job=>job.users.includes(user.id) && (job.isOpen===true && (job.dateOfExpiry !== undefined && (new Date(job.dateOfExpiry)) > (new Date()))));
+              Jobs = [];
+              setOption("notRegistered");
             }
           }
           if(props.filter !== undefined && Object.keys(props.filter).length >0){
             let jobs = Jobs;
-            const {company, courses, jobType, startDate, endDate} = props.filter;
-            console.log("JobType is ", jobType);
+            const {company, courses, jobType, startDate, endDate, searchKeyword} = props.filter;
+            console.log("props.filter", props.filter);
             if(company !== undefined && company !== ''){
               jobs = filterCompany(jobs, company);
             }
             if(courses !== undefined && courses.length > 0){
               jobs = filterCourse(jobs, courses)
             }
-            if(jobType !== ""){
+            if(jobType !== undefined && jobType != ""){
               jobs = filterJobType(jobs, jobType);
             }
             if(startDate !== undefined && endDate !== undefined){
               jobs = filterDate(jobs, startDate, endDate);
             }
+            if(searchKeyword !== undefined && searchKeyword !== ""){
+              console.log("Search is ", searchKeyword);
+              jobs = filterSearch(jobs, searchKeyword);
+            }
+            
             Jobs = jobs;
           }
           setJobs(Jobs);
@@ -191,13 +212,15 @@ const showJobsIfEligible = (job, status, user)=>{
             return <p className={classes.noJobs}>No Jobs available to apply<span style={{display: "block"}}><i className="far fa-frown"></i></span></p>
           case "unapplied":
             return <p className={classes.noJobs}>You have applied for no jobs in the past<span style={{display: "block"}}><i className="far fa-frown"></i></span></p>
+          case "notRegistered":
+            return <p className={classes.noJobs}>Please complete the <Link to="/studentReg/register">registration</Link> first and come back</p>
           default:
             return <p></p>
       }
     }
     return (
       loading?
-      <Backdrop  open={open} onClick={()=>setOpen(false)}>
+      <Backdrop style={{zIndex: "1"}} open={open} onClick={()=>setOpen(false)}>
         <p style={{fontSize: 50}}>Loading</p> <CircularProgress style={{marginLeft: "2%"}} color="inherit" />
       </Backdrop>
       :
