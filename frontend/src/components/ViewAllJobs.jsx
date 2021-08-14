@@ -353,7 +353,7 @@ const ViewAllJobs = () => {
         }}>
           
         </StyledInput>
-        <IconButton onClick={getSearchResults} type="submit" style={{marginTop: "2%"}} aria-label="search">
+        <IconButton onClick={()=>getSearchResults()} type="submit" style={{marginTop: "2%"}} aria-label="search">
         <SearchIcon />
       </IconButton>
         

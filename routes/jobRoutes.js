@@ -5,7 +5,6 @@ const AdmZip = require('adm-zip');
 var mongoXlsx = require('mongo-xlsx');
 const Job =  require('../db/jobSchema');
 const Course = require('../db/coursesSchema');
-const User = require('../db/userSchema');
 const {requireAuth} = require('../middleware/authToken');
 const fileSystem = require('fs');
 const path = require("path");
@@ -16,7 +15,6 @@ router.get('/file/:jobId', async (req, res)=>{
     path: "users",
     select: "details"
   });
-  // console.log(populatedJob);
   let userDetails = [];
   populatedJob.users.map((user, key)=>{
     const {phone, email} = user.details;
@@ -177,7 +175,9 @@ router.post('/report/', async (req, res)=>{
 
 	// Add Array Rows
 	worksheet.addRows(userDetails);
-  const fileName = `${populatedJob.companyName}_${populatedJob.year}.xlsx`;
+  const createdDate = new Date(populatedJob.createdAt);
+  let fileDate = `${createdDate.getDate()}-${createdDate.getMonth()}-${createdDate.getFullYear()}`;
+  const fileName = `${populatedJob.companyName}_${fileDate}.xlsx`;
 	// Write to File
 	try{
     await workbook.xlsx.writeFile(`./reports/${fileName}`);

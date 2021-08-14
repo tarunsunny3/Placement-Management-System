@@ -4,7 +4,7 @@ import url from '../../apiUrl';
 import LinearProgressWithLabel from '../LinearProgressWithLabel';
 import {withRouter, Link} from 'react-router-dom';
 import { DataGrid } from '@material-ui/data-grid';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
+import {makeStyles, withStyles, useTheme} from '@material-ui/core/styles';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -19,6 +19,7 @@ import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import { DatePicker } from "@material-ui/pickers";
 import ReactExport from "react-data-export";
 import Tooltip from '@material-ui/core/Tooltip';
+import { useMediaQuery } from '@material-ui/core';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -86,6 +87,14 @@ const StyledInput = withStyles({
 const ViewReports = (props) => {
 
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  let spacing;
+  if(isMobile){
+    spacing = 0;
+  }else{
+    spacing = 1;
+  }
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
     firstName:  {checked: false, value: ""},
@@ -111,6 +120,7 @@ const ViewReports = (props) => {
   const [selectionModel, setSelectionModel] = useState([]);
   const [year, setYear] = useState(new Date());
   const [downloadCount, setDownloadCount] = useState(0);
+  
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
     { field: 'open', headerName: 'Status', type: 'boolean', width: 200 },
@@ -179,7 +189,12 @@ const ViewReports = (props) => {
       }else{
         value.value = "";
       }
-      value.checked = !value.checked;
+      if(checkValue){
+        value.checked = true;
+      }else{
+        value.checked = false;
+      }
+      
     }
   }
 
@@ -370,8 +385,8 @@ const data = {
   }
   {
     selectionModel.length > 0 &&
-    <>
-    <Grid item xs={12} sm={3}>
+    <div style={{width: "100%"}}>
+    <Grid item xs={6} sm={3}>
 
       <FormControlLabel
         control={<Checkbox value="all" checked={checkAll} onChange={(e)=>onCheckAll(e)} name="all" />}
@@ -379,7 +394,7 @@ const data = {
       />
       </Grid>
     <FormGroup style={{marginTop: "3%"}} column="true">
-      <Grid container spacing={8}>
+      <Grid container spacing={spacing}>
       <Grid item xs={12} sm={3}>
 
         <FormControlLabel
@@ -399,78 +414,71 @@ const data = {
       label="Branch Name"
     />
 </Grid>
-<Grid item xs={12} sm={3}>
+<Grid item xs={6} sm={3}>
   <FormControlLabel
     control={<Checkbox value="email" checked={state.email.checked} onChange={(e)=>handleChange(e)} name="email" />}
     label="Email"
   />
 </Grid>
 
-</Grid>
-  <Grid container spacing={8}>
 
-  <Grid item xs={12} sm={3}>
+
+  <Grid item xs={6} sm={3}>
     <FormControlLabel
       control={<Checkbox id="Phone" value="phone" checked={state.phone.checked} onChange={(e)=>handleChange(e)} name="phone" />}
       label="Phone"
     />
 </Grid>
-  <Grid item xs={12} sm={3}>
+  <Grid item xs={6} sm={3}>
     <FormControlLabel
       control={<Checkbox value="resume" checked={state.resume.checked} onChange={(e)=>handleChange(e)} name="resume" />}
       label="Resume"
     />
 </Grid>
-<Grid item xs={12} sm={3}>
+<Grid item xs={6} sm={3}>
   <FormControlLabel
     control={<Checkbox value="gender" checked={state.gender.checked} onChange={(e)=>handleChange(e)} name="gender" />}
     label="Gender"
   />
 </Grid>
-<Grid item xs={12} sm={3}>
+<Grid item xs={6} sm={3}>
   <FormControlLabel
     control={<Checkbox value="tenthCgpa" checked={state.tenthCgpa.checked} onChange={(e)=>handleChange(e)} name="tenthCgpa" />}
     label="Tenth Percentage"
   />
 </Grid>
-</Grid>
-
-
-  <Grid container spacing={8}>
 
 
 
-  <Grid item xs={12} sm={3}>
+
+  <Grid item xs={6} sm={3}>
     <FormControlLabel
       control={<Checkbox value="twelfthCgpa" checked={state.twelfthCgpa.checked} onChange={(e)=>handleChange(e)} name="twelfthCgpa" />}
       label="Twelfth Percentage"
     />
 </Grid>
-<Grid item xs={12} sm={3}>
+<Grid item xs={6} sm={3}>
   <FormControlLabel
     control={<Checkbox value="ugPercentage" checked={state.ugPercentage.checked} onChange={(e)=>handleChange(e)} name="ugPercentage" />}
     label="UG Percentage"
   />
 </Grid>
-<Grid item xs={12} sm={3}>
+<Grid item xs={6} sm={3}>
   <FormControlLabel
     control={<Checkbox value="pgPercentage" checked={state.pgPercentage.checked} onChange={(e)=>handleChange(e)} name="pgPercentage" />}
     label="PG Percentage"
   />
 </Grid>
 
-  </Grid>
-  <Grid container spacing={8}>
 
 
-  <Grid item xs={12} sm={3}>
+  <Grid item xs={6} sm={3}>
     <FormControlLabel
       control={<Checkbox value="offerLetter" checked={state.offerLetter.checked} onChange={(e)=>handleChange(e)} name="offerLetter" />}
       label="Offer Letter"
     />
   </Grid>
-
-    </Grid>
+  </Grid>
     </FormGroup>
       <Button disabled={!downloadEnable} onClick={()=>handleSubmit()} variant="contained" color="primary" >Download</Button>
         {
@@ -482,7 +490,7 @@ const data = {
           </div>
           </>
         }
-      </>
+      </div>
   }
 
 
