@@ -113,7 +113,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
-    // alignItems: "center"
   }
 })
 );
@@ -150,6 +149,7 @@ const Job = (props) => {
   //To store the number of students got placed value
   const [studentsPlaced, setStudentsPlaced] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteJobDialog, setDeleteDialog] = useState(false);
   const [alert, setAlert] = useState({open: false, type: "", message: ""});
   const [disabled, setDisabled] = useState(false);
   const [closed, setClosed] = useState(false);
@@ -224,6 +224,7 @@ const deleteJob = async (jobId)=>{
       isOpen: false
     }
   }
+  setDeleteDialog(false);
   setAlert({open: true, type: "success", message: "Deleted the Job successfully"});
   const res = await axios.post('/job/updateJob', data, {withCredentials: true})
   setClosed(true);
@@ -269,7 +270,7 @@ const handleOfferLetter = async (offerLetterLink)=>{
               &&
               <>
               <Tooltip title="Close/Delete this Job?" placement="top">
-                <CloseIcon style={{float: "right", paddingRight: "5%", marginTop: "1%"}} onClick={()=>deleteJob(job._id)}/>
+                <CloseIcon style={{float: "right", paddingRight: "5%", marginTop: "1%"}} onClick={()=>setDeleteDialog(true)}/>
               </Tooltip>
 
               <Tooltip title="Update this Job?" placement="right">
@@ -440,6 +441,27 @@ const handleOfferLetter = async (offerLetterLink)=>{
 </Card>
 </div>
 }
+<Dialog
+          open={deleteJobDialog}
+          onClose={()=>handleDialogClose()}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Do you really want to close/delete this job?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+            No users can see this job if it's deleted/closed
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={()=>setDeleteDialog(false)} color="primary">
+              No
+            </Button>
+            <Button onClick={()=>deleteJob(job._id)} color="primary" autoFocus>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
 
    <Dialog
           open={dialogOpen}

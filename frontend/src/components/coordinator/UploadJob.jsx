@@ -47,7 +47,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     borderRadius: '20px',
-    backgroundColor: "#f4eee8"
+    backgroundColor: "#f4eee8",
+    backgroundColor: "#F4DFD0"
   },
 
   form: {

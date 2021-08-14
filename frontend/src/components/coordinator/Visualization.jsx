@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import { Bar, Line } from 'react-chartjs-2';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Tooltip } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -161,7 +162,7 @@ const Visualization = () => {
                     error.length > 0 && <p>{error}</p>
                 }
 
-<div style={{color: "green", fontWeight: "600", marginLeft: "2%"}}>
+<div style={{color: "green", marginLeft: "2%"}}>
         <p>Selecting one company will display a line chart of year-wise number of students placed</p>
         <p>Selecting multiple companies gives the BAR chart</p>
         </div>
@@ -205,7 +206,11 @@ const Visualization = () => {
               />
               </Grid>
   <Grid item xs={12} sm={3}>
-            <Button fullWidth variant="contained" color="primary" onClick={()=>showChart()}> Show Chart</Button>
+    <Tooltip title={selectedCompanies.length===0 ? "Select atleast a company to display charts" : ""}>
+
+                  <span>
+            <Button disabled={selectedCompanies.length===0} fullWidth variant="contained" color="primary" onClick={()=>showChart()}> Show Chart</Button>
+            </span></Tooltip>
             </Grid>
 </Grid>
 
