@@ -13,14 +13,13 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import Checkbox from '@material-ui/core/Checkbox';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
+import Switch from '@material-ui/core/Switch';
+import FormGroup from '@material-ui/core/FormGroup';
+import Chip from '@material-ui/core/Chip';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
@@ -92,7 +91,10 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiChip-root':{
       backgroundColor: '#FFC074'
     }
-  }
+  },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
 }));
 const StyledInput = withStyles({
   root: {
@@ -122,12 +124,15 @@ const ViewAllJobs = () => {
   const [company, setCompany] = useState("");
   const [courses, setCourses] = useState([]);
   const [jobType, setJobType] = useState("");
+  const [fullTime, setFulltime] = useState(false);
+  const [intern, setIntern] = useState(false);
   const [dumCourses, setDumcourse] = useState([]);
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [search, setSearch] = useState("");
+  const [showChips, setShowChips] = useState(false);
   useEffect(() => {
     async function fetchCompanyNames() {
       let response = await axios.get('/job/getCompanyNames');
@@ -143,7 +148,11 @@ const ViewAllJobs = () => {
     }
     fetchCourses();
   }, [])
-
+  useEffect(() => {
+    if(startDate === null && endDate===null && intern === false && fullTime===false){
+      setShowChips(false);
+    }
+  }, [startDate, endDate, intern, fullTime]);
   const handleClick = (type)=>{
     setType(type);
     if(type==="default" || type==="open"){
@@ -179,7 +188,7 @@ const ViewAllJobs = () => {
   const handleFilterForm = (e)=>{
     e.preventDefault();
     setOpen(!open);
-    setFilter({courses, company, jobType, startDate, endDate, searchKeyword: search});
+    setFilter({courses, company, fullTime, intern, startDate, endDate, searchKeyword: search});
   }
   const getSearchResults = (searchParam)=>{
     if(searchParam === undefined){
@@ -187,6 +196,17 @@ const ViewAllJobs = () => {
     }else{
       setFilter({searchKeyword: ""});
     }
+  }
+  const handleClearall= (event)=>{
+    setShowChips(false);
+    setOpen(!open)
+    setFulltime(false);
+    setIntern(false);
+    setStartDate(null);
+    setEndDate(null);
+    setCourses([]);
+    setDumcourse([]);
+    setFilter(setFilter({courses: [], company: "", fullTime: false, intern: false, startDate: null, endDate: null, searchKeyword: ""}));
   }
   return (
 
@@ -201,7 +221,7 @@ const ViewAllJobs = () => {
       <form onSubmit={(e)=>handleFilterForm(e)} noValidate className={classes.form}>
 
       <Grid container spacing={8}>
-        <Grid item xs={12} sm={12}>
+        {/* <Grid item xs={12} sm={12}>
           <Autocomplete
             id="free-solo-demo"
             freeSolo
@@ -221,7 +241,7 @@ const ViewAllJobs = () => {
                 />
             )}
           />
-        </Grid>
+        </Grid> */}
         {
           user != null && user.role !== "Student"
           &&
@@ -257,7 +277,6 @@ const ViewAllJobs = () => {
             style={{width: "100%"}}
             renderInput={(params) => (
               <StyledInput {...params} variant="outlined" label="Courses" placeholder="Select courses"
-                required
                 style={{width: "100%"}}
               />
           )}
@@ -265,6 +284,7 @@ const ViewAllJobs = () => {
       </Grid>
     }
       </Grid>
+
 <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container justify="space-around">
         <KeyboardDatePicker
@@ -295,16 +315,52 @@ const ViewAllJobs = () => {
   </Grid>
 
   </MuiPickersUtilsProvider>
-<FormControl style={{marginTop: "10%"}}component="fieldset">
+  <FormGroup row>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={fullTime}
+            onChange={(event)=>setFulltime(event.target.checked)}
+            color="primary"
+            name="fulltime"
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+          />
+        }
+        label="Full-Time"
+/>
+<FormControlLabel
+        control={
+          <Switch
+            checked={intern}
+            onChange={(event)=>setIntern(event.target.checked)}
+            color="primary"
+            name="intern"
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+          />
+        }
+        label="Internship"
+/>
+</FormGroup>
+{/* <FormControl style={{marginTop: "10%"}}component="fieldset">
 <FormLabel component="legend">Job Type</FormLabel>
 <RadioGroup name="gender1" value={jobType} onChange={(e)=>handleJobType(e)}>
 <FormControlLabel value="full" control={<Radio />} label="Full Time" />
 <FormControlLabel value="intern"  control={<Radio />} label="Internship" />
 </RadioGroup>
-</FormControl>
+</FormControl> */}
 
-      <Button style={{width: "50%",marginLeft: "20%", marginTop: "5%"}}  variant="contained" color="primary" type="submit">Filter</Button>
-        </form>
+<Grid style={{marginTop: "3%"}} container spacing={2}>
+  <Grid item xs={12} sm={6}>
+    <Button  variant="contained" fullWidth color="primary" onClick={()=>setShowChips(true)} type="submit">Apply</Button>
+    {/* style={{width: "40%", marginTop: "5%", marginRight: "10%"}}  */}
+  </Grid>
+  <Grid item xs={12} sm={6}>
+  <Button variant="contained" fullWidth color="secondary" onClick={(event)=>handleClearall(event)}>Clear all</Button>
+  </Grid>
+</Grid>
+
+
+</form>
 
 </Grid>
   </Drawer>
@@ -356,9 +412,25 @@ const ViewAllJobs = () => {
         <IconButton onClick={()=>getSearchResults()} type="submit" style={{marginTop: "2%"}} aria-label="search">
         <SearchIcon />
       </IconButton>
-        
-      
-       
+      <div style={{textAlign: "center", marginTop: "2%"}}>
+      {
+    showChips &&
+    <>
+  {
+    fullTime && <Chip className={classes.chip} label="Full-time" onDelete={()=>{setFulltime(false);setFilter({...filter, fullTime: false})}} color="primary" />
+  }
+   {
+    intern && <Chip className={classes.chip} label="Internship" onDelete={()=>{setIntern(false);setFilter({...filter, intern: false})}} color="primary" />
+  }
+  {
+    startDate !== null && <Chip  className={classes.chip} label={`start-date: ${new Date(startDate).getDate()} - ${new Date(startDate).getMonth()} - ${new Date(startDate).getFullYear()}`} onDelete={()=>{setStartDate(null);setFilter({...filter, startDate: null})}} color="primary" />
+}
+{
+    endDate !== null && <Chip  className={classes.chip} label={`end-date: ${new Date(endDate).getDate()} - ${new Date(endDate).getMonth()} - ${new Date(endDate).getFullYear()}`} onDelete={()=>{setEndDate(null);;setFilter({...filter, endDate: null})}} color="primary" />
+  }
+  </>
+  }
+    </div>    
       {
         user != null && user.role === "Student"
         ?

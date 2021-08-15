@@ -55,7 +55,7 @@ const ViewJobs =  (props) => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currPage, setCurrPage] = useState(1);
-  const [jobsPerPage, setJobsPerPage] = useState(2);
+  const [jobsPerPage, setJobsPerPage] = useState(3);
   const [open, setOpen] = useState(true);
   const [option, setOption] = useState("");
 const filterCompany = (Jobs, companyName)=>{
@@ -72,14 +72,24 @@ const filterCourse = (Jobs, courses)=>{
   return Jobs;
 
 }
-const filterJobType = (Jobs, jobType)=>{
-  Jobs = Jobs.filter((job)=>job.jobType===jobType);
+const filterJobType = (Jobs, fullTime, intern)=>{
+  if(fullTime && intern){
+    Jobs = Jobs.filter((job)=>job.jobType==="full" || job.jobType === "intern");
+  }else if(fullTime){
+    Jobs = Jobs.filter((job)=>job.jobType==="full");
+  }else if(intern){
+    Jobs = Jobs.filter((job)=>job.jobType === "intern");
+  }
   return Jobs;
 }
 const filterDate = (Jobs, startDate, endDate)=>{
-  // const jsStartDate = new Date(startDate);
-  // const jsEndDate = new Date(endDate);
-
+  if(startDate === null && endDate === null){
+    return Jobs;
+  }
+  if(endDate==null && startDate !== null){
+    Jobs = Jobs.filter((job)=> new Date(job.createdAt) >= startDate &&  new Date(job.createdAt) <= new Date());
+    return Jobs;
+  }
   Jobs = Jobs.filter((job)=> new Date(job.createdAt) >= startDate &&  new Date(job.createdAt) <= endDate);
   return Jobs;
 }
@@ -161,7 +171,7 @@ const showJobsIfEligible = (job, status, user)=>{
           }
           if(props.filter !== undefined && Object.keys(props.filter).length >0){
             let jobs = Jobs;
-            const {company, courses, jobType, startDate, endDate, searchKeyword} = props.filter;
+            const {company, courses, fullTime, intern, startDate, endDate, searchKeyword} = props.filter;
             console.log("props.filter", props.filter);
             if(company !== undefined && company !== ''){
               jobs = filterCompany(jobs, company);
@@ -169,8 +179,8 @@ const showJobsIfEligible = (job, status, user)=>{
             if(courses !== undefined && courses.length > 0){
               jobs = filterCourse(jobs, courses)
             }
-            if(jobType !== undefined && jobType != ""){
-              jobs = filterJobType(jobs, jobType);
+            if(fullTime !== undefined && intern != undefined){
+              jobs = filterJobType(jobs, fullTime, intern);
             }
             if(startDate !== undefined && endDate !== undefined){
               jobs = filterDate(jobs, startDate, endDate);
