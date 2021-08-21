@@ -176,35 +176,68 @@ router.post("/sendEmail", (req, res)=>{
 router.post("/sendJobUpdateEmail", async (req, res)=>{
   const message = req.body.message;
   const courses = req.body.courses;
-  console.log("Message is ", message);
-  console.log("Courses", courses);
+  // console.log("Message is ", message);
+  // console.log("Courses", courses);
  
   let users = await User.find({});
-  console.log("Old Length is ", users.length);
+  // console.log("Old Length is ", users.length);
   // console.log("Boolean is ", user.details !== undefined && user.details.courseName && courses.includes(user.details.courseName));
   users = users.filter((user)=>
   {
-    console.log(user.details !== undefined && user.details.courseName !== undefined && courses.includes(user.details.courseName));
+    // console.log(user.details !== undefined && user.details.courseName !== undefined && courses.includes(user.details.courseName));
     return user.details !== undefined && user.details.courseName !== undefined && courses.includes(user.details.courseName)
   } 
   );
   // console.log("New Length is ", users.length);
   users.map((user)=>{
-    // console.log(user.username);
     if(user.details !== undefined && user.details.email !== undefined){
-       var mailOptions = {
-        from: 'tarunsunny3@gmail.com',
-        to: user.details.email,
-        subject: 'UoH New Job Update!!',
-        html: `<p>A new job has been posted....do check it out!</p><h2 style="font-size: 40px;">${message}</h2>`
-      };
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      });
+      const mailjet = require ('node-mailjet')
+ .connect('bb0297262b66956cadcd4be5579ad049', '5d09a58eb25efc9c0f8eec727692f48d')
+const request = mailjet
+ .post("send", {'version': 'v3.1'})
+ .request({
+   "Messages":[
+     {
+       "From": {
+         "Email": "tarunsunny2662@gmail.com",
+         "Name": "UoH"
+       },
+       "To": [
+         {
+           "Email": user.details.email,
+           "Name": "Tarun"
+         }
+       ],
+       "TemplateID": 3104589,
+       "TemplateLanguage": true,
+       "Subject": "UoH PLMS New Job",
+       "Variables": {
+         message
+       }
+     }
+   ]
+ })
+request
+ .then((result) => {
+  //  console.log(result.body)
+ })
+ .catch((err) => {
+   console.log(err.statusCode)
+ })
+
+      //  var mailOptions = {
+      //   from: 'tarunsunny3@gmail.com',
+      //   to: user.details.email,
+      //   subject: 'UoH New Job Update!!',
+      //   html: `<p>A new job has been posted....do check it out!</p><h2 style="font-size: 40px;">${message}</h2>`
+      // };
+      // transporter.sendMail(mailOptions, function(error, info){
+      //   if (error) {
+      //     console.log(error);
+      //   } else {
+      //     console.log('Email sent: ' + info.response);
+      //   }
+      // });
     }
   });
   
@@ -226,7 +259,47 @@ router.post("/changePassword", async (req, res)=>{
     await user.save();
     res.json({success: true});
   }
+});
 
-})
 
+const sendmail = ()=>{
+/**
+ *
+ * This call sends a message to the given recipient with vars and custom vars.
+ *
+ */
+ 
+//   const mailjet = require ('node-mailjet')
+// .connect('bb0297262b66956cadcd4be5579ad049', '5d09a58eb25efc9c0f8eec727692f48d')
+// const request = mailjet
+// .post("send", {'version': 'v3.1'})
+// .request({
+//   "Messages":[
+//     {
+//       "From": {
+//         "Email": "tarunsunny2662@gmail.com",
+//         "Name": "Tarun"
+//       },
+//       "To": [
+//         {
+//           "Email": "tarunsunny2662@gmail.com",
+//           "Name": "Tarun"
+//         }
+//       ],
+//       "Subject": "Greetings from Mailjet.",
+//       "TextPart": "My first Mailjet email",
+//       "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
+//       "CustomID": "AppGettingStartedTest"
+//     }
+//   ]
+// })
+// request
+//   .then((result) => {
+//     console.log(result.body)
+//   })
+//   .catch((err) => {
+//     console.log(err.statusCode)
+//   })
+
+}
 module.exports = router;

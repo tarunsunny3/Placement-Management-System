@@ -29,6 +29,7 @@
     "mongo-xlsx": "^1.0.12",
     "mongoose": "^5.12.3",
     "multer": "^1.4.2",
+    "node-mailjet": "^3.3.4",
     "nodemailer": "^6.6.2"
   },
   "engines": {

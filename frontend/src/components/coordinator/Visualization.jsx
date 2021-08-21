@@ -116,7 +116,7 @@ const Visualization = () => {
                   'rgb(153, 102, 255)',
                   'rgb(201, 203, 207)'
                 ],
-                borderWidth: 1,
+                borderWidth: 3,
                 barPercentage: 0.3
               }]
             };
@@ -219,23 +219,35 @@ const Visualization = () => {
           </Grid>
             {
               isMobile ? 
-              <div id="myChartDiv" style={{display: 'none'}}>
-              <div style={{marginLeft: "5%", width: "80vw", height: "70vh"}}>
-                <b style={{color: "crimson"}}>Best Viewed in Desktop</b>
+              <div id="myChartDiv" style={{display: 'none'}} >
+              <div>
+              <b style={{color: "crimson", marginLeft: "5%"}}>Best Viewed in Desktop</b>
+                <div style={{ marginLeft: "5%", width: "80vw", height: "80vh"}}>
                 
                   {
                     chartData.type.length > 0 &&
-                    chartData.type === "Bar" ?   <Bar data={chartData.data}/> : <Line data={chartData.data} options={{spanGaps: true}}/>
+                    
+                       chartData.type === "Bar" ?   <Bar data={chartData.data} options={{scales: {
+                        yAxes: [
+                          {
+                            ticks: {
+                              beginAtZero: true,
+                            },
+                          },
+                        ],
+                      },
+                      responsive: true, maintainAspectRatio: false}}/> : <Line data={chartData.data} options={{responsive: true, spanGaps: true, maintainAspectRatio: false}}/>
+                   
                   }
-        
+                  </div>
                 </div>
               </div>
                 :
                 <div id="myChartDiv" style={{display: 'none'}}>
-                <div style={{marginLeft: "5%", width: "80vw", height: "100vh"}}>
+                <div style={{marginLeft: "5%", width: "80vw", height: "80%"}}>
                 {
                   chartData.type.length > 0 &&
-                  chartData.type === "Bar" ?   <Bar data={chartData.data}/> : <Line data={chartData.data} options={{spanGaps: true}}/>
+                  chartData.type === "Bar" ?   <Bar data={chartData.data} options={{responsive: true, maintainAspectRatio: true}}/> : <Line data={chartData.data} options={{spanGaps: true}}/>
                 }
        
       </div>

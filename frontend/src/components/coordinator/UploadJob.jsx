@@ -212,8 +212,9 @@ let courses1: CourseType[]= availableCourses;
          const d = res.data;
          console.log(d);
          if(d.success){
+          const res = axios.post('/api/sendJobUpdateEmail', {message: `${company} - ${jobPos}`, courses: selectedCourses});
            history.push("/view", {alert: true, id: state.id, currPage: state.currPage});
-           const res = axios.post('/api/sendJobUpdateEmail', {message: `${company} - ${jobPos}`, courses: selectedCourses});
+           
          }else{
            setAlert(true);
            setOpen(true);
@@ -225,8 +226,9 @@ let courses1: CourseType[]= availableCourses;
          const d = res.data;
          if(d.success){
            history.go(0);
-           history.push("/job", {alert: true, message: "Job posted successfully!!"});
            const res = axios.post('/sendJobUpdateEmail', {message: `${company} - ${jobPos}`, courses: selectedCourses});
+           history.push("/job", {alert: true, message: "Job posted successfully!!"});
+           
          }else{
            setAlert(true);
            setOpen(true);
