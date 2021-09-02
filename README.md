@@ -1,5 +1,5 @@
 # Placement-Management-System
-
+**PWA, that means it can be downloaded and used as a native app on desktops, android, ios, etc**
 This project exclusively has been made for my University (University of Hyderabad) following all the **SDE** principles including
 *Requirements gathering, Designing, and implementing*.
 
