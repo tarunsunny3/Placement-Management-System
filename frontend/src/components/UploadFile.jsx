@@ -1,5 +1,5 @@
 import React from 'react'
-import {storage } from './firebaseConfig';
+import firebase, { storage } from './firebaseConfig';
 import LinearProgressWithLabel from './LinearProgressWithLabel.js';
 import {v4 as uuidv4} from 'uuid';
 import Button from '@material-ui/core/Button';
@@ -10,6 +10,7 @@ import imageCompression from 'browser-image-compression';
 class Upload extends React.Component {
   static contextType = AppContext;
   constructor(props){
+    
     super(props);
     this.state = {
       user: null,
