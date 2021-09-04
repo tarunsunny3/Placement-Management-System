@@ -11,7 +11,8 @@ import Button from '@material-ui/core/Button';
 import { Bar, Line } from 'react-chartjs-2';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, Typography } from '@material-ui/core';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -56,13 +57,22 @@ const StyledInput = withStyles({
   
   })(TextField);
 const Visualization = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const classes = useStyles();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const classes = useStyles();
     const [availableCompanies, setAvailableCompanies] = useState([]);
     const [selectedCompanies, setSelectedCompanies] = useState([]);
     const [error, setError] = useState("");
     const [chartData, setChartData] = useState({type: ""});
+    const [open, setOpen] = React.useState(false);
+
+    const handleTooltipClose = () => {
+      setOpen(false);
+    };
+  
+    const handleTooltipOpen = () => {
+      setOpen(true);
+    };
     useEffect(() => {
         async function fetchCompanyNames() {
           let response = await axios.get('/job/getCompanyNames');
@@ -157,20 +167,22 @@ const Visualization = () => {
       }
     return (
         <div className={classes.root}>
+          
+          <div style={{marginTop: "3px", width: "100%", textAlign: "center"}}>
+          <Typography variant="h3" gutterBottom>Reports</Typography>
+          <img  src={process.env.PUBLIC_URL + "/assets/reports.png"} width="100%" height="auto"/>
+          </div>
           <CssBaseline />
                 {
                     error.length > 0 && <p>{error}</p>
                 }
 
-<div style={{color: "green", marginLeft: "2%"}}>
-        <p>Selecting one company will display a line chart of year-wise number of students placed</p>
-        <p>Selecting multiple companies gives the BAR chart</p>
-        </div>
+
   <Grid container direction="column" justify="center" alignItems="center">
       
 <form className={classes.form} noValidate>
-<Grid container  alignItems="center" spacing={8}>
-  <Grid item xs={12} sm={6}>
+<Grid container  alignItems="center" spacing={4}>
+  <Grid item xs={10} sm={6}>
               <Autocomplete
                 multiple
                 disableCloseOnSelect
@@ -190,21 +202,36 @@ const Visualization = () => {
                     </React.Fragment>
                   )}
                 renderInput={(params) => (
-                  // <StyledInput {...params} label="freeSolo" margin="normal" variant="outlined" />
                   <StyledInput
                     {...params}
                     label="Company name"
-                    // value={company}
-                    // onChange={(e)=>setCompany(e.target.value)}
-                    // error={(errors["company"]) ? true : false}
-                    // helperText={errors["company"]}
                     variant="outlined"
-                    fullWidth
+                    
                     required
                     />
+                   
                 )}
+
               />
+           
               </Grid>
+              <Grid item xs={2}>
+              <ClickAwayListener onClickAway={handleTooltipClose}>
+            <div>
+              <Tooltip
+                onClose={handleTooltipClose}
+                open={open}
+                disableTouchListener
+                disableFocusListener
+                disableHoverListener
+                title="Selecting one company will display a line chart of year-wise number of students placed, Selecting multiple companies gives the BAR chart"
+              >
+               <span><i onClick={handleTooltipOpen} class="fas fa-info-circle"></i></span>
+              </Tooltip>
+            </div>
+          </ClickAwayListener>
+          </Grid>
+             
   <Grid item xs={12} sm={3}>
     <Tooltip title={selectedCompanies.length===0 ? "Select atleast a company to display charts" : ""}>
 

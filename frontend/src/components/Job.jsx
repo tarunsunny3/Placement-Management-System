@@ -3,6 +3,7 @@ import axios from 'axios';
 import {withRouter, useHistory} from 'react-router-dom';
 import AppContext from './AppContext';
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -73,33 +74,22 @@ const useStyles = makeStyles((theme) => ({
   },
   gridItem:{
     margin: '2%',
+    width: "100vw",
+    flexBasis: "100%",
     [theme.breakpoints.up("sm")]:{
-      flexBasis:'30%',
+      flexBasis:'10vw',
     },
-    [theme.breakpoints.down("sm")]:{
-      width: "100vw"
-    },
-    [theme.breakpoints.between('sm', 'md')]:{
-      width: "80vw",
-      flexBasis:'40%',
-    }
   },
   chip:{
     backgroundColor: 'orange'
   },
   chips: {
-    margin: "3% auto 3% auto",
+    margin: "3% auto 5% auto",
     display: "flex",
     flexWrap: 'wrap',
     direction: 'row',
-    width: "30vw",
-    [theme.breakpoints.down("sm")]:{
-
-      width: "80%",
-      margin: "10% auto 3% auto",
-    },
-    justifyContent: "space-around",
-    // alignItems: "center"
+    flexBasis: "100%",
+    justifyContent: "space-evenly",
   },
   chipItem:{
     
@@ -254,10 +244,8 @@ const handleOfferLetter = async (offerLetterLink)=>{
 
   return (
 
-
-
-
-    <div  className={classes.gridItem} key={job._id}>
+ 
+    <div  key={job._id}> 
       <p>{message !== null && message.id === job._id && message.message}</p>
       { !closed &&
       <div>
@@ -382,8 +370,10 @@ const handleOfferLetter = async (offerLetterLink)=>{
         </CardActions>
         <CardActions>
         {
-            isMobile && <p>Number of applicants: {job.users.length}</p>
-          }
+            isMobile && <p>Number of Applicants: {job.users.length}<br/></p>
+        }
+        </CardActions>
+        <CardActions>
 {
   user != null && user.role==="Coordinator" && !disabled && (job.isOpen===false || !jobNotExpired)
   &&
@@ -397,14 +387,16 @@ const handleOfferLetter = async (offerLetterLink)=>{
   )
   &&
   (
+    <div>
     <StyledInput
       label="Number of students placed"
-      fullWidth
+      // fullWidth
       variant="outlined"
       color="primary"
       value ={studentsPlaced}
       onChange= {(event)=>setStudentsPlaced(event.target.value)}
     />
+    </div>
   )
 }
 {
@@ -413,7 +405,7 @@ const handleOfferLetter = async (offerLetterLink)=>{
   && jobNotExpired
   &&
   (
-    <Button style={{width: "60%"}} onClick={()=>closeJob(job._id)} variant="contained" color="secondary">Close Job?</Button>
+    <Button style={{marginLeft: "2%", width: "60%"}} onClick={()=>closeJob(job._id)} variant="contained" color="secondary">Close Job?</Button>
   )
 }
   </CardActions>
@@ -506,9 +498,7 @@ const handleOfferLetter = async (offerLetterLink)=>{
          </>
        }
  </Modal>
-
-</div>
-
+ </div>
   )
 }
 

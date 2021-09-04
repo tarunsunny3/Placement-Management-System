@@ -2,13 +2,11 @@ import React, {useState} from 'react';
 import {withRouter} from 'react-router-dom';
 import uoh_logo from './images/hcu.jpg';
 import axios from 'axios';
-import Darkmode from 'darkmode-js';
 import AppContext from './AppContext';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -17,18 +15,19 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import EditTwoToneIcon from '@material-ui/icons/EditTwoTone';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useTheme } from '@material-ui/core/styles';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import SortIcon from '@material-ui/icons/Sort';
+import { useMediaQuery } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    backgroundColor: "white"
   },
-  menuButton: {
-    // marginRight: theme.spacing(2),
+  appbar:{
+    background: 'none',
   },
   title: {
-
     marginTop: "1%",
     marginLeft: "-1%",
     flexGrow: 1,
@@ -37,12 +36,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flex: 1,
     justifyContent: "space-evenly",
+    alignItems: 'center'
   },
   headerButton:{
     '&:hover':{
       backgroundColor: "#FFDAB9"
     },
-    backgroundColor: "white",
     color: "black",
     cursor: "pointer",
   },
@@ -51,7 +50,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#BCFFB9",
     color: "black",
     padding: "5px 10px",
-    borderRadius: "10px"
+    borderRadius: "10px",
+    fontSize:  "initial"
   },
   headerItem: {
     '&:hover':{
@@ -59,7 +59,9 @@ const useStyles = makeStyles((theme) => ({
       padding: "10px 10px  5px 10px",
       color: "black",
     },
-    cursor: "pointer"
+    cursor: "pointer",
+    color: "black",
+    fontSize:  "1rem"
   },
   iconText: {
     marginLeft: "10px"
@@ -89,7 +91,7 @@ const  NavBar = (props)=> {
   const {history} = props;
   const {user, setUser, setLoggedIn} = React.useContext(AppContext);
   const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -124,20 +126,11 @@ const  NavBar = (props)=> {
   const handleMenuClick = (e, pageURL) => {
     e.preventDefault();
     setAnchorEl(null);
-    // setMobileMoreAnchorEl(null);
     history.push(pageURL);
   };
 
   const onButtonClick = (event, pageURL) => {
     event.preventDefault();
-    // let items = document.querySelectorAll("#header-item");
-    // for(let i = 0 ; i < items.length; i++){
-    //   if(items[i].className.includes("currentHeader")){
-    //     items[i].className = "";
-    //     items[i].className = classes.headerItem;
-    //   }
-    // }
-    // event.target.className = classes.currentHeaderItem;
     history.push(pageURL);
   }
   const Logout = async  ()=>{
@@ -148,8 +141,10 @@ const  NavBar = (props)=> {
     history.push('/login');
 
   }
+  
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
+
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -160,20 +155,28 @@ const  NavBar = (props)=> {
       onClose={handleMobileMenuClose}
     >
       {
-        user !== undefined && user.role==="Coordinator"
-        &&
-        <>
-        <MenuItem onClick={(e)=>{handleMenuClick(e, "/job"); handleMobileMenuClose();}}><CloudUploadIcon /><span className={classes.iconText}>Upload Job</span></MenuItem>
-        <MenuItem onClick={(e)=>{handleMenuClick(e, "/viewReports"); handleMobileMenuClose();}}><AssessmentIcon /><span className={classes.iconText}>View Reports</span></MenuItem>
-        </>
+      (user===undefined || user===null || user.id === null) &&
+      <div>
+        <MenuItem onClick={(e)=>{handleMenuClick(e, "/register"); handleMobileMenuClose();}}><span><i style={{color: 'blue'}} className="fas fa-user-plus"></i></span><span className={classes.iconText}>Register</span></MenuItem>
+        <MenuItem onClick={(e)=>{handleMenuClick(e, "/login"); handleMobileMenuClose();}}><span><i style={{color: 'blue', fontSize: "1.1rem"}} className="fas fa-sign-in-alt"></i></span><span className={classes.iconText}>Login</span></MenuItem>
+      </div>
       }
-
-      <MenuItem onClick={(e)=>{handleMenuClick(e, "/view"); handleMobileMenuClose();}}><VisibilityIcon /><span className={classes.iconText}>View Jobs</span></MenuItem>
-
-      <MenuItem onClick={handleProfileMenuOpen}>
-      <AccountCircle />
-        <span className={classes.iconText}>Profile</span>
-      </MenuItem>
+      {user !== undefined && user.role === "Coordinator"
+              &&
+              <div>
+                <MenuItem onClick={(e) => { handleMenuClick(e, "/job"); handleMobileMenuClose(); } }><CloudUploadIcon /><span className={classes.iconText}>Upload Job</span></MenuItem>
+                <MenuItem onClick={(e) => { handleMenuClick(e, "/viewReports"); handleMobileMenuClose(); } }><AssessmentIcon /><span className={classes.iconText}>View Reports</span></MenuItem>
+              </div>
+      }
+      {
+        user !== undefined && user.role !== null &&
+        <div>
+          <MenuItem onClick={(e) => { handleMenuClick(e, "/view"); handleMobileMenuClose(); } }><VisibilityIcon /><span className={classes.iconText}>View Jobs</span></MenuItem><MenuItem onClick={handleProfileMenuOpen}>
+              <AccountCircle />
+              <span className={classes.iconText}>Profile</span>
+          </MenuItem>
+        </div>
+    }
     </Menu>
   );
   const menuId = 'primary-search-account-menu';
@@ -193,47 +196,44 @@ const  NavBar = (props)=> {
   );
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar className={classes.appbar} position="static">
         <Toolbar>
         <Typography variant="h6" className={classes.title}>
         <img onClick={()=>window.location.href = "/"}  style={{ cursor: "pointer", maxHeight: (window.innerHeight/14)}} src={uoh_logo}/>
           </Typography>
-          
-        
-        
-          {
-            (user===undefined || user===null || user.id === null) ?
-
-              (<>
-              <div className={classes.headerItems}>
-                <Button className={history.location.pathname !== '/login' ? classes.headerButton : classes.currentHeaderItem} style={{marginRight: "10%"}} variant="contained" onClick = {(event)=>onButtonClick(event, "/login")}>Login</Button>
-                <Button className={history.location.pathname !== '/register' ? classes.headerButton : classes.currentHeaderItem} variant="contained" onClick = {(e)=>onButtonClick(e, "/register")}> Register</Button>
-              {/*<MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon /><span>Logout</span></MenuItem>*/}
-              </div>
-              </>)
-            :
+         
+           
             (
 
-              <div>
+            <div>
             <div className={classes.sectionMobile}>
               <IconButton
                 aria-label="show more"
                 aria-controls={mobileMenuId}
                 aria-haspopup="true"
                 onClick={handleMobileMenuOpen}
-                color="inherit"
               >
-                <MoreIcon />
+                <SortIcon />
               </IconButton>
           </div>
 
          
                 <div className={classes.sectionDesktop}>
-                <div>
-                      
-                  <p className={history.location.pathname !== '/view' ? classes.headerItem : classes.currentHeaderItem} onClick = {(event)=>onButtonClick(event, "/view")}>View Jobs</p>
-                </div>
-         {
+                  { (user === undefined || user === null || user.role === null) &&
+                    <div className={classes.headerItems}>
+                      <p className={history.location.pathname !== '/login' ? classes.headerItem : classes.currentHeaderItem} style={{marginRight: "10%"}} variant="contained" onClick = {(event)=>onButtonClick(event, "/login")}>Login</p>
+                      <p className={history.location.pathname !== '/register' ? classes.headerItem : classes.currentHeaderItem} variant="contained" onClick = {(e)=>onButtonClick(e, "/register")}> Register</p>
+                    </div>
+                  }
+                  {
+                    user.role !== null &&
+                  
+                    <div>
+                      <p className={history.location.pathname !== '/view' ? classes.headerItem : classes.currentHeaderItem} onClick = {(event)=>onButtonClick(event, "/view")}>View Jobs</p>
+                     
+                    </div>
+                }
+              {
                 user.role === "Coordinator" && 
                 <>
             
@@ -246,13 +246,14 @@ const  NavBar = (props)=> {
              
               </div>
               </>
-}
+        }
+        { user.role !== null &&
+        <>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
-                color="inherit"
               >
               <AccountCircle/>
               </IconButton>
@@ -277,12 +278,13 @@ const  NavBar = (props)=> {
               <MenuItem onClick={(e)=>handleMenuClick(e, "/studentReg/update")}><EditTwoToneIcon /><span className={history.location.pathname !== '/studentReg/update' ? classes.iconText : `${classes.iconText} ${classes.currMenuItem}`}>Edit Profile</span></MenuItem>
               <MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon className={classes.menuIcons}/><span className={classes.iconText}>Logout</span></MenuItem>
                 </Menu>
-            </div>
+                </>
+}
             {renderMobileMenu}
+            </div>
           </div>
 
         )
-          }
       
 
         </Toolbar>

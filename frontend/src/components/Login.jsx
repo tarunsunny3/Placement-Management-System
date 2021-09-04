@@ -46,10 +46,9 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100vh',
+    // height: '100vh',
   },
   image: {
-    // backgroundImage: 'url(https://source.unsplash.com/random)',
     backgroundImage: `url(${welcomeImage})`,
     backgroundRepeat: 'no-repeat',
     backgroundColor:
@@ -177,8 +176,8 @@ const  Login = (props) => {
   // ?
   <Grid container component="main" className={classes.root}>
       <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Grid item xs={false} sm={false} md={6} className={classes.image} />
+      <Grid item xs={12} sm={12} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
 
           <Avatar className={classes.avatar}>

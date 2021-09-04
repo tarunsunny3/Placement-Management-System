@@ -31,5 +31,24 @@ var firebaseConfig = {
   
   // Get a reference to the storage service, export it for use
   export const storage = firebase.storage();
+  const messaging = fire.messaging();
+  messaging.onMessage((payload) => {
+    console.log('Message received. ', payload);
+    // ...
+  });
+
+  // messaging.onBackgroundMessage((payload) => {
+  //   console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  //   // Customize notification here
+  //   const notificationTitle = 'Background Message Title';
+  //   const notificationOptions = {
+  //     body: 'Background Message body.',
+  //     icon: '/firebase-logo.png'
+  //   };
+  
+  //   this.registration.showNotification(notificationTitle,
+  //     notificationOptions);
+  // });
+  
   export   {fire};
   export default firebase;

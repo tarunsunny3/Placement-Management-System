@@ -26,31 +26,37 @@ import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    // height: "100vh",
-    // backgroundImage: `url(${bg})`,
-    // backgroundRepeat: "no-repeat",
-    // backgroundSize: "cover"
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
   },
+  search:{
+    display: "flex",
+    justifyContent: 'space-between',
+    // alignItems: "center"
+  },
   searchBar:{
-    
-    [theme.breakpoints.down("xs")]:{
-      marginLeft: "2%",
-      marginTop: "2%",
-      width: "85%",
-    },
-    [theme.breakpoints.up("md")]:{
-      marginLeft: "5%",
-      marginTop: "2%",
-      width: "70%"
-    },
+    flexGrow: 1
+    // display: "inline-block",
+    // [theme.breakpoints.down("sm")]:{
+    //   marginLeft: "2%",
+    //   marginTop: "2%",
+    //   backgroundColor: "pink",
+    //   width: "80vw",
+    // },
+    // [theme.breakpoints.up("sm")]:{
+    //   marginLeft: "2%",
+    //   marginTop: "2%",
+    //   minWidth: "80vw",
+    //   backgroundColor: "blue"
+    // },
   },
   filterButton:{
-    marginLeft: "2%",
-    marginTop: "2%"
+    marginLeft: "2px",
+    marginTop: "3px"
+    // marginLeft: "2%",
+    // marginTop: "2%"
   },
   enabled:{
     '&':{
@@ -134,6 +140,13 @@ const ViewAllJobs = () => {
   const [search, setSearch] = useState("");
   const [showChips, setShowChips] = useState(false);
   useEffect(() => {
+    if(user !== undefined && user != null && user.role !== null){
+      if(user.role==="Coordinator"){
+        setType("open");
+      }else{
+        setType("default");
+      }
+    }
     async function fetchCompanyNames() {
       let response = await axios.get('/job/getCompanyNames');
       setCompanies(response.data.companyNames);
@@ -155,14 +168,14 @@ const ViewAllJobs = () => {
   }, [startDate, endDate, intern, fullTime]);
   const handleClick = (type)=>{
     setType(type);
-    if(type==="default" || type==="open"){
-      setClass1(enabled);
-      setClass2(disabled);
-    }
-    if(type==="closed" || type==="applied"){
-      setClass1(disabled);
-      setClass2(enabled);
-    }
+    // if(type==="default" || type==="open"){
+    //   setClass1(enabled);
+    //   setClass2(disabled);
+    // }
+    // if(type==="closed" || type==="applied"){
+    //   setClass1(disabled);
+    //   setClass2(enabled);
+    // }
   }
   const handleCompany=(value)=>{
     setCompany(value);
@@ -366,31 +379,29 @@ const ViewAllJobs = () => {
   </Drawer>
   
       {
-        
+       
         user != null && user.role === "Student"
         ?
         <>
 
         <ButtonGroup fullWidth={true} variant="contained" aria-label="contained primary button group">
-          <Button variant="contained" className={class1} onClick={()=>handleClick("default")} >Unapplied Jobs</Button>
-          <Button variant="contained" className={class2} onClick={()=>handleClick("applied")} >Applied Jobs</Button>
+          <Button variant="contained"  className={type === "default" ? classes.enabled : classes.disabled} onClick={()=>handleClick("default")}>Unapplied Jobs</Button>
+          <Button variant="contained" className={type === "applied" ?classes.enabled: classes.disabled} onClick={()=>handleClick("applied")} >Applied Jobs</Button>
 
         </ButtonGroup>
         </>
         :
         <>
         <ButtonGroup fullWidth={true} variant="contained" aria-label="contained primary button group">
-          <Button variant="contained" className={class1} onClick={()=>handleClick("open")} >Open Jobs</Button>
-          <Button variant="contained" className={class2} onClick={()=>handleClick("closed")} >Closed Jobs</Button>
+          <Button variant="contained" className={type === "open" ? classes.enabled: classes.disabled} onClick={()=>handleClick("open")} >Open Jobs</Button>
+          <Button variant="contained" className={type === "closed" ? classes.enabled: classes.disabled} onClick={()=>handleClick("closed")} >Closed Jobs</Button>
         </ButtonGroup>
         </>
       }
-      
       <Button className={classes.filterButton} variant="contained" color="secondary" onClick={()=>setOpen(!open)}><span><i className="fas fa-filter fa-2x"></i></span></Button>
-  
-      
+      <div style={{marginTop: "5px", marginLeft: "4px", width: "100%"}}>
         <StyledInput 
-        className={classes.searchBar}
+        style={{width: "80%"}}
         color="primary"
         placeholder="Search for company name, position, description, location, etc"
         onChange={(event)=>{
@@ -409,9 +420,10 @@ const ViewAllJobs = () => {
         }}>
           
         </StyledInput>
-        <IconButton onClick={()=>getSearchResults()} type="submit" style={{marginTop: "2%"}} aria-label="search">
+        <IconButton onClick={()=>getSearchResults()} type="submit" aria-label="search">
         <SearchIcon />
       </IconButton>
+      </div>
       <div style={{textAlign: "center", marginTop: "2%"}}>
       {
     showChips &&

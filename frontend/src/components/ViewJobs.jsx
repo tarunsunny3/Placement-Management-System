@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 import axios from 'axios';
-import bg from './images/bg.jpg';
 import AppContext from './AppContext';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import Job from './Job';
+import Grid from '@material-ui/core/Grid';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
@@ -238,18 +238,21 @@ const showJobsIfEligible = (job, status, user)=>{
         ?
         noJobsMessage()
       :
-      <div>
-         <div className={classes.gridList}>
+      <div style={{marginLeft: "5%", marginRight: "5%"}}>
+        <Grid container display="flex" direction="row" justify="space-evenly" spacing={4}>
 
         {
 
           currJobs.map((job, key)=>{
             return (
-              <Job job={job} key={Math.random() * currPage} setCurrPage={setCurrPage} currPage={currPage} {...props}/>
+              <Grid key={job._id} item xs={12} sm={6}>
+                <Job job={job} setCurrPage={setCurrPage} currPage={currPage} {...props}/>
+              </Grid>
             )
         })
       }
-      </div>
+    
+    </Grid>
       {
         Math.ceil(jobs.length/jobsPerPage) > 1 &&
       <div className={classes.pagination}>
@@ -257,6 +260,7 @@ const showJobsIfEligible = (job, status, user)=>{
       </div>
     }
       </div>
+     
     )
 
  

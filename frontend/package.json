@@ -32,7 +32,8 @@
     "react-export-excel": "^0.5.3",
     "react-fetch-hook": "^1.8.5",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "3.4.4",
+    "react-scroll": "^1.8.4",
     "uuid": "^8.3.2",
     "web-vitals": "^1.1.1"
   },

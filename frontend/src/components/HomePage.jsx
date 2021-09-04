@@ -1,21 +1,73 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import bgImage from './images/bgImage.jpg';
 import './HomePage.css';
+import { makeStyles } from '@material-ui/core/styles';
+import { IconButton } from '@material-ui/core';
+import { Link as Scroll } from 'react-scroll';
+import HomePageContent from './HomePageContent';
+const useStyles = makeStyles((theme) => ({
+  bg:{
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.5)) , url(${bgImage})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  },
+  header:{
+    // height: "90vh",
+  },
+  title:{
+      textAlign: "center", 
+      fontSize: "4rem",
+      fontFamily: "MontSerrat, sans-serif",
+      color: "#FFE3E3",
+      marginTop: "15%",
+      [theme.breakpoints.down('md')]:{
+        marginTop: "25%",
+        fontSize: '2.5rem'
+      }
+  },
+  container:{
+    textAlign: "center",
+    marginBottom: "10%",
+  },
+  goDownIcon: {
+    color: "white",
+    fontSize: "3rem"
+  }
+}));
 const HomePage = () => {
-  // style={{position: "relative", width: "98vw", opacity: "0.2","zIndex": "-1", backgroundColor: "rgba(0,0,0,.5)",  height: "100vh", backgroundImage: `url(${bgImage})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}
-  return (
-    <div>
-  <div className="bg">
+  const classes = useStyles();
+  const [checked, setChecked] = useState(false);
 
-    <div style={{backgroundColor: "#FDD2BF", display: "flex", direction: "column", justifyContent: "center", alignItems: "center"}}>
-      <h1 style={{textAlign: "center", fontSize: "40px", color: "#3C5186", paddingTop: "5%", paddingBottom: "5%"}}>
-        Welcome to Placement Management System
+  useEffect(() => {
+    setChecked(true);
+  }, []);
+  return (
+    <div className={classes.bg}>
+  <div>
+  
+  {/* <img src={bgImage} style={{width: "100%", height: "100vh", objectFit: "cover"}} alt="background"/> */}
+
+  <div id ="header" className={classes.header}>
+  {/* <Collapse in={checked} {...(checked ? {timeout: 1000}: {})}> */}
+    <div className={classes.container}>
+    <Collapse in={checked} {...(checked ? {timeout: 1000}: {})}>
+      <h1 className={classes.title}>
+        Welcome to <br/>
+        Placement Management System
       </h1>
-      
+      </Collapse>
+      <Scroll to="place-to-visit" smooth={true}>
+      <IconButton>
+          <ExpandMoreIcon className={classes.goDownIcon} />
+        </IconButton>
+       </Scroll>
+      </div>
+    {/* </Collapse> */}
     </div>
-    <img src={bgImage} style={{width: "100%", height: "100vh", objectFit: "cover"}} alt="background"/>
-    </div>
-    <footer id="footer" className="footer">
+  <HomePageContent />
+  <footer id="footer" className="footer">
         <div className="footer-content">
             <div className="footer-section about">
                 <h1>Contact Me</h1>
@@ -33,6 +85,7 @@ const HomePage = () => {
         </div>
 
       </footer>
+    </div>
     </div>
   )
 }
