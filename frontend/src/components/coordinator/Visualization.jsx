@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'; 
+import reportsImage from "../images/assets/reports.png";
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -170,7 +171,7 @@ const Visualization = () => {
           
           <div style={{marginTop: "3px", width: "100%", textAlign: "center"}}>
           <Typography variant="h3" gutterBottom>Reports</Typography>
-          <img  src={process.env.PUBLIC_URL + "/assets/reports.png"} width="100%" height="auto"/>
+          <img src={reportsImage} width="100%" height="auto"/>
           </div>
           <CssBaseline />
                 {

@@ -105,7 +105,6 @@ const StyledInput = withStyles({
   },
 
 })(TextField);
-console.log(process.env.PUBLIC_URL);
 const UploadJob = (props) => {
   const classes = useStyles();
   const state = props.location.state;

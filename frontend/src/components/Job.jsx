@@ -390,7 +390,7 @@ const handleOfferLetter = async (offerLetterLink)=>{
     <div>
     <StyledInput
       label="Number of students placed"
-      // fullWidth
+      fullWidth
       variant="outlined"
       color="primary"
       value ={studentsPlaced}
@@ -405,7 +405,7 @@ const handleOfferLetter = async (offerLetterLink)=>{
   && jobNotExpired
   &&
   (
-    <Button style={{marginLeft: "2%", width: "60%"}} onClick={()=>closeJob(job._id)} variant="contained" color="secondary">Close Job?</Button>
+    <Button style={{marginLeft: "4%", width: "30%"}} onClick={()=>closeJob(job._id)} variant="contained" color="secondary">Close Job?</Button>
   )
 }
   </CardActions>

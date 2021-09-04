@@ -199,7 +199,7 @@ const  NavBar = (props)=> {
       <AppBar className={classes.appbar} position="static">
         <Toolbar>
         <Typography variant="h6" className={classes.title}>
-        <img onClick={()=>window.location.href = "/"}  style={{ cursor: "pointer", maxHeight: (window.innerHeight/14)}} src={uoh_logo}/>
+        <img onClick={()=>window.location.href = "/"}  style={{ cursor: "pointer", width: (window.innerWidth/10), maxHeight: (window.innerHeight/10)}} src={uoh_logo}/>
           </Typography>
          
            
