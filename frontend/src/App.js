@@ -21,7 +21,9 @@ import Brightness3Icon from "@material-ui/icons/Brightness3";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Visualization from './components/coordinator/Visualization';
 
-
+//Push Notifications
+window.OneSignal = window.OneSignal || [];
+const OneSignal = window.OneSignal;
 
 function App() {
   const [theme, setTheme] = useState(true);
@@ -31,6 +33,20 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const icon = !theme ? <Brightness7Icon /> : <Brightness3Icon />;
   const appliedTheme = createMuiTheme(theme ? light : dark);
+
+  useEffect(() => {
+    OneSignal.push(() => {
+      OneSignal.init({
+        appId: "239fffcd-8ce7-4c36-9b2b-15daa44603e5",
+        safari_web_id: "web.onesignal.auto.3f702284-340c-42a7-8810-51cb92b23548",
+        notifyButton: {
+          enable: true,
+        },
+        allowLocalhostAsSecureOrigin: true,
+      })
+    });
+  }, [])
+ 
   useEffect(()=>{
     
     async function fetchUser() {
@@ -38,6 +54,13 @@ function App() {
        const data = res.data;
        console.log("Data is ", data);
        setUser(data.user);
+       if(data.user._id !== undefined){
+         
+          OneSignal.push(()=>{
+            OneSignal.setExternalUserId(data.user._id)
+          })
+          // console.log("Ok");
+       }
      }
      fetchUser();
   }, [loggedIn]);

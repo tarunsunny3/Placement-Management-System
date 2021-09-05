@@ -32,6 +32,45 @@ if(!fs.existsSync('./reports')){
 		console.log('Directory created successfully!');
 	});
 }
+var sendNotification = function(data) {
+	var headers = {
+	  "Content-Type": "application/json; charset=utf-8",
+	  "Authorization": "Basic ZGQyZTc1NmYtMGI4OS00NTVhLWJlYmEtMDQ2Zjc1ODI4OTQx"
+	};
+	
+	var options = {
+	  host: "onesignal.com",
+	  port: 443,
+	  path: "/api/v1/notifications",
+	  method: "POST",
+	  headers: headers
+	};
+	
+	var https = require('https');
+	var req = https.request(options, function(res) {  
+	  res.on('data', function(data) {
+		console.log("Response:");
+		console.log(JSON.parse(data));
+	  });
+	});
+	
+	req.on('error', function(e) {
+	  console.log("ERROR:");
+	  console.log(e);
+	});
+	
+	req.write(JSON.stringify(data));
+	req.end();
+  };
+  
+  var message = { 
+	app_id: "239fffcd-8ce7-4c36-9b2b-15daa44603e5",
+	contents: {"en": "English Message"},
+	included_segments: ["Subscribed Users"]
+  };
+  
+//   sendNotificati on(message);
+
 
 //Serve  static files
 if(process.env.NODE_ENV == 'production'){

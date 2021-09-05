@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     width: "100%",
     height: "40vh",
+    [theme.breakpoints.down('sm')]:{
+      height: "60vh"
+    }
   },
   container:{
     margin: "auto 3%"
@@ -35,7 +38,11 @@ const useStyles = makeStyles((theme) => ({
   },
   number:{
     marginTop: theme.spacing(4),
-    fontSize: "3rem"
+    fontSize: "3rem",
+    [theme.breakpoints.down('md')]:{
+      marginTop: theme.spacing(6),
+      fontSize: "4rem"
+    }
   }
 }));
 export default function () {
