@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {withRouter} from 'react-router-dom';
-import uoh_logo from './images/logo192.png';
 import axios from 'axios';
+import uoh_logo from './images/assets/uoh_logo.png';
 import AppContext from './AppContext';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "white"
   },
   appbar:{
-    background: 'none',
+    background: 'white',
   },
   title: {
     marginTop: "1%",
@@ -196,15 +196,14 @@ const  NavBar = (props)=> {
   );
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appbar} position="static">
+      <AppBar className={classes.appbar} position="static" elevation={0}>
         <Toolbar>
         <Typography variant="h6" className={classes.title}>
-        <img onClick={()=>window.location.href = "/"}  style={{ cursor: "pointer", width: "8%", height: "10%"}} src={uoh_logo}/>
+        <img onClick={()=>window.location.href = "/"}  style={{ cursor: "pointer", height: window.innerHeight/11}} src={uoh_logo}/>
           </Typography>
          
            
-            (
-
+            
             <div>
             <div className={classes.sectionMobile}>
               <IconButton
@@ -284,7 +283,6 @@ const  NavBar = (props)=> {
             </div>
           </div>
 
-        )
       
 
         </Toolbar>

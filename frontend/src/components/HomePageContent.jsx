@@ -19,10 +19,11 @@ const useStyles = makeStyles((theme) => ({
   paper:{
     textAlign: "center",
     width: "100%",
-    height: "40vh",
-    [theme.breakpoints.down('sm')]:{
-      height: "60vh"
-    }
+    height: "100%",
+    // [theme.breakpoints.down('sm')]:{
+    //   height: "60%"
+    // },
+    boxShadow:  "10px 10px rgba(0, 0, 0, 0.2)"
   },
   container:{
     margin: "auto 3%"
@@ -67,7 +68,7 @@ export default function () {
         {({ isVisible }) => (
          
            <p className={classes.iconText}> Students Placed <br/>
-            <span  className={classes.number}>{isVisible ? <CountUp end={100} duration={2}/> : null}+</span>
+            <span  className={classes.number}>{isVisible ? <CountUp end={10000} duration={2}/> : null}+</span>
             </p>
         )}
         </VisibilitySensor>
@@ -91,7 +92,7 @@ export default function () {
         <VisibilitySensor partialVisibility>
         {({ isVisible }) => (
           <p className={classes.iconText}>Courses Offered<br/>
-          <span  className={classes.number}>{isVisible ? <CountUp end={1300} duration={2}/> : null}+</span>
+          <span  className={classes.number}>{isVisible ? <CountUp end={60} duration={2}/> : null}+</span>
           </p>
         )}
         </VisibilitySensor>

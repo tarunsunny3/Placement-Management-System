@@ -18,13 +18,35 @@
   position: absolute;
   z-index: -1;
 }
-
+.container{
+  position: relative;
+  text-align: center;
+  color: white;
+}
+.centeredText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -80%);
+  font-size: 4.5rem;
+  color: black;
+  z-index: 1;
+}
+@media (max-width: 960px) {
+  .centeredText{
+    font-size: 3.5rem;
+  }
+}
+.img{
+  mask-image: linear-gradient(to bottom, rgba(0,0,1,1) 0%,rgba(230, 27, 27, 0.95) 100%);
+   -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(230, 27, 27, 0.95) 100%);
+}
 .footer {
   position: relative;
   height: 250px;
   background-color: #343a40;
   color: #d3d3d3;
-  margin-top: 20px;
+  margin-top: 80px;
 }
 .footer .footer-content {
   border: 1px solid pink;

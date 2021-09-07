@@ -13,8 +13,13 @@ router.get('/decodedUser', requireAuth, async (req, res)=>{
   if(user.id === null){
     res.json({user: req.decoded});
   }else{
-    const userDetails = await User.findOne({_id: user.id});
-    res.json({user: userDetails});
+    try {
+      const userDetails = await User.findOne({_id: user.id});
+      res.json({user: userDetails, success:  true});
+    } catch (error) {
+      res.json({success: false});
+    }
+    
   }
 
 })
@@ -25,8 +30,7 @@ router.get('/logout', requireAuth, (req, res)=>{
   res.cookie("token", "", { maxAge: -1})
     res.sendStatus(200);
   }catch(e){
-    console.log("Logout error is ", e);
-    res.sendStatus(404);
+    res.sendStatus(400).json({success: false});
   }
 });
 
@@ -40,7 +44,6 @@ router.post('/sign_up', async (req, res)=>{
     try{
       const doc = await newUser.save();
       console.log(doc);
-      // console.log(doc.details);
       res.json({
         success: true
       })
@@ -176,8 +179,6 @@ router.post("/sendEmail", (req, res)=>{
 router.post("/sendJobUpdateEmail", async (req, res)=>{
   const message = req.body.message;
   const courses = req.body.courses;
-  // console.log("Message is ", message);
-  // console.log("Courses", courses);
  
   let users = await User.find({});
   // console.log("Old Length is ", users.length);
