@@ -12,3 +12,22 @@
 .table td:nth-child(even){
   padding-left: 40%;
 }
+@media (max-width: 960px) {
+  .table td:nth-child(even){
+    padding-left: 5%;
+  }
+}
+.large{
+  border: "10px solid blue !important";
+  width: "500px";
+  height: '300px';
+}
+
+.profileImage {
+  margin-top: 10%;
+  margin-left: 20%;
+  max-width: 60%;
+  height: 400px;
+  object-fit: contain;
+}
+

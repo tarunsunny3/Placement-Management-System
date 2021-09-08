@@ -66,8 +66,8 @@ function Item({item})
         <Paper className={"container"}>
             {/* <h2>{item.name}</h2>
            */}
+           
             <p className="centeredText">{item.description}</p>
-            
             <img className="img" width="100%" height="500rem" src={item.image} alt={item.name}/>
         </Paper>
     )
@@ -116,10 +116,11 @@ const HomePage = () => {
 
   <div id ="header" className={classes.header}>
   {/* <Collapse in={checked} {...(checked ? {timeout: 1000}: {})}> */}
-    <Example />
+  
+    
     <div className={classes.container}>
     <Collapse in={checked} {...(checked ? {timeout: 1000}: {})}>
-      <h1 className={classes.title}>
+    <h1 className={classes.title}>
         Welcome to <br/>
         Placement Management System
       </h1>
@@ -130,6 +131,7 @@ const HomePage = () => {
         </IconButton>
        </Scroll>
       </div>
+      <Example />
     {/* </Collapse> */}
     </div>
   <HomePageContent />

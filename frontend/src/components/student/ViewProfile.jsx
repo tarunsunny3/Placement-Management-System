@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import AppContext from '../AppContext';
+import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleOutlineTwoToneIcon from '@material-ui/icons/RemoveCircleOutlineTwoTone';
 import AddCircleOutlineTwoToneIcon from '@material-ui/icons/AddCircleOutlineTwoTone';
@@ -10,6 +11,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import './ViewProfile.css';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 const StyledInput = withStyles({
   root: {
     '& fieldset': {
@@ -83,8 +89,9 @@ const ViewProfile = () => {
   }
   return (
     <div>
+<Grid container spacing={4}>
 
-      <div style={{margin: "auto", textAlign: "center"}}>
+      {/* <div style={{margin: "auto", textAlign: "center"}}> */}
         {
           user.details === undefined ?  
           <>
@@ -92,11 +99,16 @@ const ViewProfile = () => {
           </>
           :
           <>
+          <Grid item xs={12} sm={6}>
           {
             user.details.profilePictureLink !== undefined &&
-            <img src={user.details.profilePictureLink} style={{width: "500px", height: "400px",objectFit: "contain", marginTop: "2%"}}  alt="user profile"/>
+            // <Avatar style={{marginLeft: "20%", maxWidth: "100%", height: "auto", objectFit: "contain"}} src={user.details.profilePictureLink}></Avatar>
+           
+              <img className="profileImage" src={user.details.profilePictureLink} alt="user profile"/>
+           
           }
-       
+          </Grid>
+       <Grid item xs={12} sm={6}>
         <div>
 
           
@@ -104,7 +116,7 @@ const ViewProfile = () => {
           <tbody>
           <tr>
             <td>
-              Username
+              ID number
             </td>
             <td>
               {user.username}
@@ -112,10 +124,10 @@ const ViewProfile = () => {
           </tr>
           <tr>
             <td>
-              Role
+              Name
             </td>
             <td>
-              {user.role}
+              {user.details.firstName + " " + user.details.lastName}
             </td>
           </tr>
           {
@@ -146,7 +158,7 @@ const ViewProfile = () => {
             {user.details.gender}
           </td>
         </tr>
-
+        
         {
           user.details.semesterWisePercentage.map((grade, key)=>{
             return (
@@ -161,6 +173,7 @@ const ViewProfile = () => {
           )
         })
       }
+        
 </>
 
     }
@@ -170,7 +183,6 @@ const ViewProfile = () => {
         {
           user.details !== undefined && user.details.semesters !== undefined  && user.details.semesters > user.details.semesterWisePercentage.length &&
           <>
-          {console.log(user.details.semesters, user.details.semesterWisePercentage.length)}
             <p>You have to enter <b>{user.details.semesters - user.details.semesterWisePercentage.length} </b>more semesters Grades</p>
           {
             gradesInputArray.length === 0 &&
@@ -217,10 +229,11 @@ const ViewProfile = () => {
 
           </>
         }
-    
+    </Grid>
       </>
         }
-      </div>
+
+</Grid>
     </div>
 
   )

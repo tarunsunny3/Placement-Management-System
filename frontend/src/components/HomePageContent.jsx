@@ -52,16 +52,20 @@ export default function () {
   return (
     <>
     <div className={classes.root} id="place-to-visit">
-     
-      <ImageCard content={content[1]} checked={checked} />
-      <ImageCard content={content[0]} checked={checked} />
+      {
+        content.map((content, key)=>(
+          <ImageCard key={key} content={content} checked={checked} />
+        ))
+      }
+      
+      {/* <ImageCard content={content[0]} checked={checked} /> */}
     </div>
     <div className={classes.container}>
 
    
-    <Grid container spacing={4}>
+    <Grid container display="flex" justify="center" spacing={4}>
     
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sm={6} md={4}>
         <div className={classes.paper} style={{backgroundColor: "#B5EAEA"}}>
           <span><i  className= {`fas fa-user-graduate ${classes.icon}`}></i></span>
         <VisibilitySensor partialVisibility>
@@ -74,7 +78,7 @@ export default function () {
         </VisibilitySensor>
         </div>
       </Grid>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sm={6} md={4}>
        <div className={classes.paper} style={{backgroundColor: "#FFBCBC"}}>
        <span><i  className= {`fas fa-building ${classes.icon}`}></i></span>
         <VisibilitySensor partialVisibility>
@@ -86,7 +90,7 @@ export default function () {
         </VisibilitySensor>
         </div>
       </Grid>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sm={6} md={4}>
         <div className={classes.paper} style={{backgroundColor: "#BEAEE2"}}>
         <span><i  className= {`fas fa-book-open ${classes.icon}`}></i></span>
         <VisibilitySensor partialVisibility>

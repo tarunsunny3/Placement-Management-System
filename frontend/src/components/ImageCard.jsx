@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 
@@ -15,7 +16,8 @@ const useStyles = makeStyles({
   },
   media: {
     height: 300,
-    backgroundSize: "cover"
+    backgroundSize: "cover",
+    cursor: "pointer"
   },
   title: {
     fontFamily: 'Montserrat',
@@ -32,14 +34,23 @@ const useStyles = makeStyles({
 
 export default function ImageCard({ content, checked }) {
   const classes = useStyles();
-
+  const onMouseOver = (e)=>{
+    let originalBg  = e.target.style["background-image"];
+    e.target.style["background-image"] = `linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.5)), ${originalBg}`;
+  }
+  const onMouseLeave = (e, image)=>{
+    e.target.style["background-image"] = `url(${image})`;
+  }
   return (
     <Collapse in={checked} {...(checked ? { timeout: 1000 } : {})}>
       <Card className={classes.root}>
         <CardMedia
+          component={Link}
+          to={content.goTo}
+          onMouseOver={(e)=>onMouseOver(e)}
+          onMouseLeave={(e)=>onMouseLeave(e, content.imageUrl)}
           className={classes.media}
           image={content.imageUrl}
-          title="Contemplative Reptile"
         />
         <CardContent>
           <Typography
