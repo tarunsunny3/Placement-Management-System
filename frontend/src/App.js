@@ -68,7 +68,6 @@ function App() {
         <ProtectedRoute path="/viewReports" role="Coordinator" component={ViewReports} />
         <ProtectedRoute exact path="/viewJobs" render={(props) => <ViewJobs type="applied" {...props} />} />
         <Route exact path="/unauthorized" component={Unauthorized}/>
-        <Route path="*" render={()=><p>404 Not found</p>} />
       </Switch>
 </AppContext.Provider>
     </Router>

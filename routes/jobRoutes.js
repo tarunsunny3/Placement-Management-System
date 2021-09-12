@@ -211,31 +211,31 @@ router.get('/downloadZip/zip', (req, res)=>{
       console.log("Errrrror is ", err);
     }else{
       console.log("Success");
-      fileSystem.unlinkSync(path.resolve("./reports.zip"));
-      const dirPath = './reports';
-      if (fileSystem.existsSync(dirPath)) {
-        const files = fileSystem.readdirSync(dirPath);
-        if (files.length > 0) {
-          files.forEach(function(filename) {
-            if (fileSystem.statSync(dirPath + "/" + filename).isDirectory()) {
-              removeDir(dirPath + "/" + filename);
-            } else {
-              fileSystem.unlinkSync(dirPath + "/" + filename);
-            }
-          });
-          fileSystem.rmdirSync(dirPath);
-          } else {
-            fileSystem.rmdirSync(dirPath);
-          }
-    } else {
-      console.log("Directory path not found.");
-    }
-    fileSystem.mkdir("./reports",  (err) => {
-      if (err) {
-          return console.error(err);
-      }
-      console.log('Directory created successfully!');
-    });
+    //   fileSystem.unlinkSync(path.resolve("./reports.zip"));
+    //   const dirPath = './reports';
+    //   if (fileSystem.existsSync(dirPath)) {
+    //     const files = fileSystem.readdirSync(dirPath);
+    //     if (files.length > 0) {
+    //       files.forEach(function(filename) {
+    //         if (fileSystem.statSync(dirPath + "/" + filename).isDirectory()) {
+    //           removeDir(dirPath + "/" + filename);
+    //         } else {
+    //           fileSystem.unlinkSync(dirPath + "/" + filename);
+    //         }
+    //       });
+    //       fileSystem.rmdirSync(dirPath);
+    //       } else {
+    //         fileSystem.rmdirSync(dirPath);
+    //       }
+    // } else {
+    //   console.log("Directory path not found.");
+    // }
+    // fileSystem.mkdir("./reports",  (err) => {
+    //   if (err) {
+    //       return console.error(err);
+    //   }
+    //   console.log('Directory created successfully!');
+    // });
       // const stats = fileSystem.statSync(path.resolve(fileName));
       // const fileSizeInBytes = stats.size;
       // //Delete the file just downloaded from the server after some time
