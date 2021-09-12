@@ -199,7 +199,7 @@ router.get('/download/:fileName', (req, res)=>{
   });
 });
 
-router.get('/downloadZip', (req, res)=>{
+router.get('/download/downloadZip', (req, res)=>{
   let tobeZipped = fileSystem.readdirSync('./reports');
   let zip = new AdmZip();
   for(let i =0; i< tobeZipped.length;i++){
