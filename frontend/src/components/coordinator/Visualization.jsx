@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'; 
 import reportsImage from "../images/assets/reports.png";
+import charstImage from '../images/assets/charts_bg.jpg';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -170,8 +171,8 @@ const Visualization = () => {
         <div className={classes.root}>
           
           <div style={{marginTop: "3px", width: "100%", textAlign: "center"}}>
-          <Typography variant="h3" gutterBottom>Reports</Typography>
-          <img src={reportsImage} width="100%" height="auto"/>
+          <Typography variant="h3" gutterBottom>Charts</Typography>
+          {/* <img src={charstImage} width="100%" height="auto"/> */}
           </div>
           <CssBaseline />
                 {

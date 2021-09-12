@@ -2,8 +2,12 @@
   /* padding-left: 60%; */
   padding-bottom: 5%;
 }
+.grades{
+  overflow-x: visible;
+  margin-left: 10%;
+}
 .table{
-  margin: auto;
+  /* margin-left: 10%; */
   text-align: justify;
 }
 .table td:nth-child(odd){
@@ -12,22 +16,57 @@
 .table td:nth-child(even){
   padding-left: 40%;
 }
-@media (max-width: 960px) {
-  .table td:nth-child(even){
-    padding-left: 5%;
-  }
-}
+
 .large{
   border: "10px solid blue !important";
   width: "500px";
   height: '300px';
 }
 
-.profileImage {
+/* .profileImage {
   margin-top: 10%;
   margin-left: 20%;
-  max-width: 60%;
-  height: 400px;
-  object-fit: contain;
+  max-width: 100px;
+  height: 100px;
+  object-fit: cover;
+} */
+#collapse{
+  display: none;
 }
 
+.image-container{
+  margin-left: 10%;
+  background-color: beige;
+  margin-top: 10%;
+  padding-top: 5%;
+  width: 60%;
+}
+.button2{
+  display: inline-block;
+}
+.MuiAvatar-img{
+  object-fit: fill !important;
+}
+.showGradesButton{
+  width: 50%;
+}
+@media (max-width: 960px) {
+  .table td:nth-child(even){
+    padding-left: 5%;
+  }
+  .table{
+    margin-left: 10%;
+    overflow-wrap: break-word;
+  }
+  .showGradesButton{
+    margin-left: 20%;
+  }
+  .image-container{
+    width: 90%;
+    margin-left: 5%;
+  }
+  .button2{
+    display: block;
+  }
+  
+}

@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
 
 const  Login = (props) => {
   const {history} = props;
-  const {setLoggedIn, setUser} = React.useContext(AppContext);
+  const {setLoggedIn, setUser, user} = React.useContext(AppContext);
   const classes = useStyles();
   const [username, setUsername] = useState("18mcme18");
   const [password, setPassword] = useState("9603877545");
@@ -91,6 +91,11 @@ const  Login = (props) => {
   const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({message: "", type: ""});
+
+
+  if(user != null && user.role !== null){
+      history.replace("/view");
+  }
   const handleClickShowPassword = () => {
    setShowPassword(!showPassword);
  };
@@ -118,8 +123,15 @@ const  Login = (props) => {
      console.log(d);
 
      if(d.success){
+       
        setUser({id: "1"});
        setLoggedIn(true);
+       if(user.details != undefined && user.details.profilePictureLink !== undefined){
+        const profileImage = document.getElementById("profile-image");
+        console.log(profileImage);
+      }else{
+        console.log("No");
+      }
        if(d.result.role==="Student"){
          if(d.reg){
            history.push('/studentReg/register');

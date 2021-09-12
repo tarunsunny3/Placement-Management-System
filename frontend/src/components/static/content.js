@@ -8,7 +8,7 @@ const places = [
       'Generating, viewing reports, flexible downloading, made easy for the placement cell team',
     imageUrl:  reportsImage,
     time: 1500,
-    goTo: "/login"
+    goTo: "/viewReports"
   },
   {
     title: 'View Charts',
@@ -23,11 +23,8 @@ const places = [
         "Viewing the jobs, filtering, applying for them is now made so easy with this app",
       imageUrl: jobsImage,
       time: 1500,
-      goTo: "/login"
-    },
-   
- 
-    // visualizing the number of students placed in each company, year-wise, etc
+      goTo: "/view"
+    }
   ];
   
   export default places;

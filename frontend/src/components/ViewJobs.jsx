@@ -245,7 +245,7 @@ const showJobsIfEligible = (job, status, user)=>{
 
           currJobs.map((job, key)=>{
             return (
-              <Grid key={job._id} item xs={12} sm={6}>
+              <Grid key={job._id} item>
                 <Job job={job} setCurrPage={setCurrPage} currPage={currPage} {...props}/>
               </Grid>
             )
