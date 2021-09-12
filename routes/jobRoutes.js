@@ -200,6 +200,7 @@ router.get('/download/:fileName', (req, res)=>{
 });
 
 router.get('/downloadZip/zip', (req, res)=>{
+  console.log("Entered");
   let tobeZipped = fileSystem.readdirSync('./reports');
   let zip = new AdmZip();
   for(let i = 0; i < tobeZipped.length;i++){
