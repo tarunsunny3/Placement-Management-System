@@ -15,4 +15,4 @@ ReactDOM.render(
   // </React.StrictMode>,
   document.getElementById('root')
 );
-serviceWorkerRegistration.register();
+// serviceWorkerRegistration.register();
