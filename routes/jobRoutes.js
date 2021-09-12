@@ -45,7 +45,7 @@ let worksheet = workbook.addWorksheet('User Details of '+populatedJob.companyNam
 
   res.download(path.resolve(fileName), (err)=>{
     if(err){
-      console.log("Errrrror is ", err);
+      console.log("eeeer is ", err);
     }else{
       console.log("Success");
       const stats = fileSystem.statSync(path.resolve(fileName));
@@ -199,10 +199,10 @@ router.get('/download/:fileName', (req, res)=>{
   });
 });
 
-router.get('/download/downloadZip', (req, res)=>{
+router.get('/downloadZip/zip', (req, res)=>{
   let tobeZipped = fileSystem.readdirSync('./reports');
   let zip = new AdmZip();
-  for(let i =0; i< tobeZipped.length;i++){
+  for(let i = 0; i < tobeZipped.length;i++){
     zip.addLocalFile('./reports/'+tobeZipped[i]);
   }
   zip.writeZip("./reports.zip");
@@ -215,7 +215,6 @@ router.get('/download/downloadZip', (req, res)=>{
       const dirPath = './reports';
       if (fileSystem.existsSync(dirPath)) {
         const files = fileSystem.readdirSync(dirPath);
-
         if (files.length > 0) {
           files.forEach(function(filename) {
             if (fileSystem.statSync(dirPath + "/" + filename).isDirectory()) {
