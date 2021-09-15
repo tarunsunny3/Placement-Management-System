@@ -98,6 +98,7 @@ router.post("/report/", async (req, res) => {
       width: 40,
     });
   }
+  
   if (gender !== undefined && gender != "") {
     excelColumnLabels.push({ header: "Gender", key: gender, width: 20 });
   }
@@ -139,13 +140,13 @@ router.post("/report/", async (req, res) => {
   if (resume !== undefined && resume != "") {
     excelColumnLabels.push({ header: "Resume", key: resume, width: 40 });
   }
-  if (offerletter !== undefined && offerletter != "") {
-    excelColumnLabels.push({
-      header: "Offer Letter",
-      key: offerletter,
-      width: 40,
-    });
-  }
+ if(offerletter !== undefined && offerletter != ""){
+  excelColumnLabels.push({
+    header: "Offer Letter",
+    key: offerletter,
+    width: 40,
+  });
+ }
   populatedJob.users.map((user, key) => {
     const details = user.details;
     let values = {};
@@ -169,26 +170,51 @@ router.post("/report/", async (req, res) => {
         values["resume"] = {
           text: "resumeLink",
           hyperlink: details.resumeLink,
+          tooltip: "click to view/download resume"
         };
       }
     }
-    if (offerletter !== "") {
+    if (offerletter != undefined &&  offerletter !== "") {
       if (details === undefined) {
-        values["offerletter"] = "";
+        values["offerLetter"] = "";
       } else {
-        if (details.offerLettersLinks === undefined) {
-          values["offerletter"] = "";
+        if (details.offerLettersLinks === undefined || details.offerLettersLinks.length === 0) {
+          values["offerLetter"] = "";
         } else {
           const links = details.offerLettersLinks;
-          let flag = false;
-          for (let i = 0; i < links.length; i++) {
-            if (links[i].jobID == jobId) {
-              values["offerletter"] = {
-                text: "offerLetterLink",
-                hyperlink: links[i].link,
-              };
-              flag = true;
-              break;
+          if(links.length == 1){
+           
+            values["offerLetter"] = {
+              text: "offerletterLink",
+              hyperlink: links[0].link,
+              tooltip: "click here to view offerletters"
+            };
+          }else{
+            let count = 0;
+            for (let i = 0; i < links.length; i++) {
+
+              if (links[i].jobID == jobId) {
+                if(count === 0){
+                  values["offerLetter"] = {
+                    text: "offerletterLink",
+                    hyperlink: links[0].link,
+                    tooltip: "click here to view offerletters"
+                  };
+                }else{
+                  // console.log("I is ", i);
+                  excelColumnLabels.push({
+                    header: "Offer Letter " + (count+1),
+                    key: "offerLetter" + (count+1),
+                    width: 30,
+                  });
+                  values["offerLetter" + (count+1)] = {
+                    text: "offerletterLink" + (count+1),
+                    hyperlink: links[i].link,
+                    tooltip: "click here to view offerletter"
+                  }
+                }
+                count++;
+              }
             }
           }
         }
@@ -223,7 +249,7 @@ router.post("/report/", async (req, res) => {
   let workbook = new excel.Workbook(); //creating workbook
   //creating worksheet
   let worksheet = workbook.addWorksheet(
-    "User Details of " + populatedJob.companyName
+    "Student Details of " + populatedJob.companyName
   );
   //  WorkSheet Header
   worksheet.columns = excelColumnLabels;
@@ -236,9 +262,9 @@ router.post("/report/", async (req, res) => {
   // Write to File
   try {
     await workbook.xlsx.writeFile(`./reports/${fileName}`);
-    // console.log(userDetails);
     res.send({ success: true, fileName });
   } catch (e) {
+    console.log("Workbook error is ", e);
     res.json({ success: false });
   }
 });

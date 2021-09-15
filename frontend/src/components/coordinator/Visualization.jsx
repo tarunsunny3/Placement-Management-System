@@ -83,13 +83,16 @@ const Visualization = () => {
         fetchCompanyNames();
       }, [])
 
-      const showChart = async ()=>{
-          let res = await axios.post('/job/getFilteredJobs', {companies: selectedCompanies});
-         
+      const showChart = async (values)=>{
+          if(values.length === 0){
+            return;
+          }
+          console.log("hi");
+          let res = await axios.post('/job/getFilteredJobs', {companies: values});
           if(res.data.success){
             const jobs = res.data.jobs;
             console.log(jobs);
-            if(selectedCompanies.length >= 2){
+            if(values.length >= 2){
             let map = new Map();
            
             jobs.map((job)=>{
@@ -108,7 +111,7 @@ const Visualization = () => {
             const data = {
               labels: labels,
               datasets: [{
-                label: 'Companies Visualization',
+                label: 'Number of students got placed so far',
                 data: values,
                 backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
@@ -137,23 +140,23 @@ const Visualization = () => {
             //Display A Visualization of it in every year
 
             //Show the data of the last 10 years
-            let years = [], values=[];
+            let years = [], chartValues=[];
             const currYear = new Date().getFullYear();
             for(let gap = 3; gap >= 0 ; gap--){
               years.push(currYear-gap);
             }
             jobs.map(job=>{
-              if(job.companyName === selectedCompanies[0]){
-                values.push(job.noOfStudentsPlaced || 5);
+              if(job.companyName === values[0]){
+                chartValues.push(job.noOfStudentsPlaced || 5);
               }
             });
             
-            console.log(values);
+            console.log(chartValues);
             const data = {
               labels: years,
               datasets: [{
-                label: 'Year-wise company data',
-                data: values,
+                label: 'Year-wise number of students placed',
+                data: chartValues,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
@@ -191,7 +194,7 @@ const Visualization = () => {
                 id="free-solo-demo"
                 freeSolo
                 options={availableCompanies.map((option) => option)}
-                onChange={(event, values)=>setSelectedCompanies(values)}
+                onChange={(event, values)=>{setSelectedCompanies(values);showChart(values);}}
                 renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -228,7 +231,7 @@ const Visualization = () => {
                 disableHoverListener
                 title="Selecting one company will display a line chart of year-wise number of students placed, Selecting multiple companies gives the BAR chart"
               >
-               <span><i onClick={handleTooltipOpen} class="fas fa-info-circle"></i></span>
+               <span><i onClick={handleTooltipOpen} style={{color: "blue"}} className="fas fa-info-circle"></i></span>
               </Tooltip>
             </div>
           </ClickAwayListener>
@@ -236,12 +239,11 @@ const Visualization = () => {
              
   <Grid item xs={12} sm={3}>
     <Tooltip title={selectedCompanies.length===0 ? "Select atleast a company to display charts" : ""}>
-
-                  <span>
+            <span>
             <Button disabled={selectedCompanies.length===0} fullWidth variant="contained" color="primary" onClick={()=>showChart()}> Show Chart</Button>
             </span></Tooltip>
             </Grid>
-</Grid>
+  </Grid>
 
 </form>
           

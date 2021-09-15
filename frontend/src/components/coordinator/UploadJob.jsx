@@ -16,6 +16,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
+import BackdropLoad from '../BackdropLoad';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -226,9 +227,9 @@ let courses1: CourseType[]= availableCourses;
          const res = await axios.post('/job/uploadJob', data, {withCredentials: true});
          const d = res.data;
          if(d.success){
-           history.go(0);
-           const res = axios.post('/sendJobUpdateEmail', {message: `${company} - ${jobPos}`, courses: selectedCourses});
-           history.push("/job", {alert: true, message: "Job posted successfully!!"});
+           setLoading(true);
+           const res = await axios.post('/api/sendJobUpdateEmail', {message: `${company} - ${jobPos}`, courses: selectedCourses});
+           history.push("/view");
            
          }else{
            setAlert(true);
@@ -439,9 +440,7 @@ const handleDate = (date: Date | null) => {
 
   return (
     loading?
-    <Backdrop  open={open} onClick={()=>setOpen(false)}>
-      <p style={{fontSize: 50}}>Loading</p> <CircularProgress style={{marginLeft: "2%"}} color="inherit" />
-    </Backdrop>
+    <BackdropLoad/>
     :
 <MuiPickersUtilsProvider utils={DateFnsUtils}>
 

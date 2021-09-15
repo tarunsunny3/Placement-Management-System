@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const  bcrypt = require('bcrypt');
 const User = require('../db/userSchema');
 const { requireAuth } = require('../middleware/authToken.js');
+const mailjet = require ('node-mailjet')
+.connect('bb0297262b66956cadcd4be5579ad049', '5d09a58eb25efc9c0f8eec727692f48d')
 
 router.get('/', (req, res)=>{
     res.send("Hi, it works");
@@ -154,25 +156,41 @@ var transporter = nodemailer.createTransport({
     pass: '9603877546'
   }
 });
-router.post("/sendEmail", (req, res)=>{
-  const toEmail = req.body.email;
+router.post("/sendOTPtoEmail", (req, res)=>{
+  const {email } = req.body;
   const otp = Math.floor(1000 + Math.random()*9000);
   console.log(otp);
-  var mailOptions = {
-    from: 'tarunsunny3@gmail.com',
-    to: toEmail,
-    subject: 'PLMS App Forgot Password',
-    text: 'Here is your OTP for verification!',
-    html: `<h2 style="font-size: 40px;">${otp}</h2>`
-  };
-
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
-  });
+  const request = mailjet
+ .post("send", {'version': 'v3.1'})
+ .request({
+   "Messages":[
+     {
+       "From": {
+         "Email": "tarunsunny2662@gmail.com",
+         "Name": "UoH"
+       },
+       "To": [
+         {
+           "Email": email,
+           "Name": "Tarun"
+         }
+       ],
+       "TemplateID": 3172558,
+       "TemplateLanguage": true,
+       "Subject": "Forgot Password PLMS",
+       "Variables": {
+         otp
+       }
+     }
+   ]
+ })
+request
+ .then((result) => {
+  //  console.log(result.body)
+ })
+ .catch((err) => {
+   console.log(err.statusCode)
+ })
 
   res.json({success: true, otp});
 })
@@ -192,8 +210,7 @@ router.post("/sendJobUpdateEmail", async (req, res)=>{
   // console.log("New Length is ", users.length);
   users.map((user)=>{
     if(user.details !== undefined && user.details.email !== undefined){
-      const mailjet = require ('node-mailjet')
- .connect('bb0297262b66956cadcd4be5579ad049', '5d09a58eb25efc9c0f8eec727692f48d')
+     
 const request = mailjet
  .post("send", {'version': 'v3.1'})
  .request({
@@ -220,12 +237,16 @@ const request = mailjet
  })
 request
  .then((result) => {
-  //  console.log(result.body)
+   console.log(result)
+  
+  res.json({success: true});
  })
  .catch((err) => {
    console.log(err.statusCode)
+   
+  res.json({success: false});
  })
-
+ res.json({success: false});
       //  var mailOptions = {
       //   from: 'tarunsunny3@gmail.com',
       //   to: user.details.email,
@@ -242,7 +263,6 @@ request
     }
   });
   
-  res.json({success: true});
 })
 
 router.post("/changePassword", async (req, res)=>{

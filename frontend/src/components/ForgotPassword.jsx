@@ -90,7 +90,7 @@ export default function ForgotPassword(props) {
      setErrors(tempErrors);
      console.log(tempErrors);
      if(Object.keys(tempErrors).length===0){
-       const res = await axios.post("/api/sendEmail", {email});
+       const res = await axios.post("/api/sendOTPtoEmail", {email});
        if(!res.data.success){
          alert("Couldn't process the request, Please try again later");
        }else{
@@ -168,7 +168,6 @@ export default function ForgotPassword(props) {
               fullWidth
               id="email"
               label="Email"
-              autoFocus
               value={email}
               error={(errors["email"]) ? true : false}
               helperText={errors["email"]}
@@ -203,10 +202,15 @@ export default function ForgotPassword(props) {
       onChange={(event)=>{setErrors({...errors, otp:""});
       setEnteredOTP(event.target.value)}}
 />
+{enteredOTP !== "" && otp !== Number(enteredOTP) &&
+  <p style={{color: "red"}}>Incorrect OTP, Please try again</p>
+}
+{otp === Number(enteredOTP) && 
+<>
         <TextField
               fullWidth
               margin="normal"
-              label="Password"
+              label="New Password"
               variant="outlined"
               value={password}
               type="password"
@@ -235,6 +239,8 @@ export default function ForgotPassword(props) {
       >
       Change Password
       </Button>
+      </>
+}
 </>
 }
 
