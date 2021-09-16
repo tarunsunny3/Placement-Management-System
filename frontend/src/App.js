@@ -16,7 +16,8 @@ import ViewReports from './components/coordinator/ViewReports';
 import ViewProfile from './components/student/ViewProfile';
 import Unauthorized from './components/Unauthorized';
 import ProtectedRoute from './components/ProtectedRoute';
-import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
+import { createTheme } from '@material-ui/core';
 import Brightness3Icon from "@material-ui/icons/Brightness3";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Visualization from './components/coordinator/Visualization';
@@ -30,7 +31,7 @@ function App() {
   //this variable to hit the backend again
   const [loggedIn, setLoggedIn] = useState(false);
   const icon = !theme ? <Brightness7Icon /> : <Brightness3Icon />;
-  const appliedTheme = createMuiTheme(theme ? light : dark);
+  const appliedTheme = createTheme(theme ? light : dark);
 
  
   useEffect(()=>{

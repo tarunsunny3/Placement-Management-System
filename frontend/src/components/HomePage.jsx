@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import bgImage from './images/bgImage.jpg';
+// import bgImage from './images/bgImage.jpg';
+import bgImage from './images/assets/placement_bg.jpeg';
 import car4 from './images/assets/car4.jpg';
 import car11 from './images/assets/car11.jpg';
 import carousel3 from './images/assets/carousel2-min.jpg';
@@ -13,7 +14,7 @@ import HomePageContent from './HomePageContent';
 import Carousel from 'react-material-ui-carousel'
 import { Paper, Button } from '@material-ui/core'
 
-function Example(props)
+function MyCarousel(props)
 {
     var items = [
       {
@@ -68,7 +69,7 @@ function Item({item})
            */}
            
             <p className="centeredText">{item.description}</p>
-            <img className="img" width="100%" height="500rem" src={item.image} alt={item.name}/>
+            <img style={{objectFit: "cover"}} className="img" width="100%" height="500rem" src={item.image} alt={item.name}/>
         </Paper>
     )
 }
@@ -77,6 +78,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.5)) , url(${bgImage})`,
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
+    // backgroundPosition: "right",
+    [theme.breakpoints.down('md')]:{
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }
+    
+
   },
   header:{
     // height: "90vh",
@@ -109,7 +117,7 @@ const HomePage = () => {
     setChecked(true);
   }, []);
   return (
-    <div className={classes.bg}>
+    <div>
   <div>
   
   {/* <img src={bgImage} style={{width: "100%", height: "100vh", objectFit: "cover"}} alt="background"/> */}
@@ -118,7 +126,7 @@ const HomePage = () => {
   {/* <Collapse in={checked} {...(checked ? {timeout: 1000}: {})}> */}
   
     
-    <div className={classes.container}>
+    <div className={`${classes.container} ${classes.bg}`}>
     <Collapse in={checked} {...(checked ? {timeout: 1000}: {})}>
     <h1 className={classes.title}>
         Welcome to <br/>
@@ -131,7 +139,7 @@ const HomePage = () => {
         </IconButton>
        </Scroll>
       </div>
-      <Example />
+      <MyCarousel />
     {/* </Collapse> */}
     </div>
   <HomePageContent />

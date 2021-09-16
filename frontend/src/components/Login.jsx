@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
-import {Redirect} from 'react-router-dom'
-import welcomeImage from './images/welcome.png';
+// import welcomeImage from './images/welcome.png';
+import welcomeImage from './images/assets/confetti-min.jpg';
 import {withRouter} from 'react-router-dom';
 import AppContext from './AppContext';
 import Avatar from '@material-ui/core/Avatar';
@@ -53,8 +53,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'contain',
-    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    backgroundPosition: 'top',
   },
   paper: {
     margin: theme.spacing(8, 4),

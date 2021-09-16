@@ -13,6 +13,11 @@ const useStyles = makeStyles({
     maxWidth: 645,
     background: 'rgba(0,0,0,0.5)',
     margin: '20px',
+    transition: "0.5s  ease-in",
+    '&:hover':{
+      transform: "perspective(100px) translateZ(10px)",
+      // backgroundColor: "pink"
+    }
   },
   media: {
     height: 300,

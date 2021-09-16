@@ -63,7 +63,7 @@ export default function () {
     <div className={classes.container}>
 
    
-    <Grid container display="flex" justify="center" spacing={4}>
+    <Grid container display="flex" justifyContent="center" spacing={4}>
     
       <Grid item xs={12} sm={6} md={4}>
         <div className={classes.paper} style={{backgroundColor: "#B5EAEA"}}>
