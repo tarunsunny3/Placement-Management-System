@@ -18,6 +18,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    paddingBottom: "20%"
   },
   paper: {
     [theme.breakpoints.up("md")]:{
@@ -183,7 +184,7 @@ const Visualization = () => {
                 }
 
 
-  <Grid container direction="column" justify="center" alignItems="center">
+  <Grid container direction="column" justifyContent="center" alignItems="center">
       
 <form className={classes.form} noValidate>
 <Grid container  alignItems="center" spacing={4}>

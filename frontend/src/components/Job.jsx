@@ -230,6 +230,7 @@ const Job = (props) => {
       message: "Closed the Job successfully",
     });
     // props.setRefresh(true);
+    
     setDisabled(true);
     setStudentsPlaced("");
   };
@@ -276,6 +277,7 @@ const Job = (props) => {
 
     const res = await axios.post("/api/updateUserDetails", { updateData });
     console.log(res.data);
+    setModal(false);
   };
 
   return (
@@ -396,7 +398,7 @@ const Job = (props) => {
                   container
                   spacing={1}
                   display="flex"
-                  justify="center"
+                  justifyContent="center"
                   alignItems="center"
                 >
                   <Grid item xs={12} sm={6}>
@@ -507,7 +509,10 @@ const Job = (props) => {
                   Apply
                 </Button>
               )}
-              {type === "applied" && (
+              {type === "applied" && 
+              <div>
+                {
+                user && user.details && user.details.offerLettersLinks && user.details.offerLettersLinks.length > 0 && <p>You have uploaded <b>{user.details.offerLettersLinks.filter((link)=>link.jobID === job._id).length} </b>  offerletters so far. </p>}
                 <Button
                   variant="contained"
                   onClick={() => setModal(true)}
@@ -515,7 +520,8 @@ const Job = (props) => {
                 >
                   Upload Offer Letter{" "}
                 </Button>
-              )}
+                </div>
+              }
             </CardActions>
             <CardActions>
               {isMobile && (
@@ -541,12 +547,19 @@ const Job = (props) => {
                     )}
                   </p>
                 )}
-
+                </CardActions>
+                <CardActions>
               {user != null &&
                 user.role === "Coordinator" &&
+                (
+                  (
                 !disabled &&
+                (
                 job.isOpen === true &&
-                jobNotExpired && (
+                jobNotExpired))
+                ||
+                ((job.isOpen === false || !jobNotExpired) && job.noOfStudentsPlaced === undefined)
+                )  && (
                   <div>
                     <StyledInput
                       label="Number of students placed"
@@ -561,8 +574,7 @@ const Job = (props) => {
                   </div>
                 )}
               {studentsPlaced.length !== 0 &&
-                job.isOpen === true &&
-                jobNotExpired && (
+                (
                   <Button
                     style={{ marginLeft: "4%", width: "30%" }}
                     onClick={() => closeJob(job._id)}

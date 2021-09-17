@@ -21,6 +21,7 @@ import { createTheme } from '@material-ui/core';
 import Brightness3Icon from "@material-ui/icons/Brightness3";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Visualization from './components/coordinator/Visualization';
+import Footer from './components/footer/Footer';
 
 
 
@@ -70,6 +71,7 @@ function App() {
         <ProtectedRoute exact path="/viewJobs" render={(props) => <ViewJobs type="applied" {...props} />} />
         <Route exact path="/unauthorized" component={Unauthorized}/>
       </Switch>
+      <Footer/>
 </AppContext.Provider>
     </Router>
     </>

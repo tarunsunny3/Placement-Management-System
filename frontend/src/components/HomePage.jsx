@@ -142,8 +142,10 @@ const HomePage = () => {
       <MyCarousel />
     {/* </Collapse> */}
     </div>
+    <div style={{marginBottom: "10%"}}>
   <HomePageContent />
-  <footer id="footer" className="footer">
+  </div>
+  {/* <footer id="footer" className="footer">
         <div className="footer-content">
             <div className="footer-section about">
                 <h1>Contact Me</h1>
@@ -160,7 +162,7 @@ const HomePage = () => {
             <div className="footer-bottom">&copy;Tarun apps.com</div>
         </div>
 
-      </footer>
+      </footer> */}
     </div>
     </div>
   )

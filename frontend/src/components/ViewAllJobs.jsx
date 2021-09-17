@@ -454,7 +454,9 @@ const ViewAllJobs = () => {
             </>
             :
             <>
+            <div style={{marginBottom: "5%"}}>
               <ViewJobs key={2} type="applied" filter={filter}/>
+              </div>
             </>
         )
         :

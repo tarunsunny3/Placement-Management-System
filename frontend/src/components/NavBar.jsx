@@ -272,9 +272,13 @@ const  NavBar = (props)=> {
                 onClose={()=>setAnchorEl(null)}
               >
 
-
+              {
+                user.role === "Student" &&
+              <div>
               <MenuItem onClick={(e)=>handleMenuClick(e, "/profile")}><VisibilityIcon /><span className={history.location.pathname !== '/profile' ? classes.iconText : `${classes.iconText} ${classes.currMenuItem}`}>View Profile</span></MenuItem>
               <MenuItem onClick={(e)=>handleMenuClick(e, "/studentReg/update")}><EditTwoToneIcon /><span className={history.location.pathname !== '/studentReg/update' ? classes.iconText : `${classes.iconText} ${classes.currMenuItem}`}>Edit Profile</span></MenuItem>
+              </div>
+              }
               <MenuItem onClick={()=>{setAnchorEl(null);Logout();}} color="inherit"><ExitToAppIcon className={classes.menuIcons}/><span className={classes.iconText}>Logout</span></MenuItem>
                 </Menu>
                 </>

@@ -239,7 +239,7 @@ const showJobsIfEligible = (job, status, user)=>{
         noJobsMessage()
       :
       <div style={{marginLeft: "5%", marginRight: "5%"}}>
-        <Grid container display="flex" direction="row" justify="space-evenly" spacing={4}>
+        <Grid container display="flex" direction="row" justifyContent="space-evenly" spacing={4}>
 
         {
 
