@@ -87,7 +87,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4)
   },
   paper:{
-    background: '#EAE2B6',
+    // background: '#EAE2B6',
+    background: "white",
     color: 'black',
     [theme.breakpoints.down('md')]:{
         width: "90vw"
@@ -95,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
   },
   course:{
     '& .MuiChip-root':{
-      backgroundColor: '#FFC074'
+      backgroundColor: '#B1E693'
     }
   },
   chip: {
@@ -228,7 +229,7 @@ const ViewAllJobs = () => {
       <Drawer variant="temporary" classes={{paper: classes.paper}} anchor='left' open={open} onClose={()=>setOpen(false)}>
         <h1 style={{textAlign: "center"}}>Filter Options <span style={{float: "right", paddingRight: "10%"}} onClick={()=>setOpen(false)}><CloseIcon/></span></h1>
 
-      <Grid container direction="column" justify="flex-start" alignItems="center">
+      <Grid container direction="column" justifyContent="flex-start" alignItems="center">
 
           <CssBaseline />
       <form onSubmit={(e)=>handleFilterForm(e)} noValidate className={classes.form}>
@@ -299,7 +300,7 @@ const ViewAllJobs = () => {
       </Grid>
 
 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Grid container justify="space-around">
+      <Grid container justifyContent="space-around">
         <KeyboardDatePicker
           format="dd/MM/yyyy"
           margin="normal"
@@ -313,7 +314,7 @@ const ViewAllJobs = () => {
           }}
         />
     </Grid>
-    <Grid container justify="space-around">
+    <Grid container justifyContent="space-around">
       <KeyboardDatePicker
         format="dd/MM/yyyy"
         margin="normal"

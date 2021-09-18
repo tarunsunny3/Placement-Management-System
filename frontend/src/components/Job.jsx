@@ -12,6 +12,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Snackbar from "@material-ui/core/Snackbar";
+import { styled } from "@material-ui/styles";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -27,10 +28,14 @@ import UploadFile from "./UploadFile";
 import Badge from "@material-ui/core/Badge";
 import CheckIcon from "@material-ui/icons/Check";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import IconButton from "@material-ui/core/IconButton";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import Collapse from "@material-ui/core/Collapse";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    width: "100%",
+    // maxWidth: "40%",
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
       // width: '100%',
@@ -45,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   form: {
-    // width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     margin: theme.spacing(3),
     padding: theme.spacing(4),
   },
@@ -106,7 +111,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   badgeContent: {
-    marginLeft: "3%"
+    marginLeft: "3%",
+  },
+  jobPosition: {
+    // '& .MuiChip-label':{
+    //   whiteSpace: "break-lines"
+    // }
+    width: "calc(20%)",
   },
 }));
 function Alert(props: AlertProps) {
@@ -148,6 +159,11 @@ const Job = (props) => {
   const [closed, setClosed] = useState(false);
   const [message, setMessage] = useState(null);
   const [modal, setModal] = useState(false);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
   const dateOptions = {
     weekday: "long",
     year: "numeric",
@@ -230,7 +246,7 @@ const Job = (props) => {
       message: "Closed the Job successfully",
     });
     // props.setRefresh(true);
-    
+
     setDisabled(true);
     setStudentsPlaced("");
   };
@@ -398,7 +414,8 @@ const Job = (props) => {
                   container
                   spacing={1}
                   display="flex"
-                  justifyContent="center"
+                  flexwrap="wrap"
+                  justifyContent="space-around"
                   alignItems="center"
                 >
                   <Grid item xs={12} sm={6}>
@@ -414,8 +431,8 @@ const Job = (props) => {
                         ></Chip>
                       </div>
                     </div>
-                  </Grid>
-                  <Grid item xs={12} sm= {6}>
+                    {/* </Grid> */}
+                    {/* <Grid item xs={12} sm= {6}> */}
                     <div>
                       <p>Salary Package</p>
                       <div className={classes.wrapper}>
@@ -431,23 +448,23 @@ const Job = (props) => {
                         ></Chip>
                       </div>
                     </div>
-                  </Grid>
-                  <Grid item xs={12} sm = {6}>
-                    <div>
+                    {/* </Grid> */}
+                    {/* <Grid item xs={12} sm = {6}> */}
+                    {/* <div>
                       <p>Job Position</p>
                       <div className={classes.wrapper}>
                         <i className="fas fa-user fa-3x"></i>
                         <Chip
 
-                          className={classes.badgeContent}
+                          className={`${classes.badgeContent} ${classes.jobPosition}`}
                           label={job.jobPosition}
                           color="secondary"
                           variant="default"
                         ></Chip>
                       </div>
-                    </div>
-                  </Grid>
-                  <Grid item xs={12} sm = {6}>
+                    </div> */}
+                    {/* </Grid> */}
+                    {/* <Grid item xs={12} sm = {6}> */}
                     {job.dateOfExpiry !== undefined && (
                       <div>
                         <p
@@ -471,12 +488,28 @@ const Job = (props) => {
                     )}
                   </Grid>
                 </Grid>
+                <p>Job Position: {job.jobPosition}</p>
+                <IconButton
+                  style={{ float: "right" }}
+                  onClick={handleExpandClick}
+                  aria-expanded={expanded}
+                  aria-label="show more"
+                >
+                  {
+                    expanded ? <ExpandLessIcon /> :  <ExpandMoreIcon />
+                  }
+                </IconButton>
+              </CardContent>
+            </CardActionArea>
+            <Collapse in={expanded} timeout="auto">
+              <CardContent>
                 <Typography
                   style={{ marginTop: "4%" }}
                   variant="body2"
                   component="p"
                 >
-                  {job.jobDesc.length > 70 ? jobDesc + "..." : jobDesc}
+                  {job.jobDesc}
+                  {/* {job.jobDesc.length > 70 ? jobDesc + "..." : jobDesc}
                   {job.jobDesc.length > 70 &&
                     (jobDesc.length <= 70 ? (
                       <a
@@ -494,129 +527,132 @@ const Job = (props) => {
                       >
                         less
                       </a>
-                    ))}
+                    ))} */}
                 </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              {type === "default" && (
-                <Button
-                  disabled={applied}
-                  onClick={(event) => handleApplyClick()}
-                  variant="contained"
-                  color="primary"
-                >
-                  Apply
-                </Button>
-              )}
-              {type === "applied" && 
-              <div>
-                {
-                user && user.details && user.details.offerLettersLinks && user.details.offerLettersLinks.length > 0 && <p>You have uploaded <b>{user.details.offerLettersLinks.filter((link)=>link.jobID === job._id).length} </b>  offerletters so far. </p>}
-                <Button
-                  variant="contained"
-                  onClick={() => setModal(true)}
-                  color="secondary"
-                >
-                  Upload Offer Letter{" "}
-                </Button>
-                </div>
-              }
-            </CardActions>
-            <CardActions>
-              {isMobile && (
-                <p>
-                  Number of Applicants: {job.users.length}
-                  <br />
-                </p>
-              )}
-            </CardActions>
-            <CardActions>
-              {user != null &&
-                user.role === "Coordinator" &&
-                !disabled &&
-                (job.isOpen === false || !jobNotExpired) && (
+                {/* </Collapse> */}
+                {isMobile && (
                   <p>
-                    No. of students got placed:{" "}
-                    {job.noOfStudentsPlaced !== undefined ? (
-                      job.noOfStudentsPlaced
-                    ) : (
-                      <span style={{ color: "#e1701a", fontWeight: "bold" }}>
-                        Data Not Available
-                      </span>
-                    )}
+                    Number of Applicants: {job.users.length}
+                    <br />
                   </p>
                 )}
-                </CardActions>
-                <CardActions>
-              {user != null &&
-                user.role === "Coordinator" &&
-                (
-                  (
-                !disabled &&
-                (
-                job.isOpen === true &&
-                jobNotExpired))
-                ||
-                ((job.isOpen === false || !jobNotExpired) && job.noOfStudentsPlaced === undefined)
-                )  && (
+                {type === "default" && (
+                  <Button
+                    style={{marginTop: "2%"}}
+                    disabled={applied}
+                    onClick={(event) => handleApplyClick()}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Apply
+                  </Button>
+                )}
+                
+                {type === "applied" && (
                   <div>
-                    <StyledInput
-                      label="Number of students placed"
-                      fullWidth
-                      variant="outlined"
-                      color="primary"
-                      value={studentsPlaced}
-                      onChange={(event) =>
-                        setStudentsPlaced(event.target.value)
-                      }
-                    />
+                    {user &&
+                      user.details &&
+                      user.details.offerLettersLinks &&
+                      user.details.offerLettersLinks.length > 0 && (
+                        <p>
+                          You have uploaded{" "}
+                          <b>
+                            {
+                              user.details.offerLettersLinks.filter(
+                                (link) => link.jobID === job._id
+                              ).length
+                            }{" "}
+                          </b>{" "}
+                          offerletters so far.{" "}
+                        </p>
+                      )}
+                    <Button
+                      variant="contained"
+                      onClick={() => setModal(true)}
+                      color="secondary"
+                    >
+                      Upload Offer Letter{" "}
+                    </Button>
                   </div>
                 )}
-              {studentsPlaced.length !== 0 &&
-                (
+               
+                {user != null &&
+                  user.role === "Coordinator" &&
+                  !disabled &&
+                  (job.isOpen === false || !jobNotExpired) && (
+                    <p>
+                      No. of students got placed:{" "}
+                      {job.noOfStudentsPlaced !== undefined ? (
+                        job.noOfStudentsPlaced
+                      ) : (
+                        <span style={{ color: "#e1701a", fontWeight: "bold" }}>
+                          Data Not Available
+                        </span>
+                      )}
+                    </p>
+                  )}
+                {user != null &&
+                  user.role === "Coordinator" &&
+                  ((!disabled && job.isOpen === true && jobNotExpired) ||
+                    ((job.isOpen === false || !jobNotExpired) &&
+                      job.noOfStudentsPlaced === undefined)) && (
+                      <StyledInput
+                        style={{marginTop: "3%"}}
+                        label="Number of students placed"
+                        variant="outlined"
+                        color="primary"
+                        value={studentsPlaced}
+                        onChange={(event) =>
+                          setStudentsPlaced(event.target.value)
+                        }
+                      />
+                  )}
+                {studentsPlaced.length !== 0 && (
+                  <div style={{display: "flex", alignItems: "center"}}>
+
+                 
                   <Button
-                    style={{ marginLeft: "4%", width: "30%" }}
+                    style={{marginRight: "5%" }}
                     onClick={() => closeJob(job._id)}
                     variant="contained"
                     color="secondary"
                   >
                     Close Job?
                   </Button>
+                  </div> 
                 )}
-            </CardActions>
-            <CardActions>
-              {user != null &&
-                user.role === "Coordinator" &&
-                job.isOpen === true &&
-                jobNotExpired && (
-                  <Tooltip
-                    arrow
-                    title={
-                      <>
-                        <p style={{ fontSize: "12px" }}>
-                          Download all the details of students who applied for
-                          this job
-                        </p>
-                      </>
-                    }
-                    placement="right-end"
-                  >
-                    {/* <Button variant="contained" color="primary" href={urlToServer}>
+                {/* {user != null &&
+                  user.role === "Coordinator" &&
+                  job.isOpen === true &&
+                  jobNotExpired && (
+                    <Tooltip
+                      arrow
+                      title={
+                        <>
+                          <p style={{ fontSize: "12px" }}>
+                            Download all the details of students who applied for
+                            this job
+                          </p>
+                        </>
+                      }
+                      placement="right-end"
+                    >
+                      {/* <Button variant="contained" color="primary" href={urlToServer}>
           Download
           </Button> */}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() =>
-                        history.push("/viewReports", { jobID: job._id })
-                      }
-                    >
-                      Download
-                    </Button>
-                  </Tooltip>
-                )}
-            </CardActions>
+                      {/* <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          history.push("/viewReports", { jobID: job._id })
+                        }
+                      >
+                        Download
+                      </Button>
+                    </Tooltip>
+                  )} */} 
+              </CardContent>
+            </Collapse>
           </Card>
         </div>
       )}

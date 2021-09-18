@@ -215,7 +215,7 @@ let courses1: CourseType[]= availableCourses;
          console.log(d);
          if(d.success){
           const res = axios.post('/api/sendJobUpdateEmail', {message: `${company} - ${jobPos}`, courses: selectedCourses});
-           history.push("/view", {alert: true, id: state.id, currPage: state.currPage});
+           history.replace("/view", {alert: true, id: state.id, currPage: state.currPage});
            
          }else{
            setAlert(true);
@@ -229,7 +229,7 @@ let courses1: CourseType[]= availableCourses;
          if(d.success){
            setLoading(true);
            const res = await axios.post('/api/sendJobUpdateEmail', {message: `${company} - ${jobPos}`, courses: selectedCourses});
-           history.push("/view");
+           history.replace("/view");
            
          }else{
            setAlert(true);
@@ -444,7 +444,7 @@ const handleDate = (date: Date | null) => {
     :
 <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
-    <Grid  container direction="column" justify="flex-start" alignItems="center">
+    <Grid  container direction="column" justifyContent="flex-start" alignItems="center">
       <CssBaseline />
 
     <div  className={classes.paper}>
@@ -480,14 +480,14 @@ const handleDate = (date: Date | null) => {
                 id="free-solo-demo"
                 freeSolo
                 options={availableCompanies.map((option) => option)}
-                value={company}
+                value={company || ""}
                 onChange={(event, values)=>handleCompany1(event, values)}
                 renderInput={(params) => (
                   // <StyledInput {...params} label="freeSolo" margin="normal" variant="outlined" />
                   <StyledInput
                     {...params}
                     label="Company name"
-                    value={company}
+                    value={company || ""}
                     onChange={(e)=>setCompany(e.target.value)}
                     error={(errors["company"]) ? true : false}
                     helperText={errors["company"]}
@@ -505,7 +505,7 @@ const handleDate = (date: Date | null) => {
                 id="free-solo-demo"
                 freeSolo
                 options={cities.map((option) => option.city)}
-                value={location}
+                value={location || ""}
                 onChange={(event, values)=>handleLocation1(event, values)}
                 renderInput={(params) => (
                   // <StyledInput {...params} label="freeSolo" margin="normal" variant="outlined" />
@@ -529,7 +529,7 @@ const handleDate = (date: Date | null) => {
             <Grid item xs={12} sm={6}>
               <StyledInput
                 label="Minimum CGPA"
-                value={gpa}
+                value={gpa || ""}
                 error={(errors["gpa"]) ? true : false}
                 onChange={(event)=>handleGpa(event)}
                 variant="outlined"
@@ -540,7 +540,7 @@ const handleDate = (date: Date | null) => {
             <Grid item xs={12} sm={6}>
               <StyledInput
                 label="Job Position"
-                value={jobPos}
+                value={jobPos || ""}
                 onChange={(event)=>setJobPos(event.target.value)}
                 variant="outlined"
                 fullWidth
@@ -554,7 +554,7 @@ const handleDate = (date: Date | null) => {
                 id="checkboxes-tags-demo"
                 options={courses1}
                 freeSolo
-                value={dumCourses}
+                value={dumCourses || ""}
                 getOptionSelected={(option, value) => value.courseName === option.courseName}
                 filterOptions={(options, params) => {
                 const filtered = filter(options, params);
@@ -644,7 +644,7 @@ const handleDate = (date: Date | null) => {
             <StyledInput
                label="Salary Package"
                // className={classes.textField}
-               value={salaryPackage}
+               value={salaryPackage || ""}
                error={(errors["salaryPackage"]) ? true : false}
                onChange={(event)=>{
                  handlePackage(event)
@@ -668,7 +668,7 @@ const handleDate = (date: Date | null) => {
           <Grid item xs={12} sm={6}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Job Type</FormLabel>
-            <RadioGroup aria-label="jobType" name="jobType" value={jobType} onChange={(e)=>setJobType(e.target.value)}>
+            <RadioGroup aria-label="jobType" name="jobType" value={jobType || ""} onChange={(e)=>setJobType(e.target.value)}>
               <FormControlLabel value="full" control={<Radio />} name="jobType" label="Full-Time" />
               <FormControlLabel value="intern" control={<Radio />} name="jobType" label="Internship" />
         </RadioGroup>
@@ -683,7 +683,7 @@ const handleDate = (date: Date | null) => {
     label="Job Description"
     multiline
     rows={8}
-    value={jobDesc}
+    value={jobDesc || ""}
     error={(errors["jobDesc"]) ? true : false}
     onChange={(event)=> handleJobDesc(event)}
     helperText={errors["jobDesc"]}
@@ -692,13 +692,13 @@ const handleDate = (date: Date | null) => {
     autoFocus={(errors["jobDesc"]) ? true : false}
   />
 
-        <Grid container justify="space-around">
+        <Grid container justifyContent="space-around">
           <KeyboardDatePicker
             format="dd/MM/yyyy"
             margin="normal"
             id="date-of-expiry"
             label="Date of Expiry"
-            value={dateOfExpiry}
+            value={dateOfExpiry || ""}
             onChange={handleDate}
             helperText="Defaults to 3 months from now"
             KeyboardButtonProps={{

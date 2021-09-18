@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
+import { MenuItem, Select, FormControl, InputLabel, FormHelperText } from '@material-ui/core';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
@@ -55,7 +56,7 @@ const ViewJobs =  (props) => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currPage, setCurrPage] = useState(1);
-  const [jobsPerPage, setJobsPerPage] = useState(3);
+  const [jobsPerPage, setJobsPerPage] = useState(5);
   const [open, setOpen] = useState(true);
   const [option, setOption] = useState("");
 const filterCompany = (Jobs, companyName)=>{
@@ -238,14 +239,25 @@ const showJobsIfEligible = (job, status, user)=>{
         ?
         noJobsMessage()
       :
-      <div style={{marginLeft: "5%", marginRight: "5%"}}>
-        <Grid container display="flex" direction="row" justifyContent="space-evenly" spacing={4}>
+      <div style={{marginLeft: "5%", marginRight: "5%", marginBottom: "10%"}}>
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <InputLabel id="demo-simple-select-helper-label">Jobs</InputLabel>
+        <Select  defaultValue={5} onChange={(e)=>setJobsPerPage(e.target.value)}>
+        <MenuItem value={5}>5</MenuItem>
+        <MenuItem value={10}>10</MenuItem>
+        <MenuItem value={20}>20</MenuItem>
+        </Select>
+         <FormHelperText>No. of Jobs per page</FormHelperText>
+      </FormControl>
+        
+        
+        <Grid container display="flex" direction="row" justifyContent="space-evenly"  spacing={4}>
 
         {
 
           currJobs.map((job, key)=>{
             return (
-              <Grid key={job._id} item>
+              <Grid key={job._id} item xs={12} sm={8} md={6}>
                 <Job job={job} setCurrPage={setCurrPage} currPage={currPage} {...props}/>
               </Grid>
             )
@@ -256,7 +268,7 @@ const showJobsIfEligible = (job, status, user)=>{
       {
         Math.ceil(jobs.length/jobsPerPage) > 1 &&
       <div className={classes.pagination}>
-      <Pagination style={{marginBottom: "5%"}} showFirstButton showLastButton color="primary" count={Math.ceil(jobs.length/jobsPerPage)} page={currPage} onChange={(event: React.ChangeEvent<unknown>, value: number)=>setCurrPage(value)} />
+      <Pagination style={{marginTop: "5%", marginBottom: "5%"}} showFirstButton showLastButton color="primary" count={Math.ceil(jobs.length/jobsPerPage)} page={currPage} onChange={(event: React.ChangeEvent<unknown>, value: number)=>setCurrPage(value)} />
       </div>
     }
       </div>

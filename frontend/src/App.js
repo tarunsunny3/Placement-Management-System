@@ -22,6 +22,7 @@ import Brightness3Icon from "@material-ui/icons/Brightness3";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Visualization from './components/coordinator/Visualization';
 import Footer from './components/footer/Footer';
+import Scroll from './components/Scroll';
 
 
 
@@ -56,6 +57,7 @@ function App() {
     <Router>
 <AppContext.Provider value={userDetails}>
       <NavBar/>
+      <Scroll showBelow={500} />
       <Switch>
         <Route exact path="/" component={HomePage}/>
         <Route exact path="/register" component={Register}/>
