@@ -232,7 +232,7 @@ const showJobsIfEligible = (job, status, user)=>{
     return (
       loading?
       <Backdrop style={{zIndex: "1"}} open={open} onClick={()=>setOpen(false)}>
-        <p style={{fontSize: 50}}>Loading</p> <CircularProgress style={{marginLeft: "2%"}} color="inherit" />
+        <p style={{fontSize: 50, color: "white"}}>Loading</p> <CircularProgress style={{marginLeft: "2%"}} color="primary" />
       </Backdrop>
       :
         (currJobs.length===0)
@@ -251,7 +251,7 @@ const showJobsIfEligible = (job, status, user)=>{
       </FormControl>
         
         
-        <Grid container display="flex" direction="row" justifyContent="space-evenly"  spacing={4}>
+        <Grid container display="flex" direction="row" justifyContent="space-evenly"  spacing={6}>
 
         {
 

@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     margin: '20px',
     transition: "0.5s  ease-in",
     '&:hover':{
-      transform: "perspective(100px) translateZ(10px)",
+      transform: "perspective(200px) translateZ(10px)",
       // backgroundColor: "pink"
     }
   },

@@ -4,7 +4,7 @@
 }
 .grades{
   overflow-x: visible;
-  margin-left: 10%;
+  /* margin-left: 10%; */
 }
 .table{
   /* margin-left: 10%; */
@@ -36,6 +36,7 @@
 
 .image-container{
   margin-left: 10%;
+  margin-bottom: 10%;
   background-color: beige;
   margin-top: 10%;
   padding-top: 5%;
@@ -51,6 +52,9 @@
   width: 50%;
 }
 @media (max-width: 960px) {
+  .grades{
+    margin-left: 10%;
+  }
   .table td:nth-child(even){
     padding-left: 5%;
   }

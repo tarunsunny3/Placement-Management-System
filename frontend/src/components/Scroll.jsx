@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
-
+import {Link as Scroller} from 'react-scroll';
 const useStyles = makeStyles((theme)=>({
     toUp:{
         zIndex: 2,
@@ -37,16 +37,14 @@ const Scroll = ({ showBelow }) => {
         }
     }
 
-    const handleClick = ()=>{
-        window['scrollTo']({ top: 0, behavior: 'smooth'});
-    }
     return (
         <div>
             {show &&
-
-                <IconButton onClick={handleClick} className={classes.toUp}>
+                <Scroller to="navbar" smooth>
+                <IconButton  className={classes.toUp}>
                     <ExpandLessIcon />
                 </IconButton>
+                </Scroller>
             }
         </div>
     )

@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
   },
   container:{
     textAlign: "center",
-    marginBottom: "10%",
+    paddingBottom: "10%",
   },
   goDownIcon: {
     color: "white",

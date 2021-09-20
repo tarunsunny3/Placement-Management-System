@@ -40,6 +40,14 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       // width: '100%',
     },
+    boxShadow: "13px 13px rgba(0, 0, 0, 0.2)",
+    [theme.breakpoints.up('md')]:{
+      transition: "0.3s  ease-in-out",
+      '&:hover':{
+        transform: "perspective(200px) translateZ(10px)",
+      }
+    }
+    
   },
   paper: {
     position: "absolute",
@@ -159,8 +167,9 @@ const Job = (props) => {
   const [closed, setClosed] = useState(false);
   const [message, setMessage] = useState(null);
   const [modal, setModal] = useState(false);
-  const [expanded, setExpanded] = React.useState(false);
-
+  const [expanded, setExpanded] = useState(false);
+  const [collapseChecked, setCollapseChecked] = useState(false);
+  const [studentsPlacedError, setStudentsPlacedError] = useState({error: false, message: ""});
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -174,6 +183,9 @@ const Job = (props) => {
     "en-US",
     dateOptions
   );
+  React.useEffect(()=>{
+    setCollapseChecked(true);
+  }, [])
 
   React.useEffect(() => {
     let mounted = true;
@@ -297,6 +309,7 @@ const Job = (props) => {
   };
 
   return (
+    <Collapse in={collapseChecked} {...(collapseChecked ? {timeout: 1000}: {})}>
     <div key={job._id}>
       <p>{message !== null && message.id === job._id && message.message}</p>
       {!closed && (
@@ -488,8 +501,13 @@ const Job = (props) => {
                     )}
                   </Grid>
                 </Grid>
-                <p>Job Position: {job.jobPosition}</p>
-                <IconButton
+              
+                
+              </CardContent>
+            </CardActionArea>
+            <CardContent>
+            <p>Job Position: {job.jobPosition}</p>
+            <IconButton
                   style={{ float: "right" }}
                   onClick={handleExpandClick}
                   aria-expanded={expanded}
@@ -498,9 +516,9 @@ const Job = (props) => {
                   {
                     expanded ? <ExpandLessIcon /> :  <ExpandMoreIcon />
                   }
-                </IconButton>
-              </CardContent>
-            </CardActionArea>
+            </IconButton>
+            </CardContent>
+
             <Collapse in={expanded} timeout="auto">
               <CardContent>
                 <Typography
@@ -597,13 +615,24 @@ const Job = (props) => {
                     ((job.isOpen === false || !jobNotExpired) &&
                       job.noOfStudentsPlaced === undefined)) && (
                       <StyledInput
+                        fullWidth
+                        type="number"
                         style={{marginTop: "3%"}}
                         label="Number of students placed"
                         variant="outlined"
                         color="primary"
                         value={studentsPlaced}
-                        onChange={(event) =>
-                          setStudentsPlaced(event.target.value)
+                        error={studentsPlacedError.error}
+                        helperText={studentsPlacedError.error ? studentsPlacedError.message : ""}
+                        onChange={(event) =>{
+                          if(event.target.value.length > 0 && Number(event.target.value) < 0){
+                            setStudentsPlacedError({error: true, message: "Please enter a positive value only"})
+                          }else{
+                            setStudentsPlacedError({error: false, message: ""});
+                            setStudentsPlaced(event.target.value);
+                          }
+                          
+                          }
                         }
                       />
                   )}
@@ -749,6 +778,7 @@ const Job = (props) => {
         }
       </Modal>
     </div>
+    </Collapse>
   );
 };
 

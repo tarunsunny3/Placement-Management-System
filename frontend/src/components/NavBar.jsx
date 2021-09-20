@@ -195,7 +195,7 @@ const  NavBar = (props)=> {
     </Menu>
   );
   return (
-    <div className={classes.root}>
+    <div id="navbar" className={classes.root}>
       <AppBar className={classes.appbar} position="static" elevation={0}>
         <Toolbar>
         <Typography variant="h6" className={classes.title}>

@@ -11,10 +11,6 @@ import Button from "@material-ui/core/Button";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import "./ViewProfile.css";
 import BackdropLoad from "../BackdropLoad";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Avatar, Modal } from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -224,7 +220,7 @@ const ViewProfile = () => {
                     spacing={2}
                     display="flex"
                     alignItems="center"
-                    justify="space-around"
+                    justifyContent="space-around"
                   >
                     <Grid item xs={6} sm={6}>
                       <IconButton
@@ -326,6 +322,7 @@ const ViewProfile = () => {
                   </table>
                 </div>
                 <Button
+                  style={{marginLeft: "2%", marginBottom: "5%"}}
                   className="showGradesButton"
                   onClick={() => setShowGrades(!showGrades)}
                   variant="contained"
@@ -427,6 +424,7 @@ const ViewProfile = () => {
                         </Grid>
                         {gradesInputArray.length > 0 && (
                           <Button
+                            style={{marginBottom: "5%"}}
                             type="submit"
                             variant="contained"
                             color="primary"
