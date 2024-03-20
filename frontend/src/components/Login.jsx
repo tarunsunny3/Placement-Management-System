@@ -151,7 +151,7 @@ const Login = (props) => {
       } catch (error) {
         setAlert(true);
         setOpen(true);
-        setMessage({ "message": error, "type": "error" });
+        setMessage({ "message": "Something went wrong", "type": "error" });
       }
 
     }
