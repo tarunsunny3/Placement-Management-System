@@ -65,7 +65,8 @@ router.post('/sign_up', async (req, res)=>{
 })
 router.post('/sign_in', async (req, res)=>{
   const {username, password} = req.body;
-  const user = await User.findOne({username});
+  try {
+    const user = await User.findOne({username});
   if(!user){
     //User is not registered
     res.json({
@@ -94,6 +95,13 @@ router.post('/sign_in', async (req, res)=>{
           }
       })
     }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error,
+    })
+    return;
+  }
 })
 
 //Basic Details basic_registration

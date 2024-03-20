@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 // import welcomeImage from './images/welcome.png';
 import welcomeImage from './images/assets/confetti-min.jpg';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import AppContext from './AppContext';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -36,7 +36,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="/">
-      Tarun
+        Tarun
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -79,9 +79,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const  Login = (props) => {
-  const {history} = props;
-  const {setLoggedIn, setUser, user} = React.useContext(AppContext);
+const Login = (props) => {
+  const { history } = props;
+  const { setLoggedIn, setUser, user } = React.useContext(AppContext);
   const classes = useStyles();
   const [username, setUsername] = useState("18mcme18");
   const [password, setPassword] = useState("9603877545");
@@ -90,103 +90,112 @@ const  Login = (props) => {
   const [alert, setAlert] = useState(false);
   const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({message: "", type: ""});
+  const [message, setMessage] = useState({ message: "", type: "" });
 
 
-  if(user != null && user.role !== null){
-      history.replace("/view");
+  if (user != null && user.role !== null) {
+    history.replace("/view");
   }
   const handleClickShowPassword = () => {
-   setShowPassword(!showPassword);
- };
+    setShowPassword(!showPassword);
+  };
 
- const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-   event.preventDefault();
- };
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
 
- const handleSubmit = async (event)=>{
-   event.preventDefault();
-   let tempErrors = {};
-   if(username.length === 0){
-     tempErrors["username"] = "Please enter the username";
-   }
-   if(password.length === 0){
-     tempErrors["password"] = "Please enter the password";
-   }
-   setErrors(tempErrors);
-   if(Object.keys(tempErrors).length===0){
-     const data = {
-       username, password
-     }
-     const res = await axios.post('/api/sign_in',data);
-     const d = res.data;
-     console.log(d);
-
-     if(d.success){
-       
-       setUser({id: "1"});
-       setLoggedIn(true);
-       if(user.details != undefined && user.details.profilePictureLink !== undefined){
-        const profileImage = document.getElementById("profile-image");
-        console.log(profileImage);
-      }else{
-        console.log("No");
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    let tempErrors = {};
+    if (username.length === 0) {
+      tempErrors["username"] = "Please enter the username";
+    }
+    if (password.length === 0) {
+      tempErrors["password"] = "Please enter the password";
+    }
+    setErrors(tempErrors);
+    if (Object.keys(tempErrors).length === 0) {
+      const data = {
+        username, password
       }
-       if(d.result.role==="Student"){
-         if(d.reg){
-           history.push('/studentReg/register');
-         }else{
-            history.push('/view');
-         }
-       }else if(d.result.role==="Coordinator"){
-         history.push('/view');
-        }
-     }else{
-       setAlert(true);
-       setOpen(true);
-       setMessage({"message": d.message, "type": "error"});
-       // console.log(d.message);
-     }
-   }
- }
- const showAlert = ()=>{
-   if(alert){
+      try {
+        const res = await axios.post('/api/sign_in', data);
+        const d = res.data;
+        console.log(d);
 
-   return(
-     <Collapse className={classes.alert} in={open}>
-     <Alert
-       severity={message.type}
-       variant="filled"
-       action={
-         <IconButton
-           aria-label="close"
-           color="inherit"
-           size="small"
-           onClick={() => {
-             setOpen(false);
-           }}
-           >
-             <CloseIcon fontSize="inherit" />
-         </IconButton>
-       }
-       >
-         {message.message}
-       </Alert>
-     </Collapse>)}
+        if (d.success) {
+
+          setUser({ id: "1" });
+          setLoggedIn(true);
+          if (user.details != undefined && user.details.profilePictureLink !== undefined) {
+            const profileImage = document.getElementById("profile-image");
+            console.log(profileImage);
+          } else {
+            console.log("No");
+          }
+          if (d.result.role === "Student") {
+            if (d.reg) {
+              history.push('/studentReg/register');
+            } else {
+              history.push('/view');
+            }
+          } else if (d.result.role === "Coordinator") {
+            history.push('/view');
+          }
+        } else {
+          setAlert(true);
+          setOpen(true);
+          setMessage({ "message": d.message, "type": "error" });
+          // console.log(d.message);
+        }
+      } catch (error) {
+        setAlert(true);
+        setOpen(true);
+        setMessage({ "message": error, "type": "error" });
+      }
+
+    }
+  }
+
+const showAlert = () => {
+  if (alert) {
+
+    return (
+      <Collapse className={classes.alert} in={open}>
+        <Alert
+          severity={message.type}
+          variant="filled"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+        >
+          {message.message}
+        </Alert>
+      </Collapse>)
+  }
 
 }
-  return (
+return (
 
 
   loading ?
 
-  <Backdrop  open={loading} onClick={()=>setLoading(false)}>
-    <p style={{fontSize: 50}}>Logging in</p> <CircularProgress style={{marginLeft: "2%"}} color="inherit" />
-</Backdrop>
-:
-  // user==null || user.id == null
-  // ?
-  <Grid container component="main" className={classes.root}>
+    <Backdrop open={loading} onClick={() => setLoading(false)}>
+      <p style={{ fontSize: 50 }}>Logging in</p> <CircularProgress style={{ marginLeft: "2%" }} color="inherit" />
+    </Backdrop>
+    :
+    // user==null || user.id == null
+    // ?
+    <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={false} md={6} className={classes.image} />
       <Grid item xs={12} sm={12} md={6} component={Paper} elevation={6} square>
@@ -214,34 +223,34 @@ const  Login = (props) => {
               value={username}
               error={(errors["username"]) ? true : false}
               helperText={errors["username"]}
-              onChange={(event)=>{setErrors({...errors, username:""});setUsername(event.target.value)}}
+              onChange={(event) => { setErrors({ ...errors, username: "" }); setUsername(event.target.value) }}
             />
 
-            <FormControl  className={clsx(classes.textField)}  variant="outlined">
-          <InputLabel   error={errors["password"]?true:false} required htmlFor="outlined-adornment-password" >Password</InputLabel>
-        <OutlinedInput
-              variant="outlined"
-              id="standard-adornment-password"
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              error={errors["password"]?true:false}
-              onChange={(event)=>{setErrors({...errors, password:""});setPassword(event.target.value)}}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
+            <FormControl className={clsx(classes.textField)} variant="outlined">
+              <InputLabel error={errors["password"] ? true : false} required htmlFor="outlined-adornment-password" >Password</InputLabel>
+              <OutlinedInput
+                variant="outlined"
+                id="standard-adornment-password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                error={errors["password"] ? true : false}
+                onChange={(event) => { setErrors({ ...errors, password: "" }); setPassword(event.target.value) }}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
 
-              }
+                }
                 labelWidth={85}
-            />
-          <FormHelperText style={{color: 'red'}}>{errors["password"]}</FormHelperText>
-              </FormControl>
+              />
+              <FormHelperText style={{ color: 'red' }}>{errors["password"]}</FormHelperText>
+            </FormControl>
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
@@ -262,7 +271,7 @@ const  Login = (props) => {
                 </Link>
               </Grid>
               <Grid item>
-                <Link style={{cursor: "pointer"}} onClick={()=>history.push("/register")} variant="body2">
+                <Link style={{ cursor: "pointer" }} onClick={() => history.push("/register")} variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -274,14 +283,14 @@ const  Login = (props) => {
         </div>
       </Grid>
     </Grid>
-    // :
-    // (
-    //   user.role==="Student"
-    //   ?
-    //   <Redirect to="/studentReg"/>
-    //   :
-    //   <Redirect to="/view"/>
-    // )
-  );
+  // :
+  // (
+  //   user.role==="Student"
+  //   ?
+  //   <Redirect to="/studentReg"/>
+  //   :
+  //   <Redirect to="/view"/>
+  // )
+);
 }
 export default withRouter(Login);
