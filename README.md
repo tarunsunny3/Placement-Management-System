@@ -1,5 +1,10 @@
 # Placement-Management-System
 **PWA, that means it can be downloaded and used as a native app on desktops, android, ios, etc**
+
+
+The App is deployed on Heroku and available at https://plms-0a2c20251af6.herokuapp.com/
+
+
 This project exclusively has been made for my University (University of Hyderabad) following all the **SDE** principles including
 *Requirements gathering, Designing, and implementing*.
 
